@@ -1,6 +1,6 @@
 # Team 111's Prototype Robot Simulation and Base Code
 
-This repository contains the Team 111 2013 fall drive base prototype and simulation code improvements code base. This code is released under the BSD 2-clause license. A copy of this license is included in COPYING.
+This repository contains the Team 111's 2014 robot source. This code is private until the 2014 season is complete!
 
 ## Intro
 
