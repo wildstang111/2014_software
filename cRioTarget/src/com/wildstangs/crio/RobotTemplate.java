@@ -36,7 +36,7 @@ public class RobotTemplate extends IterativeRobot {
         //Enables the filelogger thread.
         //FileLogger.getFileLogger().startLogger();
         try {
-            WsConfigManager.getInstance().setFileName("/ws_config.txt");
+            WsConfigManager.getInstance().setConfigFileName("/ws_config.txt");
             WsConfigManager.getInstance().readConfig();
             //WsConfigFacade.getInstance().dumpConfigData();
         } catch (WsConfigManagerException wscfe) {
@@ -47,9 +47,9 @@ public class RobotTemplate extends IterativeRobot {
         WsOutputManager.getInstance();
 //        Logger.getLogger().always(this.getClass().getName(), "robotInit", "Facades Completed");
         WsSubsystemContainer.getInstance().init();
-//        Logger.getLogger().always(this.getClass().getName(), "robotInit", "Subsystem Completed");
+        //Logger.getLogger().always(this.getClass().getName(), "robotInit", "Subsystem Completed");
         Logger.getLogger().readConfig();
-//        Logger.getLogger().always(this.getClass().getName(), "robotInit", "Logger Read Config Completed");
+        //Logger.getLogger().always(this.getClass().getName(), "robotInit", "Logger Read Config Completed");
         WsAutonomousManager.getInstance();
         Logger.getLogger().always(this.getClass().getName(), "robotInit", "Startup Completed");
         startupTimer.endTimingSection();
@@ -69,19 +69,24 @@ public class RobotTemplate extends IterativeRobot {
             System.out.println(e.getMessage());
         }
 
-//        Logger.getLogger().always(this.getClass().getName(), "disbledInit", "Config Completed");
+        //Logger.getLogger().always(this.getClass().getName(), "disbledInit", "Config Completed");
         WsSubsystemContainer.getInstance().init();
         Logger.getLogger().readConfig();
         //WsConfigFacade.getInstance().dumpConfigData();
         initTimer.endTimingSection();
         Logger.getLogger().always(this.getClass().getName(), "disabledInit", "Disabled Init Complete");
-        
+
     }
 
     public void disabledPeriodic() {
         WsInputManager.getInstance().updateOiData();
         //Make LED stuff go in disabled.
         ((WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_LED))).update();
+        try {
+            WsConfigManager.getInstance().readConfigIfUpdateAvailable();
+        } catch (WsConfigManagerException e) {
+            System.out.println(e.toString());
+        }
     }
 
     public void autonomousInit() {
