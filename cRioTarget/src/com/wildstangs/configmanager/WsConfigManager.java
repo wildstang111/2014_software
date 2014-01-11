@@ -142,6 +142,7 @@ public class WsConfigManager {
      */
     public void readConfigIfUpdateAvailable() throws WsConfigManagerException {
         if (WsConfigFacadeImpl.isUpdateAvailable(updateFileName)) {
+            Logger.getLogger().always(this.getClass().getName(), "readConfigIfUpdateAvailable", "New config file found!");
             try {
                 readConfig();
                 WsConfigFacadeImpl.deleteUpdateFile(updateFileName);
