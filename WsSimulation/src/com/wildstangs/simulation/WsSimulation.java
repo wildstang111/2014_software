@@ -9,6 +9,7 @@ import com.wildstangs.simulation.solenoids.WsSolenoidContainer;
 import com.wildstangs.autonomous.WsAutonomousManager;
 import com.wildstangs.configmanager.WsConfigManager;
 import com.wildstangs.configmanager.WsConfigManagerException;
+import com.wildstangs.crio.AbstractionFactory;
 import com.wildstangs.inputmanager.base.WsInputManager;
 import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
 import com.wildstangs.logger.*;
@@ -62,7 +63,7 @@ public class WsSimulation {
 //        WsConfigManager.getInstance().dumpConfigData();
 
         Logger logger = Logger.getLogger();
-
+        
         //System.out.println(WsConfigManager.getInstance().getConfigItemName("com.wildstangs.WsInputManager.WsDriverJoystick.trim"));
         //System.out.println(WsConfigManager.getInstance().dumpConfigData());
         logger.always(c, "sim_startup", "Simulation starting.");
@@ -76,9 +77,7 @@ public class WsSimulation {
         //logger.debug(c, "debug_test", "debug");
         //logger.warning(c, "warning_test", "warning");
         //logger.always(c, "always_test", "always");
-        WsInputManager.getInstance();
-        WsOutputManager.getInstance();
-        WsSubsystemContainer.getInstance();
+        AbstractionFactory.robotInit();
 //        
 //        DoubleSubjectGraph leftDriveSpeed = new DoubleSubjectGraph() ; 
 //        DoubleSubjectGraph rightDriveSpeed = new DoubleSubjectGraph() ; 
@@ -212,8 +211,7 @@ public class WsSimulation {
                 {
                     WsInputManager.getInstance().updateOiData();
                 }
-                WsSubsystemContainer.getInstance().update();
-                WsOutputManager.getInstance().update();
+                AbstractionFactory.robotInit();
                 WsSolenoidContainer.getInstance().update();
 
 //                flywheelEncoders.update(); 

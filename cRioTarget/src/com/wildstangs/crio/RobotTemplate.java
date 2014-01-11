@@ -70,8 +70,7 @@ public class RobotTemplate extends IterativeRobot {
         }
 
 //        Logger.getLogger().always(this.getClass().getName(), "disbledInit", "Config Completed");
-        WsSubsystemContainer.getInstance().init();
-        Logger.getLogger().readConfig();
+        AbstractionFactory.teleopInit();
         //WsConfigFacade.getInstance().dumpConfigData();
         initTimer.endTimingSection();
         Logger.getLogger().always(this.getClass().getName(), "disabledInit", "Disabled Init Complete");
@@ -85,9 +84,7 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void autonomousInit() {
-        WsSubsystemContainer.getInstance().init();
-        Logger.getLogger().readConfig();
-        WsAutonomousManager.getInstance().startCurrentProgram();
+        AbstractionFactory.autonomousInit();
     }
 
     /**
@@ -106,8 +103,7 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopInit() {
-        WsSubsystemContainer.getInstance().init();
-        Logger.getLogger().readConfig();
+        AbstractionFactory.teleopInit();
         periodTimer.startTimingSection();
     }
 
