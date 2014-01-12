@@ -20,6 +20,8 @@ import com.wildstangs.profiling.WsProfilingTimer;
 import com.wildstangs.subjects.base.DoubleSubject;
 import com.wildstangs.subsystems.base.WsSubsystemContainer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -45,8 +47,9 @@ public class WsSimulation {
      */
     public static void main(String[] args) {
 
-        // testInput();
+        System.setProperty("net.java.games.input.librarypath", System.getProperty("user.dir") + File.separator + "lib");
 
+        // testInput();
         //Instantiate the Facades and Containers
         //start the log viewer.
         (new Thread(new LogViewer())).start();
