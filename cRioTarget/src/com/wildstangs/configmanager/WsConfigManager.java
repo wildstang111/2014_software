@@ -22,6 +22,7 @@ public class WsConfigManager {
     static String myClassName = "WsConfigFacade";
     private static WsConfigManager instance = null;
     private static String configFileName = "/ws_config.txt";
+    private static String updateFileName = "/reloadConfigFile.cmd";
     private static List config = new List();
 
     /**
@@ -46,13 +47,28 @@ public class WsConfigManager {
      * @param filename The new filename to use for reading.
      * @throws WsConfigManagerException
      */
-    public void setFileName(String filename) throws WsConfigManagerException {
+    public void setConfigFileName(String filename) throws WsConfigManagerException {
         if (WsConfigFacadeImpl.checkCreateFile(filename)) {
             configFileName = filename;
         } else {
             throw new WsConfigManagerException("Problem setting config file name");
         }
+    }
 
+    /**
+     * Sets the filename to check for updates. Overrides the default
+     * /reloadConfigFile.cmd. The filename will only be set if it exists and is
+     * readable.
+     *
+     * @param filename The new filename to use for checking for updates.
+     * @throws WsConfigManagerException
+     */
+    public void setUpdateFileName(String filename) throws WsConfigManagerException {
+        if (WsConfigFacadeImpl.checkCreateFile(filename)) {
+            updateFileName = filename;
+        } else {
+            throw new WsConfigManagerException("Problem setting update file name");
+        }
     }
 
     /**
@@ -112,10 +128,27 @@ public class WsConfigManager {
      * Example: com.wildstangs.WsInputManager.WsDriverJoystick.trim will return
      * trim.
      *
-     * @returns The config Item name or null if the string is unparsable
+     * @return The config Item name or null if the string is unparsable
      * @param configItem A String representing the config item to parse
      */
     public String getConfigItemName(String configItem) {
         return WsConfigFacadeImpl.getConfigItemName(configItem);
+    }
+
+    /**
+     * If an updated config file is available, read it
+     *
+     * @throws WsConfigManagerException
+     */
+    public void readConfigIfUpdateAvailable() throws WsConfigManagerException {
+        if (WsConfigFacadeImpl.isUpdateAvailable(updateFileName)) {
+            Logger.getLogger().always(this.getClass().getName(), "readConfigIfUpdateAvailable", "New config file found!");
+            try {
+                readConfig();
+                WsConfigFacadeImpl.deleteUpdateFile(updateFileName);
+            } catch (WsConfigManagerException e) {
+                throw new WsConfigManagerException(e.toString());
+            }
+        }
     }
 }

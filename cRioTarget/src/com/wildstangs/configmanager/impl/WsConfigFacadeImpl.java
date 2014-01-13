@@ -114,7 +114,7 @@ public final class WsConfigFacadeImpl {
                 return true;
             }
         } catch (Throwable e) {
-            Logger.getLogger().error(myClassName, "checkCreateFile", "Open Config File exception" + e.toString());
+            Logger.getLogger().error(myClassName, "checkCreateFile", "Open Config File exception " + e.toString());
             return false;
         }
     }
@@ -129,5 +129,32 @@ public final class WsConfigFacadeImpl {
             }
         }
         return configName;
+    }
+    
+    public static boolean isUpdateAvailable(String filename) {
+        FileConnection fc;
+        String path = "file://";
+        path += filename;
+
+        try {
+            fc = (FileConnection) Connector.open(path, Connector.READ_WRITE);
+            return fc.exists();
+        } catch (Throwable e) {
+            Logger.getLogger().error(myClassName, "isUpdateAvailable", "Check for update exception " + e.toString());
+            return false;
+        }
+    }
+    
+        public static void deleteUpdateFile(String filename) {
+        FileConnection fc;
+        String path = "file://";
+        path += filename;
+
+        try {
+            fc = (FileConnection) Connector.open(path, Connector.READ_WRITE);
+            fc.delete();
+        } catch (Throwable e) {
+            Logger.getLogger().error(myClassName, "isUpdateAvailable", "Update file not deleted " + e.toString());
+        }
     }
 }
