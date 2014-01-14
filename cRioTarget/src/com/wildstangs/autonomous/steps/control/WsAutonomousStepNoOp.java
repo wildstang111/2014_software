@@ -4,7 +4,6 @@
  */
 package com.wildstangs.autonomous.steps.control;
 
-import com.wildstangs.autonomous.WsAutonomousManager;
 import com.wildstangs.autonomous.WsAutonomousStep;
 
 /**
@@ -25,20 +24,7 @@ public class WsAutonomousStepNoOp extends WsAutonomousStep {
     public void update() {
     }
 
-//    public boolean equals(Object o)
-//    {
-//        if (o instanceof WsAutonomousStepNoOp)
-//        {
-//            return true;
-//        }
-//        return false;
-//    }
     public String toString() {
         return "No-Op";
     }
-//    public int hashCode()
-//    {
-//        int hash = 7;
-//        return hash;
-//    }
 }

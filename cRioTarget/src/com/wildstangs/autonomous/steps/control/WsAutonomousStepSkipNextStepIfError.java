@@ -32,20 +32,7 @@ public class WsAutonomousStepSkipNextStepIfError extends WsAutonomousStep {
         }
     }
 
-//    public boolean equals(Object o)
-//    {
-//        if (o instanceof WsAutonomousStepSkipNextStepIfError)
-//        {
-//            return true;
-//        }
-//        return false;
-//    }
     public String toString() {
         return "Skips next step if last step had error";
     }
-//    public int hashCode()
-//    {
-//        int hash = 3;
-//        return hash;
-//    }
 }

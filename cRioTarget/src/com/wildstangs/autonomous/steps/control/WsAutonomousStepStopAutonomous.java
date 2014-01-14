@@ -25,20 +25,7 @@ public class WsAutonomousStepStopAutonomous extends WsAutonomousStep {
         // Do nothing.
     }
 
-//    public boolean equals(Object o)
-//    {
-//        if (o instanceof WsAutonomousStepStop)
-//        {
-//            return true;
-//        }
-//        return false;
-//    }
     public String toString() {
         return "Stop auto-op";
     }
-//    public int hashCode()
-//    {
-//        int hash = 7;
-//        return hash;
-//    }
 }

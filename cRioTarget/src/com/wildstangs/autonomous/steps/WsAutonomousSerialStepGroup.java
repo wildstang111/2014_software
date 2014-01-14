@@ -129,19 +129,4 @@ public abstract class WsAutonomousSerialStepGroup extends WsAutonomousStep imple
         }
         return lastStepError;
     }
-//    public int hashCode()
-//    {
-//        int hash = 7;
-//        hash = 59 * hash + Arrays.deepHashCode(this.steps);
-//        return hash;
-//    }
-//    public boolean equals(Object o)
-//    {
-//        if (o instanceof WsAutonomousStepGroup)
-//        {
-//            WsAutonomousStepGroup obj = (WsAutonomousStepGroup)o;
-//            return Arrays.deepEquals(obj.steps, steps);
-//        }
-//        return false;
-//    }
 }

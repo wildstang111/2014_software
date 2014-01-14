@@ -72,16 +72,6 @@ public class WsAutonomousParallelStepGroup extends WsAutonomousStep {
         }
     }
 
-//    public int hashCode()
-//    {
-//        int hash = 5;
-//        return hash;
-//    }
-//
-//    public boolean equals(Object o)
-//    {
-//        return false;
-//    }
     public String toString() {
         return "Parallel step group: " + name;
     }

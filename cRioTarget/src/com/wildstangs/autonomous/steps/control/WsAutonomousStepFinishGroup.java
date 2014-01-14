@@ -44,20 +44,7 @@ public class WsAutonomousStepFinishGroup extends WsAutonomousStep {
         }
     }
 
-//    public boolean equals(Object o)
-//    {
-//        if (o instanceof WsAutonomousStepFinishGroup)
-//        {
-//            return true;
-//        }
-//        return false;
-//    }
     public String toString() {
         return "Interrupt current step group";
     }
-//    public int hashCode()
-//    {
-//        int hash = 5;
-//        return hash;
-//    }
 }
