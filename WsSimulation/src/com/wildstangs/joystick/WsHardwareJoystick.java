@@ -81,7 +81,7 @@ public class WsHardwareJoystick implements IHardwareJoystick {
         leftJoystickY = controller.getYAxisValue();
         leftJoystickX = controller.getXAxisValue();
 
-        dPadLeftRight = (int) controller.getPovY();
+        dPadLeftRight = (int) controller.getPovX();
         dPadUpDown = (int) controller.getPovY();
     }
 

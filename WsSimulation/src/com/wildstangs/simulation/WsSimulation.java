@@ -21,7 +21,6 @@ import com.wildstangs.subjects.base.DoubleSubject;
 import com.wildstangs.subsystems.base.WsSubsystemContainer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.io.File;
-import java.io.IOException;
 
 /**
  *
