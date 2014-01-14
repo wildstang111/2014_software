@@ -8,6 +8,7 @@ import com.wildstangs.inputmanager.base.IInputEnum;
 import com.wildstangs.inputmanager.base.WsInputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.subjects.base.IObserver;
+import com.wildstangs.subjects.base.ISubjectEnum;
 
 /**
  *
@@ -62,6 +63,18 @@ public class WsSubsystem {
             WsInputManager.getInstance().attachJoystickButton(button, (IObserver) this);
         } catch (ClassCastException e) {
             Logger.getLogger().debug(this.getClass().getName(), "registerForJoystickButtonNotification", "This class must implement IObserver!");
+        }
+    }
+        
+    public void registerForSensorNotification(String sensorKey)
+    {
+        try
+        {
+            WsInputManager.getInstance().getSensorInput(sensorKey).getSubject((ISubjectEnum) null).attach((IObserver) this);
+        }
+        catch(Exception e)
+        {
+            Logger.getLogger().debug(this.getClass().getName(), "registerForSensorNotification", "This class must implement IObserver!");
         }
     }
 }
