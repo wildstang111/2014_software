@@ -19,17 +19,13 @@ import com.wildstangs.autonomous.steps.drivebase.WsAutonomousStepDriveManual;
  */
 public class WsAutonomousProgramTestParallel extends WsAutonomousProgram {
 
-    public WsAutonomousProgramTestParallel() {
-        super(2);
-    }
-
     public void defineSteps() {
         WsAutonomousParallelStepGroup parallelGroup = new WsAutonomousParallelStepGroup();
             parallelGroup.addStep(new WsAutonomousStepDriveManual(WsAutonomousStepDriveManual.KEEP_PREVIOUS_STATE, 1.0));
             parallelGroup.addStep(new WsAutonomousStepDelay(250));
             parallelGroup.addStep(new WsAutonomousStepDriveManual(1.0, WsAutonomousStepDriveManual.KEEP_PREVIOUS_STATE));
-        programSteps[0] = parallelGroup;
-        programSteps[1] = new WsAutonomousStepDriveManual(0.0, 0.0);
+        addStep(parallelGroup);
+        addStep(new WsAutonomousStepDriveManual(0.0, 0.0));
 
     }
 

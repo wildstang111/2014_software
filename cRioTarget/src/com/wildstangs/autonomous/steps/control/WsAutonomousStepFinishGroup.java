@@ -25,23 +25,29 @@ public class WsAutonomousStepFinishGroup extends WsAutonomousStep {
     public void update() {
         boolean bottomOfTree = false;
         WsAutonomousSerialStepGroup group = null;
-        IStepContainer container = WsAutonomousManager.getInstance().getRunningProgram();
-        while (!bottomOfTree) {
-            WsAutonomousStep currStep = container.getCurrentStep();
-            if (currStep instanceof WsAutonomousSerialStepGroup) {
-                group = (WsAutonomousSerialStepGroup) currStep;
-                container = group;
-            } else {
-                bottomOfTree = true;
+        WsAutonomousStep currentStep = WsAutonomousManager.getInstance().getRunningProgram().getCurrentStep();
+        if (currentStep instanceof WsAutonomousSerialStepGroup) {
+            WsAutonomousSerialStepGroup container = (WsAutonomousSerialStepGroup) currentStep;
+            while (!bottomOfTree) {
+                WsAutonomousStep currStep = container.getCurrentStep();
+                if (currStep instanceof WsAutonomousSerialStepGroup) {
+                    group = (WsAutonomousSerialStepGroup) currStep;
+                    container = group;
+                } else {
+                    bottomOfTree = true;
+                }
             }
-        }
-        if (group == null) {
+            if (group == null) {
+
+            } else {
+                group.finishGroup();
+            }
+        } else {
             errorInfo = "This step must be run inside a step group";
             finished = true;
             pass = false;
-        } else {
-            group.finishGroup();
         }
+
     }
 
 //    public boolean equals(Object o)

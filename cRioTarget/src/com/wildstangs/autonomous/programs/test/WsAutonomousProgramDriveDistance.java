@@ -23,14 +23,13 @@ public class WsAutonomousProgramDriveDistance extends WsAutonomousProgram {
     private DoubleConfigFileParameter distance;
 
     public WsAutonomousProgramDriveDistance() {
-        super(3);
         distance = new DoubleConfigFileParameter(this.getClass().getName(), "distance", 10.0);
     }
 
     public void defineSteps() {
-        programSteps[0] = new WsAutonomousStepEnableDriveDistancePid();
-        programSteps[1] = new WsAutonomousStepSetDriveDistancePidSetpoint(distance.getValue());
-        programSteps[2] = new WsAutonomousStepWaitForDriveDistancePid();
+        addStep(new WsAutonomousStepEnableDriveDistancePid());
+        addStep(new WsAutonomousStepSetDriveDistancePidSetpoint(distance.getValue()));
+        addStep(new WsAutonomousStepWaitForDriveDistancePid());
     }
 
     public String toString() {

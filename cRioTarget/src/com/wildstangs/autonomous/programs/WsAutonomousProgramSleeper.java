@@ -17,12 +17,8 @@ import com.wildstangs.autonomous.steps.control.WsAutonomousStepStopAutonomous;
  */
 public class WsAutonomousProgramSleeper extends WsAutonomousProgram {
 
-    public WsAutonomousProgramSleeper() {
-        super(1);
-    }
-
     public void defineSteps() {
-        programSteps[0] = new WsAutonomousStepStopAutonomous();
+        addStep(new WsAutonomousStepStopAutonomous());
     }
 
     public String toString() {

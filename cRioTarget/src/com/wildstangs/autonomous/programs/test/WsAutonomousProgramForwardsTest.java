@@ -18,14 +18,10 @@ import com.wildstangs.autonomous.steps.drivebase.WsAutonomousStepDriveManual;
  */
 public class WsAutonomousProgramForwardsTest extends WsAutonomousProgram {
 
-    public WsAutonomousProgramForwardsTest() {
-        super(3);
-    }
-
     public void defineSteps() {
-        programSteps[0] = new WsAutonomousStepDriveManual(1.0, 0.0);
-        programSteps[1] = new WsAutonomousStepDelay(500);
-        programSteps[2] = new WsAutonomousStepDriveManual(0.0, 0.0);
+        addStep(new WsAutonomousStepDriveManual(1.0, 0.0));
+        addStep(new WsAutonomousStepDelay(500));
+        addStep(new WsAutonomousStepDriveManual(0.0, 0.0));
     }
 
     public String toString() {

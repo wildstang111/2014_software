@@ -16,7 +16,6 @@ public class WsAutonomousStepMultikick extends WsAutonomousSerialStepGroup {
     private int numFrisbees;
 
     public WsAutonomousStepMultikick(int numFrisbees) {
-        super(numFrisbees + (numFrisbees - 1));
         this.numFrisbees = numFrisbees;
         defineSteps();
     }
@@ -24,9 +23,9 @@ public class WsAutonomousStepMultikick extends WsAutonomousSerialStepGroup {
     public void defineSteps() {
         for (int i = 0; i < getNumSteps(numFrisbees); i++) {
             if (i % 2 == 0) {
-                steps[i] = new WsAutonomousStepKick();
+                addStep(new WsAutonomousStepKick());
             } else {
-                steps[i] = new WsAutonomousStepWaitForShooter();
+                addStep(new WsAutonomousStepWaitForShooter());
             }
         }
     }

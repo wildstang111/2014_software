@@ -16,18 +16,17 @@ public class WsAutonomousStepGroupIntakeTwoFrisbees extends WsAutonomousSerialSt
     int delay;
 
     public WsAutonomousStepGroupIntakeTwoFrisbees(int delay) {
-        super(6);
         this.delay = delay;
         this.defineSteps();
     }
 
     public void defineSteps() {
-        steps[0] = new WsAutonomousStepIntakeMotorPullFrisbeesIn();
-        steps[1] = new WsAutonomousStepDelay(delay);
-        steps[2] = new WsAutonomousStepOverrideFunnelatorButtonOn();
-        steps[3] = new WsAutonomousStepDelay(delay);
-        steps[4] = new WsAutonomousStepOverrideFunnelatorButtonOff();
-        steps[5] = new WsAutonomousStepIntakeMotorStop();
+        addStep(new WsAutonomousStepIntakeMotorPullFrisbeesIn());
+        addStep(new WsAutonomousStepDelay(delay));
+        addStep(new WsAutonomousStepOverrideFunnelatorButtonOn());
+        addStep(new WsAutonomousStepDelay(delay));
+        addStep(new WsAutonomousStepOverrideFunnelatorButtonOff());
+        addStep(new WsAutonomousStepIntakeMotorStop());
 
     }
 
