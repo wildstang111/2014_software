@@ -143,6 +143,6 @@ public abstract class WsAutonomousProgram implements IStepContainer {
     protected void addStep(WsAutonomousStep newStep) {
         programSteps.add(newStep);
     }
-    
+
     public abstract String toString();
 }

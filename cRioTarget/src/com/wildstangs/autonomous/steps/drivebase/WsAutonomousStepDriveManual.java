@@ -35,22 +35,6 @@ public class WsAutonomousStepDriveManual extends WsAutonomousStep {
     public void update() {
     }
 
-//    public int hashCode()
-//    {
-//        int hash = 5;
-//        hash = 67 * hash + (int) (Double.doubleToLongBits(this.value) ^ (Double.doubleToLongBits(this.value) >>> 32));
-//        return hash;
-//    }
-//
-//    public boolean equals(Object o)
-//    {
-//        if (o instanceof WsAutonomousStepSetThrottle)
-//        {
-//            WsAutonomousStepSetThrottle obj = (WsAutonomousStepSetThrottle)o;
-//            return obj.value == this.value;
-//        }
-//        return false;
-//    }
     public String toString() {
         return "Set throttle to " + throttle + " and heading to " + heading;
     }

@@ -46,23 +46,4 @@ public class WsAutonomousStepDelay extends WsAutonomousStep /* This step delays 
     public String toString() {
         return "Delay for " + msDelay + "  ms";
     }
-//    public int hashCode()
-//    {
-//        int hash = 5;
-//        hash = 53 * hash + this.originalCount;
-//        return hash;
-//    }
-//
-//    public boolean equals(Object o)
-//    {
-//        if (o instanceof WsAutonomousStepDelay)
-//        {
-//            WsAutonomousStepDelay step = (WsAutonomousStepDelay) o;
-//            if (step.originalCount == this.originalCount)
-//            {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 }
