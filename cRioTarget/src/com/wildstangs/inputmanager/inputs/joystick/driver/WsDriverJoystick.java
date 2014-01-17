@@ -101,7 +101,7 @@ public class WsDriverJoystick implements IInput {
         if (driverJoystick instanceof IHardwareJoystick) {
             ((IHardwareJoystick) driverJoystick).pullData();
         }
-        throttle.setValue(driverJoystick.getY());
+        throttle.setValue(driverJoystick.getY() * -1);
         heading.setValue(driverJoystick.getZ());
         dPadUpDown.setValue(driverJoystick.getThrottle() * -1);
         for (int i = 0; i < buttons.length; i++) {

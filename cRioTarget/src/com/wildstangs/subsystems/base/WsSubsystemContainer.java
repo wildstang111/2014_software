@@ -4,6 +4,7 @@ import com.wildstangs.types.DataElement;
 import edu.wpi.first.wpilibj.networktables2.util.List;
 import com.wildstangs.subsystems.WsCompressor;
 import com.wildstangs.subsystems.WsDriveBase;
+import com.wildstangs.subsystems.WsLED;
 
 /**
  *
@@ -89,7 +90,7 @@ public class WsSubsystemContainer {
 //        subsystem.add(new DataElement(WS_HOPPER, new WsHopper(WS_HOPPER)));
 //        subsystem.add(new DataElement(WS_LOADING_RAMP, new WsLoadingRamp(WS_LOADING_RAMP)));
 //        subsystem.add(new DataElement(WS_CLIMBER, new WsClimber(WS_CLIMBER)));
-//        subsystem.add(new DataElement(WS_LED, new WsLED(WS_LED)));
+        subsystem.add(new DataElement(WS_LED, new WsLED(WS_LED)));
 //        subsystem.add(new DataElement(WS_LIGHT_CANNON, new WsLightCannon(WS_LIGHT_CANNON)));
 //        subsystem.add(new DataElement(WS_TURRET, new WsTurret(WS_TURRET)));
     }

@@ -480,11 +480,12 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
         double leftMotorSpeed = 0;
         double angularPower = 0.0;
         if (Math.abs(driveBaseHeadingValue) > 0.05) {
-            angularPower = Math.abs(driveBaseThrottleValue) * driveBaseHeadingValue * HEADING_SENSITIVITY;
+            //Absolute value on driveBaseThrottleValue, creates a S curve, none is banana
+            angularPower = driveBaseThrottleValue * driveBaseHeadingValue * HEADING_SENSITIVITY;
         }
 
-        rightMotorSpeed = driveBaseThrottleValue + angularPower;
-        leftMotorSpeed = driveBaseThrottleValue - angularPower;
+        rightMotorSpeed = driveBaseThrottleValue - angularPower;
+        leftMotorSpeed = driveBaseThrottleValue + angularPower;
 
         if (true == quickTurnFlag) {
             rightMotorSpeed = 0.0f;
