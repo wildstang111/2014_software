@@ -18,7 +18,7 @@ public class WsDriveBaseSpeedPidInput implements IPidInput {
     public double pidRead() {
         double /*left_encoder_value,*/ right_encoder_value, final_encoder_value;
         //left_encoder_value = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).getLeftDistance();
-        double currentVelocity = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).getVelocity();
+        double currentVelocity = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).getVelocity();
         return currentVelocity;
     }
 }

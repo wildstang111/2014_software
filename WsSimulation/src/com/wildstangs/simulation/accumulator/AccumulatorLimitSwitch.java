@@ -20,7 +20,7 @@ public class AccumulatorLimitSwitch {
     public void update(){
         
         //Get the solenoid value 
-        Boolean solState = ((Boolean)WsOutputManager.getInstance().getOutput(WsOutputManager.ACCUMULATOR_SOLENOID).get(null)); 
+        Boolean solState = ((Boolean)WsOutputManager.getInstance().getOutput(WsOutputManager.UNKNOWN_INDEX).get(null)); 
         
         //Forward is up
         if (false== solState){

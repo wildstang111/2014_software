@@ -25,32 +25,32 @@ public class WsAutonomousStepQuickTurn extends WsAutonomousStep {
 
     public void initialize() {
 
-        angle = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).getGyroAngle() + value;
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).setThrottleValue(0);
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).overrideHeadingValue(value < 0 ? 0.6 : -0.6);
+        angle = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).getGyroAngle() + value;
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).setThrottleValue(0);
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).overrideHeadingValue(value < 0 ? 0.6 : -0.6);
 
-        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK).set(WsJoystickAxisEnum.DRIVER_THROTTLE, new Double(0.0));
-        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK).set(WsJoystickAxisEnum.DRIVER_HEADING, new Double(value < 0 ? 0.6 : -0.6));
+        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX).set(WsJoystickAxisEnum.DRIVER_THROTTLE, new Double(0.0));
+        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX).set(WsJoystickAxisEnum.DRIVER_HEADING, new Double(value < 0 ? 0.6 : -0.6));
 
     }
 
     public void update() {
         if (shouldFinish) {
             finished = true;
-            ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).overrideHeadingValue(0.0);
+            ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).overrideHeadingValue(0.0);
             return;
         }
-        double gyroAngle = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).getGyroAngle();
+        double gyroAngle = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).getGyroAngle();
         if (value < 0) {
             if (angle > gyroAngle) {
-                ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).overrideHeadingValue(0.0);
-                WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK).set(WsJoystickAxisEnum.DRIVER_HEADING, new Double(0.0));
+                ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).overrideHeadingValue(0.0);
+                WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX).set(WsJoystickAxisEnum.DRIVER_HEADING, new Double(0.0));
                 shouldFinish = true;
             }
         } else {
             if (angle < gyroAngle) {
-                ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).overrideHeadingValue(0.0);
-                WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK).set(WsJoystickAxisEnum.DRIVER_HEADING, new Double(0.0));
+                ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).overrideHeadingValue(0.0);
+                WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX).set(WsJoystickAxisEnum.DRIVER_HEADING, new Double(0.0));
                 shouldFinish = true;
             }
         }

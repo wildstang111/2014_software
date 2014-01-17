@@ -21,6 +21,6 @@ public class WsDriveBaseSpeedPidOutput implements IPidOutput {
     }
 
     public void pidWrite(double output) {
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).setPidSpeedValue(output);
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).setPidSpeedValue(output);
     }
 }

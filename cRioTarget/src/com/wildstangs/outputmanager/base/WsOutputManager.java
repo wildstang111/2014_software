@@ -1,19 +1,11 @@
 package com.wildstangs.outputmanager.base;
 
-import com.wildstangs.config.BooleanConfigFileParameter;
+import com.wildstangs.list.WsList;
 import com.wildstangs.outputmanager.outputs.WsDoubleSolenoid;
 import com.wildstangs.outputmanager.outputs.WsDriveSpeed;
 import com.wildstangs.outputmanager.outputs.WsRelay;
-import com.wildstangs.outputmanager.outputs.WsServo;
-import com.wildstangs.outputmanager.outputs.WsSolenoid;
-import com.wildstangs.outputmanager.outputs.WsVictor;
-import com.wildstangs.outputmanager.outputs.no.NoDoubleSolenoid;
-import com.wildstangs.outputmanager.outputs.no.NoServo;
-import com.wildstangs.outputmanager.outputs.no.NoSolenoid;
-import com.wildstangs.outputmanager.outputs.no.NoVictor;
-import com.wildstangs.types.DataElement;
+import com.wildstangs.outputmanager.outputs.no.NoOutput;
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
  *
@@ -22,7 +14,7 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
 public class WsOutputManager {
 
     private static WsOutputManager instance = null;
-    private static List outputs = new List();
+    private static WsList outputs = new WsList(10);
 
     /**
      * Method to obtain the instance of the WsOutputManager singleton.
@@ -44,7 +36,8 @@ public class WsOutputManager {
 
     public void update() {
         for (int i = 0; i < outputs.size(); i++) {
-            ((IOutput) (((DataElement) outputs.get(i)).getValue())).update();
+            IOutput out = (IOutput) outputs.get(i);
+            if(out != null) out.update();
         }
     }
 
@@ -54,7 +47,8 @@ public class WsOutputManager {
      */
     public void notifyConfigChange() {
         for (int i = 0; i < outputs.size(); i++) {
-            ((IOutput) (((DataElement) outputs.get(i)).getValue())).notifyConfigChange();
+            IOutput out = (IOutput) outputs.get(i);
+            if(out != null) out.notifyConfigChange();
         }
     }
 
@@ -65,13 +59,12 @@ public class WsOutputManager {
      *
      * @return The output element.
      */
-    public IOutput getOutput(String key) {
-        for (int i = 0; i < outputs.size(); i++) {
-            if ((((DataElement) outputs.get(i)).getKey()).equals(key)) {
-                return (IOutput) (((DataElement) outputs.get(i)).getValue());
-            }
+    public IOutput getOutput(int index) {
+        if(index >= 0 && index < outputs.size())
+        {
+            return (IOutput) outputs.get(index);
         }
-        return (IOutput) null;
+        return (IOutput) outputs.get(UNKNOWN_INDEX);
     }
     //Key Values - Need to update for each new output element.
     public static final String RIGHT_DRIVE_SPEED = "RightDriveSpeed";
@@ -92,6 +85,12 @@ public class WsOutputManager {
     public static final String TOMAHAWK_SERVO = "TomahawkServo";
     public static final String LIGHT_CANNON_RELAY = "LightCannonRelay";
     public static final String TURRET = "Turret";
+    
+    public static final int UNKNOWN_INDEX = 0;
+    public static final int RIGHT_DRIVE_SPEED_INDEX = 1;
+    public static final int LEFT_DRIVE_SPEED_INDEX = 2;
+    public static final int SHIFTER_INDEX = 3;
+    public static final int LIGHT_CANNON_RELAY_INDEX = 4;
     /**
      * Constructor for WsOutputManager.
      *
@@ -100,52 +99,10 @@ public class WsOutputManager {
      */
     protected WsOutputManager() {
         //Add the facade data elements
-        outputs.add(new DataElement(RIGHT_DRIVE_SPEED, new WsDriveSpeed(RIGHT_DRIVE_SPEED, 1, 2)));
-        outputs.add(new DataElement(LEFT_DRIVE_SPEED, new WsDriveSpeed(LEFT_DRIVE_SPEED, 3, 4)));
-        BooleanConfigFileParameter outputsFor2012 = new BooleanConfigFileParameter(this.getClass().getName(), "2012_Robot", false);
-        if (outputsFor2012.getValue()) {
-            //Shifter is actually a single solenoid on 4 but 2 is unused for faking it as a double
-            outputs.add(new DataElement(SHIFTER, new WsDoubleSolenoid(SHIFTER, 1, 2, 4)));
-            
-
-            //This goes to the ball staging upper solenoid to allow shooting
-            outputs.add(new DataElement(KICKER, new WsSolenoid(KICKER, 1, 5)));
-            outputs.add(new DataElement(SHOOTER_ANGLE, new WsDoubleSolenoid(SHOOTER_ANGLE, 1, 8, 3)));
-            outputs.add(new DataElement(FUNNELATOR_ROLLER, new WsDriveSpeed(FUNNELATOR_ROLLER, 7,8)));
-            
-            outputs.add(new DataElement(SHOOTER_VICTOR_ENTER, new WsVictor(SHOOTER_VICTOR_ENTER, 5)));
-            outputs.add(new DataElement(TURRET, new WsVictor(TURRET, 9)));
-            
-            //Unused
-            outputs.add(new DataElement(SHOOTER_VICTOR_EXIT, new NoVictor(SHOOTER_VICTOR_EXIT, 10)));
-            outputs.add(new DataElement(ACCUMULATOR_VICTOR, new NoVictor(ACCUMULATOR_VICTOR, 6)));
-            outputs.add(new DataElement(LOADING_RAMP, new NoServo(LOADING_RAMP, 6)));
-            outputs.add(new DataElement(CLIMBER, new NoSolenoid(CLIMBER, 2, 1)));
-            outputs.add(new DataElement(FRISBIE_CONTROL, new NoSolenoid(FRISBIE_CONTROL, 1, 5)));
-            outputs.add(new DataElement(ACCUMULATOR_SOLENOID, new NoSolenoid(ACCUMULATOR_SOLENOID, 2, 7)));
-            outputs.add(new DataElement(LIFT, new NoDoubleSolenoid(LIFT, 2, 3, 4)));
-            outputs.add(new DataElement(ACCUMULATOR_SECONDARY_SOLENOID, new NoSolenoid(ACCUMULATOR_SECONDARY_SOLENOID, 1, 5)));
-            outputs.add(new DataElement(TOMAHAWK_SERVO, new NoServo(TOMAHAWK_SERVO, 8)));
-
-
-        } else {
-            outputs.add(new DataElement(KICKER, new WsSolenoid(KICKER, 1, 1)));
-            outputs.add(new DataElement(ACCUMULATOR_SOLENOID, new WsSolenoid(ACCUMULATOR_SOLENOID, 1, 2)));
-            outputs.add(new DataElement(ACCUMULATOR_SECONDARY_SOLENOID, new WsSolenoid(ACCUMULATOR_SECONDARY_SOLENOID, 1, 5)));
-            outputs.add(new DataElement(FRISBIE_CONTROL, new WsSolenoid(FRISBIE_CONTROL, 1, 3)));
-            outputs.add(new DataElement(CLIMBER, new WsSolenoid(CLIMBER, 1, 4)));
-            outputs.add(new DataElement(SHIFTER, new WsDoubleSolenoid(SHIFTER, 2, 1, 2)));
-            //put the frisbee holder above the lift, so it updates first.
-            outputs.add(new DataElement(TOMAHAWK_SERVO, new WsServo(TOMAHAWK_SERVO, 8)));
-            outputs.add(new DataElement(LIFT, new WsDoubleSolenoid(LIFT, 2, 3, 4)));
-            outputs.add(new DataElement(SHOOTER_ANGLE, new WsDoubleSolenoid(SHOOTER_ANGLE, 2, 5, 6)));
-            outputs.add(new DataElement(SHOOTER_VICTOR_EXIT, new WsVictor(SHOOTER_VICTOR_EXIT, 6)));
-            outputs.add(new DataElement(LOADING_RAMP, new WsServo(LOADING_RAMP, 7)));
-            outputs.add(new DataElement(FUNNELATOR_ROLLER, new WsVictor(FUNNELATOR_ROLLER, 10)));
-            outputs.add(new DataElement(SHOOTER_VICTOR_ENTER, new WsVictor(SHOOTER_VICTOR_ENTER, 5)));
-            outputs.add(new DataElement(ACCUMULATOR_VICTOR, new WsVictor(ACCUMULATOR_VICTOR, 9)));
-            outputs.add(new DataElement(TURRET, new NoVictor(TURRET, 9)));
-        }
-        outputs.add(new DataElement(LIGHT_CANNON_RELAY, new WsRelay(1, 2, Relay.Direction.kForward)));
+        outputs.addToIndex(UNKNOWN_INDEX, new NoOutput());
+        outputs.addToIndex(RIGHT_DRIVE_SPEED_INDEX, new WsDriveSpeed(RIGHT_DRIVE_SPEED, 1, 2));
+        outputs.addToIndex(LEFT_DRIVE_SPEED_INDEX, new WsDriveSpeed(LEFT_DRIVE_SPEED, 3, 4));
+        outputs.addToIndex(SHIFTER_INDEX, new WsDoubleSolenoid(SHIFTER, 2, 1, 2));
+        outputs.addToIndex(LIGHT_CANNON_RELAY_INDEX, new WsRelay(1, 2, Relay.Direction.kForward));
     }
 }

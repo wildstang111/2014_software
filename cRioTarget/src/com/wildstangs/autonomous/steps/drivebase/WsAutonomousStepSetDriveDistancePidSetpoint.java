@@ -21,7 +21,7 @@ public class WsAutonomousStepSetDriveDistancePidSetpoint extends WsAutonomousSte
     }
 
     public void initialize() {
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).setDriveDistancePidSetpoint(value);
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).setDriveDistancePidSetpoint(value);
         finished = true;
     }
 

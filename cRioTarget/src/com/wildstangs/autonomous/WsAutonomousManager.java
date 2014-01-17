@@ -4,7 +4,7 @@
  */
 package com.wildstangs.autonomous;
 
-import com.wildstangs.autonomous.programs.*;
+import com.wildstangs.autonomous.programs.WsAutonomousProgramSleeper;
 import com.wildstangs.autonomous.programs.test.*;
 import com.wildstangs.inputmanager.base.WsInputManager;
 import com.wildstangs.logger.Logger;
@@ -27,9 +27,9 @@ public class WsAutonomousManager implements IObserver {
 
     private WsAutonomousManager() {
         definePrograms();
-        WsInputManager.getInstance().getOiInput(WsInputManager.AUTO_PROGRAM_SELECTOR).getSubject((ISubjectEnum) null).attach(this);
-        WsInputManager.getInstance().getOiInput(WsInputManager.LOCK_IN_SWITCH).getSubject((ISubjectEnum) null).attach(this);
-        WsInputManager.getInstance().getOiInput(WsInputManager.START_POSITION_SELECTOR).getSubject((ISubjectEnum) null).attach(this);
+        WsInputManager.getInstance().getOiInput(WsInputManager.AUTO_PROGRAM_SELECTOR_INDEX).getSubject((ISubjectEnum) null).attach(this);
+        WsInputManager.getInstance().getOiInput(WsInputManager.LOCK_IN_SWITCH_INDEX).getSubject((ISubjectEnum) null).attach(this);
+        WsInputManager.getInstance().getOiInput(WsInputManager.START_POSITION_SELECTOR_INDEX).getSubject((ISubjectEnum) null).attach(this);
         selectorSwitch = 0;
         lockInSwitch = false;
         positionSwitch = 0;
@@ -97,7 +97,7 @@ public class WsAutonomousManager implements IObserver {
 
     public void acceptNotification(Subject cause) {
         if (cause instanceof DoubleSubject) {
-            if (cause == WsInputManager.getInstance().getOiInput(WsInputManager.START_POSITION_SELECTOR)
+            if (cause == WsInputManager.getInstance().getOiInput(WsInputManager.START_POSITION_SELECTOR_INDEX)
                     .getSubject((ISubjectEnum) null)) {
                 positionSwitch = (float) ((DoubleSubject) cause).getValue();
                 if (positionSwitch >= 3.3) {
@@ -108,7 +108,7 @@ public class WsAutonomousManager implements IObserver {
                 }
                 currentPosition = WsAutonomousStartPositionEnum.getEnumFromValue((int) (Math.floor((positionSwitch / 3.4) * WsAutonomousStartPositionEnum.POSITION_COUNT)));
                 SmartDashboard.putString("Current Start Position", currentPosition.toString());
-            } else if (cause == WsInputManager.getInstance().getOiInput(WsInputManager.AUTO_PROGRAM_SELECTOR)
+            } else if (cause == WsInputManager.getInstance().getOiInput(WsInputManager.AUTO_PROGRAM_SELECTOR_INDEX)
                     .getSubject((ISubjectEnum) null)) {
                 selectorSwitch = (float) ((DoubleSubject) cause).getValue();
                 if (selectorSwitch >= 3.3) {
@@ -150,21 +150,9 @@ public class WsAutonomousManager implements IObserver {
     }
 
     private void definePrograms() {
-        programs = new WsAutonomousProgram[15];
+        programs = new WsAutonomousProgram[3];
         programs[0] = new WsAutonomousProgramSleeper(); //Always leave Sleeper as 0. Other parts of the code assume 0 is Sleeper.
-        programs[1] = new WsAutonomousProgramShootFive();
-        programs[2] = new WsAutonomousProgramShootFiveFeederStation();
-        programs[3] = new WsAutonomousProgramShootFiveUnprotectedFeederStation();
-        programs[4] = new WsAutonomousProgramShootFiveFromMiddleLine(); 
-        programs[5] = new WsAutonomousProgramShootThree();
-        programs[6] = new WsAutonomousProgramShootSevenSensor();
-        programs[7] = new WsAutonomousProgramDriveDistanceMotionProfile();
-        programs[8] = new WsAutonomousProgramDrivePatterns();
-        programs[9] = new WsAutonomousProgramShootSevenDriveAfterOne();
-        programs[10] = new WsAutonomousProgramShootSevenActiveAccumulator();
-        programs[11] = new WsAutonomousProgramShootFiveFallback();
-        programs[12] = new WsAutonomousProgramTestShootSevenDrive();
-        programs[13] = new WsAutonomousProgramTestShootSevenDriveComplete();
-        programs[14] = new WsAutonomousProgramTestShootSevenIntake();
+        programs[1] = new WsAutonomousProgramDriveDistanceMotionProfile();
+        programs[2] = new WsAutonomousProgramDrivePatterns();
     }
 }

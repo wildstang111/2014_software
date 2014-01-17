@@ -21,6 +21,6 @@ public class WsDriveBaseDistancePidOutput implements IPidOutput {
     }
 
     public void pidWrite(double output) {
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).setPidThrottleValue(output);
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).setPidThrottleValue(output);
     }
 }

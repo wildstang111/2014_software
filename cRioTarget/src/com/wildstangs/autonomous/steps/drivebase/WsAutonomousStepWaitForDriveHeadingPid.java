@@ -22,9 +22,9 @@ public class WsAutonomousStepWaitForDriveHeadingPid extends WsAutonomousStep {
     }
 
     public void update() {
-        WsPidStateType pidState = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).getHeadingPidState();
+        WsPidStateType pidState = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).getHeadingPidState();
         if (pidState == WsPidStateType.WS_PID_STABILIZED_STATE) {
-            ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).disableHeadingPidControl();
+            ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).disableHeadingPidControl();
             finished = true;
         }
     }

@@ -66,9 +66,9 @@ public class WsSubsystem {
         }
     }
         
-    public void registerForSensorNotification(String sensorKey) {
+    public void registerForSensorNotification(int sensorIndex) {
         try {
-            WsInputManager.getInstance().getSensorInput(sensorKey).getSubject((ISubjectEnum) null).attach((IObserver) this);
+            WsInputManager.getInstance().getSensorInput(sensorIndex).getSubject((ISubjectEnum) null).attach((IObserver) this);
         } catch(Exception e) {
             Logger.getLogger().debug(this.getClass().getName(), "registerForSensorNotification", "This class must implement IObserver!");
         }
