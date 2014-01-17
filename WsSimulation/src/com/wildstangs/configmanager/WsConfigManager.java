@@ -4,8 +4,6 @@
  */
 package com.wildstangs.configmanager;
 
-
-import com.wildstangs.configmanager.WsConfigManagerException;
 import com.wildstangs.inputmanager.base.WsInputManager;
 import com.wildstangs.outputmanager.base.WsOutputManager;
 import com.wildstangs.subsystems.base.WsSubsystemContainer;
@@ -24,6 +22,7 @@ import java.util.logging.Logger;
  * @author Nathan
  */
 public class WsConfigManager {
+
     private static WsConfigManager instance = null;
     private static String configFileName = "/ws_config.txt";
     private static Hashtable config = new Hashtable();
@@ -40,18 +39,19 @@ public class WsConfigManager {
         return instance;
     }
 
-    protected WsConfigManager() {}
+    protected WsConfigManager() {
+    }
 
     /**
      * Sets the filename to parse. Overrides the default /ws_config.txt. The
      * filename will only be set if it exists and is readable.
      *
      * @param filename The new filename to use for reading.
-     * @throws WsConfigFacadeException
+     * @throws WsConfigManagerException
      */
-    public void setFileName(String filename) throws WsConfigManagerException {
-        String path = System.getProperty("user.dir"); 
-        path += filename; 
+    public void setConfigFileName(String filename) throws WsConfigManagerException {
+        String path = System.getProperty("user.dir");
+        path += filename;
         System.out.println("Path " + path);
         File testFile = new File(path);
         try {
@@ -72,8 +72,8 @@ public class WsConfigManager {
 
     /**
      * Reads the config file /ws_config.txt unless setFileName has been used to
-     * change the filename.  Supports comment lines using // delineator.
-     * Comments can be by themselves on a line or at the end of the line.
+     * change the filename. Supports comment lines using // delineator. Comments
+     * can be by themselves on a line or at the end of the line.
      *
      * The config file should be on the format key=value Example:
      * com.wildstangs.WsInputManager.WsDriverJoystick.trim=0.1
@@ -107,7 +107,7 @@ public class WsConfigManager {
                             } else {
                                 configLine = line;
                             }
-                            
+
                             st = new StringTokenizer(configLine.trim(), "=");
                             if (st.countTokens() >= 2) {
                                 key = st.nextToken();
@@ -119,7 +119,7 @@ public class WsConfigManager {
                         }
                     }
 
-                    }  catch (IOException ioe) {
+                } catch (IOException ioe) {
                     throw new WsConfigManagerException(ioe.toString());
                 }
             }
@@ -133,12 +133,12 @@ public class WsConfigManager {
                 throw new WsConfigManagerException("Error closing file.");
             }
         }
-        
+
         //Update all the facades
         WsInputManager.getInstance().notifyConfigChange();
         WsOutputManager.getInstance().notifyConfigChange();
         WsSubsystemContainer.getInstance().notifyConfigChange();
-        
+
     }
 
     /**
@@ -149,8 +149,8 @@ public class WsConfigManager {
      * @throws WsConfigFacadeException if the key cannot be found.
      */
     public String getConfigParamByName(String name) throws WsConfigManagerException {
-        String o = null;  
-        if (config.get(name) != null){ 
+        String o = null;
+        if (config.get(name) != null) {
             o = (config.get(name)).toString();
         }
         if (o == null) {
@@ -162,7 +162,7 @@ public class WsConfigManager {
     public String dumpConfigData() {
         for (Enumeration e = config.keys(); e.hasMoreElements();) {
             Object name = e.nextElement();
-            System.out.println((String)name + "=" + (String)config.get(name));
+            System.out.println((String) name + "=" + (String) config.get(name));
         }
         return null;
     }
@@ -173,7 +173,7 @@ public class WsConfigManager {
      * Example: com.wildstangs.WsInputManager.WsDriverJoystick.trim will return
      * trim.
      *
-     * @returns The config Item name or null if the string is unparsable
+     * @return The config Item name or null if the string is unparsable
      * @param configItem A String representing the config item to parse
      */
     public String getConfigItemName(String configItem) {
