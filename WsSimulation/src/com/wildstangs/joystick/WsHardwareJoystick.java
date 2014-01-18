@@ -4,13 +4,10 @@
  */
 package com.wildstangs.joystick;
 
-import com.codeminders.hidapi.ClassPathLibraryLoader;
-import com.codeminders.hidapi.HIDDevice;
-import com.codeminders.hidapi.HIDDeviceInfo;
-import com.codeminders.hidapi.HIDManager;
+import com.wildstangs.input.Controller;
+import com.wildstangs.input.Controllers;
 import com.wildstangs.inputmanager.inputs.joystick.IHardwareJoystick;
 import edu.wpi.first.wpilibj.Joystick;
-import java.util.Arrays;
 
 /**
  *
@@ -18,27 +15,31 @@ import java.util.Arrays;
  */
 public class WsHardwareJoystick implements IHardwareJoystick {
 
-    private HIDDeviceInfo hIDJoystickInfo = null; 
-    private HIDDevice hIDJoystick = null; 
-    private int startOfAxisDataIndex; 
-    private int halfByteButtonIndex; 
-    private int wholeByteButtonIndex; 
-            
-    static int[] connectedDeviceProductIDs = {0,0}; 
-    static String[] connectedDevicePaths = {"",""}; 
-    static int connectedJoysticks = 0 ; 
-    
-    private final double[] m_axis_values_from_usb;
-    private int m_button_values_from_usb; 
-    
+    int controllerIndex;
+
+    boolean[] buttonStates;
+
+    double rightJoystickY;
+
+    double rightJoystickX;
+
+    double leftJoystickY;
+
+    double leftJoystickX;
+
+    // Up is -1
+    int dPadUpDown;
+
+    // Right is -1
+    int dPadLeftRight;
+
     private final byte[] m_axes_mapping;
     private final byte[] m_buttons_mapping;
 
     public WsHardwareJoystick() {
-        m_axis_values_from_usb = new double[6];
         m_axes_mapping = new byte[6];
         m_buttons_mapping = new byte[2];
-        
+
         m_axes_mapping[AxisType.kX.value] = kDefaultXAxis;
         m_axes_mapping[AxisType.kY.value] = kDefaultYAxis;
         m_axes_mapping[AxisType.kZ.value] = kDefaultZAxis;
@@ -47,170 +48,41 @@ public class WsHardwareJoystick implements IHardwareJoystick {
 
         m_buttons_mapping[ButtonType.kTrigger.value] = kDefaultTriggerButton;
         m_buttons_mapping[ButtonType.kTop.value] = kDefaultTopButton;
-
-        
     }
-    
-    public boolean initializeJoystick(){
-        
-        //See if any joysticks are connected
-        ClassPathLibraryLoader.loadNativeHIDLibrary();
+
+    public boolean initializeJoystick() {
         try {
-            HIDDeviceInfo[] devices = HIDManager.getInstance().listDevices();
-            for (HIDDeviceInfo hIDDeviceInfo : devices) {
-                int usage = hIDDeviceInfo.getUsage(); 
-                if ((usage == 4 ) || (usage == 5)){
-                    
-                    if (connectedJoysticks !=0){
-                        System.out.println("Joystick found with productID " + hIDDeviceInfo.getProduct_id());
-                        boolean alreadyUsed = false; 
-                        for (int i = 0; i < connectedJoysticks; i++) {
-                            if (connectedDeviceProductIDs[i] == hIDDeviceInfo.getProduct_id()){
-                                if (connectedDevicePaths[i].equalsIgnoreCase(hIDDeviceInfo.getPath())){
-                                    alreadyUsed = true; 
-                                }
-                                break;
-                            }
-                        }
-                        if (alreadyUsed){ 
-                            //Use a different device
-                            hIDJoystickInfo = hIDDeviceInfo; 
-//                    System.out.println("Joystick found with usage " + usage);
-//                    System.out.println("Joystick found with device info " + hIDJoystickInfo);
-                    
-                            continue;
-                        }
-                    }
-                    hIDJoystickInfo = hIDDeviceInfo; 
-//                    System.out.println("Joystick found with usage " + usage);
-//                    System.out.println("Joystick found with device info " + hIDJoystickInfo);
-                    hIDJoystick = hIDJoystickInfo.open();
-                    hIDJoystick.disableBlocking();
-                    connectedDeviceProductIDs[connectedJoysticks] = hIDDeviceInfo.getProduct_id();
-                    connectedDevicePaths[connectedJoysticks]= hIDDeviceInfo.getPath();
-                    connectedJoysticks++; 
-                    switch (hIDJoystickInfo.getUsage()) {
-                        case 4:
-                            startOfAxisDataIndex= 0;
-                            halfByteButtonIndex = 4; 
-                            wholeByteButtonIndex = 5; 
-                            break;
-                        case 5:
-                            startOfAxisDataIndex= 2; 
-                            halfByteButtonIndex = 1; 
-                            wholeByteButtonIndex = 0; 
-                            break;
-                        default:
-                            throw new AssertionError();
-                    }
-                    
-                    break; 
+            Controllers.create();
+            for (int i = 0; i < Controllers.getControllerCount(); i++) {
+                if ((Controllers.getController(i).getName().toUpperCase().contains("Logitech".toUpperCase())
+                        || Controllers.getController(i).getName().toUpperCase().contains("Gamepad".toUpperCase()))
+                        && !Controllers.isControllerUsed(i)) {
+                    Controllers.markControllerUsed(i);
+                    controllerIndex = i;
+                    buttonStates = new boolean[Controllers.getController(i).getButtonCount()];
+                    return true;
                 }
             }
-        } catch (Exception e) {
-            hIDJoystickInfo = null; 
-            hIDJoystick = null; 
+        } catch (Exception ex) {
+            System.out.println("Controller creation failed!");
         }
-        
-        if (hIDJoystick == null){
-            return false; 
-        }else { 
-            return true; 
-        }
-        
+        return false;
+
     }
-    
-    
+
     public void pullData() {
-        //Move data from usb to variables
-        
+        Controller controller = Controllers.getController(controllerIndex);
+        controller.poll();
+        for (int i = 0; i < buttonStates.length; i++) {
+            buttonStates[i] = controller.isButtonPressed(i);
+        }
+        rightJoystickY = controller.getRZAxisValue();
+        rightJoystickX = controller.getZAxisValue();
+        leftJoystickY = controller.getYAxisValue();
+        leftJoystickX = controller.getXAxisValue();
 
-        //Get input reports
-        byte[] inbuf = new byte[8]; 
-        Arrays.fill(inbuf, (byte)0);
-        try {
-            hIDJoystick.read(inbuf);
-            
-        } catch (Exception e) {
-            System.out.println("Read didn't return ok: " + inbuf[0] + e);
-            
-        }
-        boolean dataRefreshed = false; 
-        for (int i = 0; i < inbuf.length; i++) {
-            if(inbuf[i] != 0){
-                dataRefreshed = true; 
-                break; 
-            }
-        }
-        if (dataRefreshed){ 
-            for (int i = 0; i < m_axis_values_from_usb.length; i++) {
-                m_axis_values_from_usb[i] = getJoystickValueFromUSB(inbuf[i+startOfAxisDataIndex]);
-                //Reverse the signs on the vertical axis
-                if (i%2 == 1){
-                   m_axis_values_from_usb[i] *= -1;  
-                }
-            }
-//            System.out.println("USBRead: " + Arrays.toString(inbuf) + " Axis: " + Arrays.toString(m_axis_values_from_usb)); 
-            m_button_values_from_usb = getButtonValueFromUSB(inbuf);
-//            
-//            do {                
-//                
-//            Arrays.fill(inbuf, (byte)0);
-//            try {
-//                hIDJoystick.read(inbuf);
-//
-//            } catch (Exception e) {
-//                System.out.println("Read didn't return ok: " + inbuf[0] + e);
-//
-//            }
-//            dataRefreshed = false; 
-//            for (int i = 0; i < inbuf.length; i++) {
-//                if(inbuf[i] != 0){
-//                    dataRefreshed = true; 
-//                    break; 
-//                }
-//            }
-//            } while (dataRefreshed);
-        }
-    }
-    
-    //This converts from 0 -255 unsigned scale or really weird signed 0to127 and -128to-1 
-    private double getJoystickValueFromUSB(byte signedByte){
-        double axisValue; 
-        if (signedByte >= 0 ){
-            axisValue = -1.0 + (signedByte/128.0);
-        }else {
-            axisValue = ((signedByte+128.0)/127.0);
-        }
-        return axisValue;
-    }
-    
-    //This converts from the report from USB to the ordered buttons based on usage
-    private short getButtonValueFromUSB(byte[] inbuf ){
-        short buttonValues; 
-        short topByte ; 
-        short bottomByte; 
-        switch (hIDJoystickInfo.getUsage()) {
-                        case 4:
-                            //Mapping is bottom 4 bits is in half byte and top 8 bits are in whole bit
-                            topByte = (short)((inbuf[wholeByteButtonIndex] * 0x10) & 0x0FF0);
-                            bottomByte = (short)((inbuf[halfByteButtonIndex] >>> 4) & 0x000F) ;
-                            buttonValues =  ((short)(topByte | bottomByte)) ;
-                            System.out.println(String.format("Buttons: %X %X to %02X", inbuf[halfByteButtonIndex], inbuf[wholeByteButtonIndex] , buttonValues ));
-                            break;
-                        case 5:
-                            //Mapping is top 4 bits is in half byte and bottom 8 bits are in whole bit
-                            topByte = (short)((inbuf[halfByteButtonIndex] * 0x0100) & 0x0F00);
-                            bottomByte = (short)(inbuf[wholeByteButtonIndex] & 0xFF);
-                            buttonValues =  ((short)(topByte | bottomByte)) ; 
-                            System.out.println(String.format("Buttons: %X %X to %02X", inbuf[halfByteButtonIndex], inbuf[wholeByteButtonIndex] , buttonValues ));
-                            break;
-                        default:
-                            buttonValues= 0 ; 
-                            throw new AssertionError();
-        }
-        return buttonValues; 
-    
+        dPadLeftRight = (int) controller.getPovX();
+        dPadUpDown = (int) controller.getPovY();
     }
 
     static final byte kDefaultXAxis = 1;
@@ -289,72 +161,61 @@ public class WsHardwareJoystick implements IHardwareJoystick {
         /**
          * button: num button types
          */
-        public static final ButtonType kNumButton = new ButtonType((kNumButton_val));
+        public static final ButtonType kNumButton = new ButtonType(kNumButton_val);
 
         private ButtonType(int value) {
             this.value = value;
         }
     }
-    
-    /**
-     * Construct an instance of a joystick.
-     * The joystick index is the usb port on the drivers station.
-     *
-     * @param port The port on the driver station that the joystick is plugged into.
-     */
-
 
     /**
-     * Get the X value of the joystick.
-     * This depends on the mapping of the joystick connected to the current port.
+     * Get the X value of the joystick. This depends on the mapping of the
+     * joystick connected to the current port.
      *
-     * @param hand Unused
      * @return The X value of the joystick.
      */
     public double getX() {
-        return getRawAxis(m_axes_mapping[AxisType.kX.value]);
+        return leftJoystickX;
     }
 
     /**
-     * Get the Y value of the joystick.
-     * This depends on the mapping of the joystick connected to the current port.
+     * Get the Y value of the joystick. This depends on the mapping of the
+     * joystick connected to the current port.
      *
-     * @param hand Unused
      * @return The Y value of the joystick.
      */
     public double getY() {
-        return getRawAxis(m_axes_mapping[AxisType.kY.value]);
+        return leftJoystickY;
     }
 
     /**
-     * Get the Z value of the joystick.
-     * This depends on the mapping of the joystick connected to the current port.
+     * Get the Z value of the joystick. This depends on the mapping of the
+     * joystick connected to the current port.
      *
-     * @param hand Unused
      * @return The Z value of the joystick.
      */
     public double getZ() {
-        return getRawAxis(m_axes_mapping[AxisType.kZ.value]);
+        return rightJoystickX;
     }
 
     /**
-     * Get the twist value of the current joystick.
-     * This depends on the mapping of the joystick connected to the current port.
+     * Get the twist value of the current joystick. This depends on the mapping
+     * of the joystick connected to the current port.
      *
      * @return The Twist value of the joystick.
      */
     public double getTwist() {
-        return getRawAxis(m_axes_mapping[AxisType.kTwist.value]);
+        return dPadLeftRight;
     }
 
     /**
-     * Get the throttle value of the current joystick.
-     * This depends on the mapping of the joystick connected to the current port.
+     * Get the throttle value of the current joystick. This depends on the
+     * mapping of the joystick connected to the current port.
      *
      * @return The Throttle value of the joystick.
      */
     public double getThrottle() {
-        return getRawAxis(m_axes_mapping[AxisType.kThrottle.value]);
+        return dPadUpDown;
     }
 
     /**
@@ -364,14 +225,15 @@ public class WsHardwareJoystick implements IHardwareJoystick {
      * @return The value of the axis.
      */
     public double getRawAxis(final int axis) {
-        return m_axis_values_from_usb[axis-1]; 
+        return 0;
     }
 
     /**
      * For the current joystick, return the axis determined by the argument.
      *
-     * This is for cases where the joystick axis is returned programatically, otherwise one of the
-     * previous functions would be preferable (for example getX()).
+     * This is for cases where the joystick axis is returned programatically,
+     * otherwise one of the previous functions would be preferable (for example
+     * getX()).
      *
      * @param axis The axis to read.
      * @return The value of the axis.
@@ -398,7 +260,6 @@ public class WsHardwareJoystick implements IHardwareJoystick {
      *
      * Look up which button has been assigned to the trigger and read its state.
      *
-     * @param hand This parameter is ignored for the Joystick class and is only here to complete the GenericHID interface.
      * @return The state of the trigger.
      */
     public boolean getTrigger() {
@@ -410,7 +271,6 @@ public class WsHardwareJoystick implements IHardwareJoystick {
      *
      * Look up which button has been assigned to the top and read its state.
      *
-     * @param hand This parameter is ignored for the Joystick class and is only here to complete the GenericHID interface.
      * @return The state of the top button.
      */
     public boolean getTop() {
@@ -418,10 +278,9 @@ public class WsHardwareJoystick implements IHardwareJoystick {
     }
 
     /**
-     * This is not supported for the Joystick.
-     * This method is only here to complete the GenericHID interface.
+     * This is not supported for the Joystick. This method is only here to
+     * complete the GenericHID interface.
      *
-     * @param hand This parameter is ignored for the Joystick class and is only here to complete the GenericHID interface.
      * @return The state of the bumper (always false)
      */
     public boolean getBumper() {
@@ -431,14 +290,15 @@ public class WsHardwareJoystick implements IHardwareJoystick {
     /**
      * Get the button value for buttons 1 through 12.
      *
-     * The buttons are returned in a single 16 bit value with one bit representing the state
-     * of each button. The appropriate button is returned as a boolean value.
+     * The buttons are returned in a single 16 bit value with one bit
+     * representing the state of each button. The appropriate button is returned
+     * as a boolean value.
      *
      * @param button The button number to be read.
      * @return The state of the button.
      */
     public boolean getRawButton(final int button) {
-        return ((0x1 << (button - 1)) & m_button_values_from_usb) != 0;
+        return buttonStates[button - 1];
     }
 
     /**
@@ -471,8 +331,8 @@ public class WsHardwareJoystick implements IHardwareJoystick {
     }
 
     /**
-     * Get the direction of the vector formed by the joystick and its origin
-     * in radians
+     * Get the direction of the vector formed by the joystick and its origin in
+     * radians
      *
      * @return The direction of the vector in radians
      */
@@ -481,8 +341,8 @@ public class WsHardwareJoystick implements IHardwareJoystick {
     }
 
     /**
-     * Get the direction of the vector formed by the joystick and its origin
-     * in degrees
+     * Get the direction of the vector formed by the joystick and its origin in
+     * degrees
      *
      * uses acos(-1) to represent Pi due to absence of readily accessable Pi
      * constant in C++
@@ -512,6 +372,5 @@ public class WsHardwareJoystick implements IHardwareJoystick {
     public void setAxisChannel(Joystick.AxisType axis, int channel) {
         m_axes_mapping[axis.value] = (byte) channel;
     }
-    
-    
+
 }
