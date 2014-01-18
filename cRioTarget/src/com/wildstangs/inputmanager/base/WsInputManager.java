@@ -1,18 +1,15 @@
 package com.wildstangs.inputmanager.base;
 
-import com.wildstangs.config.BooleanConfigFileParameter;
-import com.wildstangs.inputmanager.inputs.WsDigitalInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSAnalogInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSDigitalInput;
 import com.wildstangs.inputmanager.inputs.joystick.driver.WsDriverJoystick;
 import com.wildstangs.inputmanager.inputs.joystick.WsJoystickButtonEnum;
 import com.wildstangs.inputmanager.inputs.joystick.manipulator.WsManipulatorJoystick;
+import com.wildstangs.inputmanager.inputs.no.NoInput;
+import com.wildstangs.list.WsList;
 import com.wildstangs.logger.Logger;
-import com.wildstangs.outputmanager.base.WsOutputManager;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
-import com.wildstangs.types.DataElement;
-import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
  *
@@ -21,8 +18,8 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
 public class WsInputManager {
 
     private static WsInputManager instance = null;
-    private static List oiInputs = new List();
-    private static List sensorInputs = new List();
+    private static WsList oiInputs = new WsList(10);
+    private static WsList sensorInputs = new WsList(10);
 
     /**
      * Method to get the instance of this singleton object.
@@ -45,7 +42,8 @@ public class WsInputManager {
     public void updateSensorData() {
         IInput sIn;
         for (int i = 0; i < sensorInputs.size(); i++) {
-            sIn = (IInput) (((DataElement) sensorInputs.get(i)).getValue());
+            sIn = (IInput) sensorInputs.get(i);
+            if(sIn == null) continue;
             sIn.pullData();
             sIn.update();
         }
@@ -57,7 +55,8 @@ public class WsInputManager {
     public void updateOiData() {
         IInput oiIn;
         for (int i = 0; i < oiInputs.size(); i++) {
-            oiIn = (IInput) (((DataElement) oiInputs.get(i)).getValue());
+            oiIn = (IInput) oiInputs.get(i);
+            if(oiIn == null) continue;
             oiIn.pullData();
             oiIn.update();
         }
@@ -66,7 +65,8 @@ public class WsInputManager {
     public void updateOiDataAutonomous() {
         IInput oiIn;
         for (int i = 0; i < oiInputs.size(); i++) {
-            oiIn = (IInput) (((DataElement) oiInputs.get(i)).getValue());
+            oiIn = (IInput) oiInputs.get(i);
+            if(oiIn == null) continue;
             if (!(oiIn instanceof WsDriverJoystick || oiIn instanceof WsManipulatorJoystick)) {
                 oiIn.pullData();
             }
@@ -81,10 +81,12 @@ public class WsInputManager {
      */
     public void notifyConfigChange() {
         for (int i = 0; i < sensorInputs.size(); i++) {
-            ((IInput) (((DataElement) sensorInputs.get(i)).getValue())).notifyConfigChange();
+            IInput sIn = (IInput) sensorInputs.get(i);
+            if(sIn != null) sIn.notifyConfigChange();
         }
         for (int i = 0; i < oiInputs.size(); i++) {
-            ((IInput) (((DataElement) oiInputs.get(i)).getValue())).notifyConfigChange();
+            IInput oiIn = (IInput) oiInputs.get(i);
+            if(oiIn != null) oiIn.notifyConfigChange();
         }
     }
 
@@ -94,13 +96,12 @@ public class WsInputManager {
      * @param key The key that represents the OI input container
      * @return A WsInputInterface.
      */
-    public IInput getOiInput(String key) {
-        for (int i = 0; i < oiInputs.size(); i++) {
-            if ((((DataElement) oiInputs.get(i)).getKey()).equals(key)) {
-                return (IInput) (((DataElement) oiInputs.get(i)).getValue());
-            }
+    public IInput getOiInput(int index) {
+        if(index >= 0 && index < oiInputs.size())
+        {
+            return (IInput) oiInputs.get(index);
         }
-        return (IInput) null;
+        return (IInput) oiInputs.get(UNKNOWN_INDEX);
     }
 
     /**
@@ -109,19 +110,18 @@ public class WsInputManager {
      * @param key The key that represents the sensor input container
      * @return A WsInputInterface.
      */
-    public IInput getSensorInput(String key) {
-        for (int i = 0; i < sensorInputs.size(); i++) {
-            if ((((DataElement) sensorInputs.get(i)).getKey()).equals(key)) {
-                return (IInput) (((DataElement) sensorInputs.get(i)).getValue());
-            }
+    public IInput getSensorInput(int index) {
+        if(index >= 0 || index < sensorInputs.size())
+        {
+            return (IInput) sensorInputs.get(index);
         }
-        return (IInput) null;
+        return (IInput) sensorInputs.get(UNKNOWN_INDEX);
     }
     
     final public void attachJoystickButton(IInputEnum button, IObserver observer ) {
         if (button instanceof WsJoystickButtonEnum)
         {
-            Subject subject = WsInputManager.getInstance().getOiInput(((WsJoystickButtonEnum) button).isDriver() ? WsInputManager.DRIVER_JOYSTICK : WsInputManager.MANIPULATOR_JOYSTICK).getSubject(button);
+            Subject subject = WsInputManager.getInstance().getOiInput(((WsJoystickButtonEnum) button).isDriver() ? WsInputManager.DRIVER_JOYSTICK_INDEX : WsInputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(button);
             subject.attach(observer);
         }
         else {
@@ -131,20 +131,12 @@ public class WsInputManager {
     /**
      * Keys to represent Inputs
      */
-    public static final String DRIVER_JOYSTICK = "DriverJoystick";
-    public static final String MANIPULATOR_JOYSTICK = "ManipulatorJoystick";
-    public static final String ENTER_WHEEL_SHOOTER_SPEED_INPUT = "EnterWheelShooterSpeedInput";
-    public static final String EXIT_WHEEL_SHOOTER_SPEED_INPUT = "ExitWheelShooterSpeedInput";
-    public static final String SHOOTER_WHEEL_SPEED_OVERRIDE = "ShooterWheelSpeedOverride";
-    public static final String AUTO_PROGRAM_SELECTOR = "AutoProgramSelector";
-    public static final String LOCK_IN_SWITCH = "LockInSwitch";
-    public static final String START_POSITION_SELECTOR = "StartPositionSelector";
-    public static final String LEFT_ACCUMULATOR_LIMIT_SWITCH = "LeftAccumulatorLimitSwitch";
-    public static final String RIGHT_ACCUMULATOR_LIMIT_SWITCH = "RightAccumulatorLimitSwitch";
-    public static final String FUNNELATOR_LIMIT_SWITCH = "FunnelatorLimitSwitch";
-    public static final String HOPPER_UP_LIMIT_SWITCH = "HopperUpLimitSwitch";
-    public static final String HOPPER_DOWN_LIMIT_SWITCH = "HopperDownLimitSwitch";
-    public static final String ACCUMULATOR_UP_LIMIT_SWITCH = "AccumulatorUpLimitSwitch";
+    public static final int UNKNOWN_INDEX = 0;
+    public static final int DRIVER_JOYSTICK_INDEX = 1;
+    public static final int MANIPULATOR_JOYSTICK_INDEX = 2;
+    public static final int AUTO_PROGRAM_SELECTOR_INDEX = 3;
+    public static final int LOCK_IN_SWITCH_INDEX = 3;
+    public static final int START_POSITION_SELECTOR_INDEX = 3;
 
     /**
      * Constructor for the WsInputManager.
@@ -154,27 +146,13 @@ public class WsInputManager {
      */
     protected WsInputManager() {
         //Add the facade data elements
-        BooleanConfigFileParameter outputsFor2012 = new BooleanConfigFileParameter(WsOutputManager.getInstance().getClass().getName(), "2012_Robot", false);
-        if (outputsFor2012.getValue()) {
-            sensorInputs.add(new DataElement(RIGHT_ACCUMULATOR_LIMIT_SWITCH, new WsDigitalInput(11)));
-            sensorInputs.add(new DataElement(FUNNELATOR_LIMIT_SWITCH, new WsDigitalInput(7)));
-        } else {
-            sensorInputs.add(new DataElement(RIGHT_ACCUMULATOR_LIMIT_SWITCH, new WsDigitalInput(7)));
-            sensorInputs.add(new DataElement(FUNNELATOR_LIMIT_SWITCH, new WsDigitalInput(9)));
-        }
-        oiInputs.add(new DataElement(DRIVER_JOYSTICK, new WsDriverJoystick()));
-        oiInputs.add(new DataElement(MANIPULATOR_JOYSTICK, new WsManipulatorJoystick()));
-//        oiInputs.add(new DataElement(ENTER_WHEEL_SHOOTER_SPEED_INPUT, new WsDSAnalogInput(5)));
-//        oiInputs.add(new DataElement(EXIT_WHEEL_SHOOTER_SPEED_INPUT, new WsDSAnalogInput(7)));
-        oiInputs.add(new DataElement(ENTER_WHEEL_SHOOTER_SPEED_INPUT, new WsDSAnalogInput(3)));
-        oiInputs.add(new DataElement(EXIT_WHEEL_SHOOTER_SPEED_INPUT, new WsDSAnalogInput(4)));
-        oiInputs.add(new DataElement(SHOOTER_WHEEL_SPEED_OVERRIDE, new WsDSDigitalInput(2)));
-        oiInputs.add(new DataElement(AUTO_PROGRAM_SELECTOR, new WsDSAnalogInput(1)));
-        oiInputs.add(new DataElement(LOCK_IN_SWITCH, new WsDSDigitalInput(1)));
-        oiInputs.add(new DataElement(START_POSITION_SELECTOR, new WsDSAnalogInput(2)));
-        sensorInputs.add(new DataElement(LEFT_ACCUMULATOR_LIMIT_SWITCH, new WsDigitalInput(6)));
-        sensorInputs.add(new DataElement(HOPPER_DOWN_LIMIT_SWITCH, new WsDigitalInput(13)));
-        sensorInputs.add(new DataElement(HOPPER_UP_LIMIT_SWITCH, new WsDigitalInput(12)));
-        sensorInputs.add(new DataElement(ACCUMULATOR_UP_LIMIT_SWITCH, new WsDigitalInput(8)));
+        sensorInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
+        
+        oiInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
+        oiInputs.addToIndex(DRIVER_JOYSTICK_INDEX, new WsDriverJoystick());
+        oiInputs.addToIndex(MANIPULATOR_JOYSTICK_INDEX, new WsManipulatorJoystick());
+        oiInputs.addToIndex(AUTO_PROGRAM_SELECTOR_INDEX, new WsDSAnalogInput(1));
+        oiInputs.addToIndex(LOCK_IN_SWITCH_INDEX, new WsDSDigitalInput(1));
+        oiInputs.addToIndex(START_POSITION_SELECTOR_INDEX, new WsDSAnalogInput(2));
     }
 }

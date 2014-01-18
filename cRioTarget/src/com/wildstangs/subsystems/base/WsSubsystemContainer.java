@@ -1,10 +1,10 @@
 package com.wildstangs.subsystems.base;
 
-import com.wildstangs.types.DataElement;
-import edu.wpi.first.wpilibj.networktables2.util.List;
+import com.wildstangs.list.WsList;
 import com.wildstangs.subsystems.WsCompressor;
 import com.wildstangs.subsystems.WsDriveBase;
 import com.wildstangs.subsystems.WsLED;
+import com.wildstangs.subsystems.WsLightCannon;
 
 /**
  *
@@ -13,7 +13,7 @@ import com.wildstangs.subsystems.WsLED;
 public class WsSubsystemContainer {
 
     private static WsSubsystemContainer instance = null;
-    private static List subsystem = new List();
+    private static WsList subsystem = new WsList(10);
 
     public static WsSubsystemContainer getInstance() {
         if (WsSubsystemContainer.instance == null) {
@@ -24,7 +24,8 @@ public class WsSubsystemContainer {
 
     public void init() {
         for (int i = 0; i < subsystem.size(); i++) {
-            ((WsSubsystem) (((DataElement) subsystem.get(i)).getValue())).init();
+            WsSubsystem sys = (WsSubsystem) subsystem.get(i);
+            if(sys != null) sys.init();
         }
     }
 
@@ -34,11 +35,10 @@ public class WsSubsystemContainer {
      * @param key The key representing the subsystem.
      * @return A subsystem.
      */
-    public WsSubsystem getSubsystem(String key) {
-        for (int i = 0; i < subsystem.size(); i++) {
-            if ((((DataElement) subsystem.get(i)).getKey()).equals(key)) {
-                return (WsSubsystem) (((DataElement) subsystem.get(i)).getValue());
-            }
+    public WsSubsystem getSubsystem(int index) {
+        if(index >= 0 && index < subsystem.size())
+        {
+            return (WsSubsystem) subsystem.get(index);
         }
         return (WsSubsystem) null;
     }
@@ -48,7 +48,8 @@ public class WsSubsystemContainer {
      */
     public void update() {
         for (int i = 0; i < subsystem.size(); i++) {
-            ((WsSubsystem) (((DataElement) subsystem.get(i)).getValue())).update();
+            WsSubsystem sys = (WsSubsystem) subsystem.get(i);
+            if(sys != null) sys.update();
         }
     }
 
@@ -58,23 +59,21 @@ public class WsSubsystemContainer {
      */
     public void notifyConfigChange() {
         for (int i = 0; i < subsystem.size(); i++) {
-            ((WsSubsystem) (((DataElement) subsystem.get(i)).getValue())).notifyConfigChange();
+            WsSubsystem sys = (WsSubsystem) subsystem.get(i);
+            if(sys != null) sys.notifyConfigChange();
         }
     }
     //Subsystem keys - must add a new key for each subsystem.
     public static final String WS_DRIVE_BASE = "WsDriveBase";
     public static final String WS_COMPRESSOR = "WsCompressor";
-    public static final String WS_INTAKE = "WsIntake";
-    public static final String WS_FLOOR_PICKUP = "WsFloorPickup";
-    public static final String WS_HOPPER = "WsHopper";
-    public static final String WS_SHOOTER = "WsShooter";
-    public static final String WS_LOADING_RAMP = "WsLoadingRamp";
-    public static final String WS_CLIMBER = "WsClimber";
     public static final String WS_LED = "WsLED";
     public static final String WS_LIGHT_CANNON = "WsLightCannon";
-    public static final String WS_TURRET = "WsTurret";
-    public static final String INTRO_DRIVEBASE = "IntroDriveBase";
-
+    
+    public static final int WS_DRIVE_BASE_INDEX = 0;
+    public static final int WS_COMPRESSOR_INDEX = 1;
+    public static final int WS_LED_INDEX = 2;
+    public static final int WS_LIGHT_CANNON_INDEX = 3;
+    
     /**
      * Constructor for the subsystem container.
      *
@@ -82,16 +81,9 @@ public class WsSubsystemContainer {
      * instantiated as well as placed in the subsystem container.
      */
     protected WsSubsystemContainer() {
-        subsystem.add(new DataElement(WS_DRIVE_BASE, new WsDriveBase(WS_DRIVE_BASE)));
-        subsystem.add(new DataElement(WS_COMPRESSOR, new WsCompressor(WS_COMPRESSOR, 1, 1, 1, 1)));
-//        subsystem.add(new DataElement(WS_INTAKE, new WsIntake(WS_INTAKE)));
-//        subsystem.add(new DataElement(WS_FLOOR_PICKUP, new WsFloorPickup(WS_FLOOR_PICKUP)));
-//        subsystem.add(new DataElement(WS_SHOOTER, new WsShooter(WS_SHOOTER)));
-//        subsystem.add(new DataElement(WS_HOPPER, new WsHopper(WS_HOPPER)));
-//        subsystem.add(new DataElement(WS_LOADING_RAMP, new WsLoadingRamp(WS_LOADING_RAMP)));
-//        subsystem.add(new DataElement(WS_CLIMBER, new WsClimber(WS_CLIMBER)));
-        subsystem.add(new DataElement(WS_LED, new WsLED(WS_LED)));
-//        subsystem.add(new DataElement(WS_LIGHT_CANNON, new WsLightCannon(WS_LIGHT_CANNON)));
-//        subsystem.add(new DataElement(WS_TURRET, new WsTurret(WS_TURRET)));
+        subsystem.addToIndex(WS_DRIVE_BASE_INDEX, new WsDriveBase(WS_DRIVE_BASE));
+        subsystem.addToIndex(WS_COMPRESSOR_INDEX, new WsCompressor(WS_COMPRESSOR, 1, 1, 1, 1));
+        subsystem.addToIndex(WS_LED_INDEX, new WsLED(WS_LED));
+        subsystem.addToIndex(WS_LIGHT_CANNON_INDEX, new WsLightCannon(WS_LIGHT_CANNON));
     }
 }

@@ -215,13 +215,13 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
         currentProfileX = 0.0;
         continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
         //Zero out all motor values left over from autonomous
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED)).set((IOutputEnum) null, new Double(0.0));
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED)).set((IOutputEnum) null, new Double(0.0));
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED)).update();
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED)).update();
-        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK).set(WsJoystickAxisEnum.DRIVER_THROTTLE, new Double(0.0));
-        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK).set(WsJoystickAxisEnum.DRIVER_HEADING, new Double(0.0));
-        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK).update();
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(0.0));
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(0.0));
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED_INDEX)).update();
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED_INDEX)).update();
+        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX).set(WsJoystickAxisEnum.DRIVER_THROTTLE, new Double(0.0));
+        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX).set(WsJoystickAxisEnum.DRIVER_HEADING, new Double(0.0));
+        WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX).update();
         //Clear encoders
         resetLeftEncoder();
         resetRightEncoder();
@@ -297,8 +297,8 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
             double throttleValue = 0.0;
             double headingValue = 0.0;
 
-            throttleValue = ((Double) ((WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK))).get(WsJoystickAxisEnum.DRIVER_THROTTLE)).doubleValue();
-            headingValue = ((Double) ((WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK))).get(WsJoystickAxisEnum.DRIVER_HEADING)).doubleValue();
+            throttleValue = ((Double) ((WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX))).get(WsJoystickAxisEnum.DRIVER_THROTTLE)).doubleValue();
+            headingValue = ((Double) ((WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX))).get(WsJoystickAxisEnum.DRIVER_HEADING)).doubleValue();
 
             setThrottleValue(throttleValue);
             setHeadingValue(headingValue);
@@ -315,7 +315,7 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
             SmartDashboard.putBoolean("Anti-Turbo Flag", antiTurboFlag);
 
             //Set gear shift output
-            WsOutputManager.getInstance().getOutput(WsOutputManager.SHIFTER).set(null, new Integer(shifterFlag.value));
+            WsOutputManager.getInstance().getOutput(WsOutputManager.SHIFTER_INDEX).set(null, new Integer(shifterFlag.value));
         } else {
         }
 
@@ -592,8 +592,8 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
         }
 
         //Update Output Facade.
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED)).set((IOutputEnum) null, new Double(leftMotorSpeed));
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED)).set((IOutputEnum) null, new Double(rightMotorSpeed));
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(leftMotorSpeed));
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(rightMotorSpeed));
     }
 
     public void checkAutoQuickTurn() {

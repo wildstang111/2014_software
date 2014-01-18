@@ -19,7 +19,7 @@ public class WsAutonomousStepEnableDriveHeadingPid extends WsAutonomousStep {
     }
 
     public void initialize() {
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).enableHeadingPidControl();
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).enableHeadingPidControl();
         Logger.getLogger().info(this.toString(), "initialize", "Drive Heading pid is enabled");
         finished = true;
     }

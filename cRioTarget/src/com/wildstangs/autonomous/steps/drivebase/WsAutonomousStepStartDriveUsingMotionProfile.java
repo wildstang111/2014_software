@@ -23,7 +23,7 @@ public class WsAutonomousStepStartDriveUsingMotionProfile extends WsAutonomousSt
     }
 
     public void initialize() {
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).startStraightMoveWithMotionProfile(distance , goal_velocity);
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).startStraightMoveWithMotionProfile(distance , goal_velocity);
         finished = true;
     }
 

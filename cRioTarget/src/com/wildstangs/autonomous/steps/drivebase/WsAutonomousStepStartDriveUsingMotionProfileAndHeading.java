@@ -25,7 +25,7 @@ public class WsAutonomousStepStartDriveUsingMotionProfileAndHeading extends WsAu
     }
 
     public void initialize() {
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).startMoveWithHeadingAndMotionProfile(distance, goal_velocity, heading);
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).startMoveWithHeadingAndMotionProfile(distance, goal_velocity, heading);
         finished = true;
     }
 

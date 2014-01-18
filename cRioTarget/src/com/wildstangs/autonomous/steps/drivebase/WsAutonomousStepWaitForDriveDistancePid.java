@@ -22,9 +22,9 @@ public class WsAutonomousStepWaitForDriveDistancePid extends WsAutonomousStep {
     }
 
     public void update() {
-        WsPidStateType pidState = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).getDistancePidState();
+        WsPidStateType pidState = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).getDistancePidState();
         if (pidState == WsPidStateType.WS_PID_STABILIZED_STATE) {
-            ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).disableDistancePidControl();
+            ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).disableDistancePidControl();
             finished = true;
         }
     }

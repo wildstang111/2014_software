@@ -21,6 +21,6 @@ public class WsDriveBaseHeadingPidOutput implements IPidOutput {
     }
 
     public void pidWrite(double output) {
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).setPidHeadingValue(output);
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).setPidHeadingValue(output);
     }
 }

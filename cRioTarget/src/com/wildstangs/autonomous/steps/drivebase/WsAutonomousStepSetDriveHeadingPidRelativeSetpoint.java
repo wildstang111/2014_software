@@ -21,8 +21,8 @@ public class WsAutonomousStepSetDriveHeadingPidRelativeSetpoint extends WsAutono
     }
 
     public void initialize() {
-        double angle = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).getGyroAngle() + value;
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).setDriveHeadingPidSetpoint(angle);
+        double angle = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).getGyroAngle() + value;
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).setDriveHeadingPidSetpoint(angle);
         finished = true;
     }
 

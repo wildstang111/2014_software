@@ -22,7 +22,7 @@ public class WsAutonomousStepStopDriveUsingMotionProfile extends WsAutonomousSte
     }
 
     public void update() {
-        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).stopStraightMoveWithMotionProfile();
+        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).stopStraightMoveWithMotionProfile();
         finished = true;
     }
 

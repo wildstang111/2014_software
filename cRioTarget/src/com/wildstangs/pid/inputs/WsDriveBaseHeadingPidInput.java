@@ -17,7 +17,7 @@ public class WsDriveBaseHeadingPidInput implements IPidInput {
 
     public double pidRead() {
         double gyro_angle;
-        gyro_angle = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).getGyroAngle();
+        gyro_angle = ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE_INDEX)).getGyroAngle();
         SmartDashboard.putNumber("Gyro angle: ", gyro_angle);
         return gyro_angle;
     }
