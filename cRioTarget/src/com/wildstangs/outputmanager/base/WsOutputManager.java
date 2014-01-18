@@ -66,26 +66,12 @@ public class WsOutputManager {
         }
         return (IOutput) outputs.get(UNKNOWN_INDEX);
     }
-    //Key Values - Need to update for each new output element.
+    //Names to pass into some of the outputs
     public static final String RIGHT_DRIVE_SPEED = "RightDriveSpeed";
     public static final String LEFT_DRIVE_SPEED = "LeftDriveSpeed";
     public static final String SHIFTER = "Shifter";
-    public static final String LIFT = "Lift";
-    public static final String KICKER = "Kicker";
-    public static final String SHOOTER_VICTOR_ENTER = "ShooterVictorEnter";
-    public static final String SHOOTER_VICTOR_EXIT = "ShooterVictorExit";
-    public static final String SHOOTER_ANGLE = "ShooterAngle";
-    public static final String FRISBIE_CONTROL = "FrisbieControl";
-    public static final String ACCUMULATOR_SOLENOID = "AccumulatorSolenoid";
-    public static final String ACCUMULATOR_SECONDARY_SOLENOID = "AccumulatorSecondarySolenoid";
-    public static final String ACCUMULATOR_VICTOR = "AccumulatorVictor";
-    public static final String FUNNELATOR_ROLLER = "FunnelatorRoller";
-    public static final String LOADING_RAMP = "LoadingRamp";
-    public static final String CLIMBER = "Climber";
-    public static final String TOMAHAWK_SERVO = "TomahawkServo";
-    public static final String LIGHT_CANNON_RELAY = "LightCannonRelay";
-    public static final String TURRET = "Turret";
     
+    //Key Values - Need to update for each new output element.
     public static final int UNKNOWN_INDEX = 0;
     public static final int RIGHT_DRIVE_SPEED_INDEX = 1;
     public static final int LEFT_DRIVE_SPEED_INDEX = 2;

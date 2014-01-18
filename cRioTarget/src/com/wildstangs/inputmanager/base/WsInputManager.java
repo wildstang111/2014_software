@@ -131,21 +131,6 @@ public class WsInputManager {
     /**
      * Keys to represent Inputs
      */
-    public static final String DRIVER_JOYSTICK = "DriverJoystick";
-    public static final String MANIPULATOR_JOYSTICK = "ManipulatorJoystick";
-    public static final String ENTER_WHEEL_SHOOTER_SPEED_INPUT = "EnterWheelShooterSpeedInput";
-    public static final String EXIT_WHEEL_SHOOTER_SPEED_INPUT = "ExitWheelShooterSpeedInput";
-    public static final String SHOOTER_WHEEL_SPEED_OVERRIDE = "ShooterWheelSpeedOverride";
-    public static final String AUTO_PROGRAM_SELECTOR = "AutoProgramSelector";
-    public static final String LOCK_IN_SWITCH = "LockInSwitch";
-    public static final String START_POSITION_SELECTOR = "StartPositionSelector";
-    public static final String LEFT_ACCUMULATOR_LIMIT_SWITCH = "LeftAccumulatorLimitSwitch";
-    public static final String RIGHT_ACCUMULATOR_LIMIT_SWITCH = "RightAccumulatorLimitSwitch";
-    public static final String FUNNELATOR_LIMIT_SWITCH = "FunnelatorLimitSwitch";
-    public static final String HOPPER_UP_LIMIT_SWITCH = "HopperUpLimitSwitch";
-    public static final String HOPPER_DOWN_LIMIT_SWITCH = "HopperDownLimitSwitch";
-    public static final String ACCUMULATOR_UP_LIMIT_SWITCH = "AccumulatorUpLimitSwitch";
-    
     public static final int UNKNOWN_INDEX = 0;
     public static final int DRIVER_JOYSTICK_INDEX = 1;
     public static final int MANIPULATOR_JOYSTICK_INDEX = 2;

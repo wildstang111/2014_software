@@ -66,16 +66,8 @@ public class WsSubsystemContainer {
     //Subsystem keys - must add a new key for each subsystem.
     public static final String WS_DRIVE_BASE = "WsDriveBase";
     public static final String WS_COMPRESSOR = "WsCompressor";
-    public static final String WS_INTAKE = "WsIntake";
-    public static final String WS_FLOOR_PICKUP = "WsFloorPickup";
-    public static final String WS_HOPPER = "WsHopper";
-    public static final String WS_SHOOTER = "WsShooter";
-    public static final String WS_LOADING_RAMP = "WsLoadingRamp";
-    public static final String WS_CLIMBER = "WsClimber";
     public static final String WS_LED = "WsLED";
     public static final String WS_LIGHT_CANNON = "WsLightCannon";
-    public static final String WS_TURRET = "WsTurret";
-    public static final String INTRO_DRIVEBASE = "IntroDriveBase";
     
     public static final int WS_DRIVE_BASE_INDEX = 0;
     public static final int WS_COMPRESSOR_INDEX = 1;
