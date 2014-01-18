@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.wildstangs.autonomous;
 
 import com.wildstangs.autonomous.programs.WsAutonomousProgramSleeper;
@@ -9,6 +5,7 @@ import com.wildstangs.autonomous.programs.test.*;
 import com.wildstangs.inputmanager.base.WsInputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.subjects.base.*;
+import edu.wpi.first.wpilibj.networktables2.util.List;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -17,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class WsAutonomousManager implements IObserver {
 
-    private WsAutonomousProgram[] programs;
+    private List programs = new List();
     private int currentProgram, lockedProgram;
     private float selectorSwitch, positionSwitch;
     private WsAutonomousProgram runningProgram;
@@ -51,7 +48,7 @@ public class WsAutonomousManager implements IObserver {
     }
 
     public void startCurrentProgram() {
-        runningProgram = programs[lockedProgram];
+        runningProgram = (WsAutonomousProgram) programs.get(lockedProgram);
         Logger.getLogger().always("Auton", "Running Autonomous Program", runningProgram.toString());
         runningProgram.initialize();
         SmartDashboard.putString("Running Autonomous Program", runningProgram.toString());
@@ -63,11 +60,11 @@ public class WsAutonomousManager implements IObserver {
         if (runningProgram != null) {
             runningProgram.cleanup();
         }
-        runningProgram = programs[0];
+        runningProgram = (WsAutonomousProgram) programs.get(0);
         lockedProgram = 0;
         SmartDashboard.putString("Running Autonomous Program", "No Program Running");
-        SmartDashboard.putString("Locked Autonomous Program", programs[lockedProgram].toString());
-        SmartDashboard.putString("Current Autonomous Program", programs[currentProgram].toString());
+        SmartDashboard.putString("Locked Autonomous Program", programs.get(lockedProgram).toString());
+        SmartDashboard.putString("Current Autonomous Program", programs.get(currentProgram).toString());
         SmartDashboard.putString("Current Start Position", currentPosition.toString());
     }
 
@@ -84,11 +81,11 @@ public class WsAutonomousManager implements IObserver {
     }
 
     public String getSelectedProgramName() {
-        return programs[currentProgram].toString();
+        return programs.get(currentProgram).toString();
     }
 
     public String getLockedProgramName() {
-        return programs[lockedProgram].toString();
+        return programs.get(lockedProgram).toString();
     }
 
     public WsAutonomousStartPositionEnum getStartPosition() {
@@ -117,13 +114,13 @@ public class WsAutonomousManager implements IObserver {
                 if(selectorSwitch < 0) {
                     selectorSwitch = 0;
                 }
-                currentProgram = (int) (Math.floor((selectorSwitch / 3.4) * programs.length));
-                SmartDashboard.putString("Current Autonomous Program", programs[currentProgram].toString());
+                currentProgram = (int) (Math.floor((selectorSwitch / 3.4) * programs.size()));
+                SmartDashboard.putString("Current Autonomous Program", programs.get(currentProgram).toString());
             }
         } else if (cause instanceof BooleanSubject) {
             lockInSwitch = ((BooleanSubject) cause).getValue();
             lockedProgram = !lockInSwitch ? currentProgram : 0;
-            SmartDashboard.putString("Locked Autonomous Program", programs[lockedProgram].toString());
+            SmartDashboard.putString("Locked Autonomous Program", programs.get(lockedProgram).toString());
         }
     }
 
@@ -135,7 +132,7 @@ public class WsAutonomousManager implements IObserver {
     }
 
     public void setProgram(int index) {
-        if (index >= programs.length) {
+        if (index >= programs.size() || index < 0) {
             index = 0;
         }
         currentProgram = index;
@@ -150,9 +147,15 @@ public class WsAutonomousManager implements IObserver {
     }
 
     private void definePrograms() {
-        programs = new WsAutonomousProgram[3];
-        programs[0] = new WsAutonomousProgramSleeper(); //Always leave Sleeper as 0. Other parts of the code assume 0 is Sleeper.
-        programs[1] = new WsAutonomousProgramDriveDistanceMotionProfile();
-        programs[2] = new WsAutonomousProgramDrivePatterns();
+        addProgram(new WsAutonomousProgramSleeper()); //Always leave Sleeper as 0. Other parts of the code assume 0 is Sleeper.
+        addProgram(new WsAutonomousProgramDriveDistanceMotionProfile());
+        addProgram(new WsAutonomousProgramDrivePatterns());
+        addProgram(new WsAutonomousProgramTestParallel());
+        addProgram(new WsAutonomousProgramTestSerial());
+
+    }
+    
+    private void addProgram(WsAutonomousProgram program) {
+        programs.add(program);
     }
 }

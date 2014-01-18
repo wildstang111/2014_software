@@ -24,16 +24,12 @@ public class WsAutonomousProgramDriveDistanceMotionProfile extends WsAutonomousP
     private DoubleConfigFileParameter distance;
     private DoubleConfigFileParameter heading;
 
-    public WsAutonomousProgramDriveDistanceMotionProfile() {
-        super(3);
-    }
-
     public void defineSteps() {
         distance = new DoubleConfigFileParameter(this.getClass().getName(), WsAutonomousManager.getInstance().getStartPosition().toConfigString() + ".distance", 10.0);
         heading = new DoubleConfigFileParameter(this.getClass().getName(), WsAutonomousManager.getInstance().getStartPosition().toConfigString() + ".heading", 0.0);
-        programSteps[0] = new WsAutonomousStepStartDriveUsingMotionProfileAndHeading(distance.getValue(), 0.0, heading.getValue());
-        programSteps[1] = new WsAutonomousStepWaitForDriveMotionProfile(); 
-        programSteps[2] = new WsAutonomousStepStopDriveUsingMotionProfile();
+        addStep(new WsAutonomousStepStartDriveUsingMotionProfileAndHeading(distance.getValue(), 0.0, heading.getValue()));
+        addStep(new WsAutonomousStepWaitForDriveMotionProfile()); 
+        addStep(new WsAutonomousStepStopDriveUsingMotionProfile());
 
 //        programSteps[3] = new WsAutonomousStepEnableDriveDistancePid();
 //        programSteps[4] = new WsAutonomousStepSetDriveDistancePidSetpoint(distance.getValue());
