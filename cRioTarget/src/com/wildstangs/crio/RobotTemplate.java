@@ -6,14 +6,9 @@
 /*----------------------------------------------------------------------------*/
 package com.wildstangs.crio;
 
-import com.wildstangs.autonomous.WsAutonomousManager;
-import com.wildstangs.configmanager.WsConfigManager;
-import com.wildstangs.configmanager.WsConfigManagerException;
-import com.wildstangs.inputmanager.base.WsInputManager;
+
 import com.wildstangs.logger.Logger;
-import com.wildstangs.outputmanager.base.WsOutputManager;
 import com.wildstangs.profiling.WsProfilingTimer;
-import com.wildstangs.subsystems.base.WsSubsystemContainer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Watchdog;
 
@@ -32,25 +27,7 @@ public class RobotTemplate extends IterativeRobot {
      */
     public void robotInit() {
         startupTimer.startTimingSection();
-        System.out.println("RobotInit Start");
-        //Enables the filelogger thread.
-        //FileLogger.getFileLogger().startLogger();
-        try {
-            WsConfigManager.getInstance().setConfigFileName("/ws_config.txt");
-            WsConfigManager.getInstance().readConfig();
-            //WsConfigFacade.getInstance().dumpConfigData();
-        } catch (WsConfigManagerException wscfe) {
-            System.out.println(wscfe.toString());
-        }
-
-        WsInputManager.getInstance();
-        WsOutputManager.getInstance();
-//        Logger.getLogger().always(this.getClass().getName(), "robotInit", "Facades Completed");
-        WsSubsystemContainer.getInstance().init();
-        //Logger.getLogger().always(this.getClass().getName(), "robotInit", "Subsystem Completed");
-        Logger.getLogger().readConfig();
-        //Logger.getLogger().always(this.getClass().getName(), "robotInit", "Logger Read Config Completed");
-        WsAutonomousManager.getInstance();
+        FrameworkAbstraction.robotInit("/ws_config.txt");
         Logger.getLogger().always(this.getClass().getName(), "robotInit", "Startup Completed");
         startupTimer.endTimingSection();
 
@@ -62,48 +39,25 @@ public class RobotTemplate extends IterativeRobot {
 
     public void disabledInit() {
         initTimer.startTimingSection();
-        WsAutonomousManager.getInstance().clear();
-        try {
-            WsConfigManager.getInstance().readConfig();
-        } catch (Throwable e) {
-            System.out.println(e.getMessage());
-        }
-
-        //Logger.getLogger().always(this.getClass().getName(), "disbledInit", "Config Completed");
-        WsSubsystemContainer.getInstance().init();
-        Logger.getLogger().readConfig();
-        //WsConfigFacade.getInstance().dumpConfigData();
+        FrameworkAbstraction.disabledInit();
         initTimer.endTimingSection();
         Logger.getLogger().always(this.getClass().getName(), "disabledInit", "Disabled Init Complete");
 
     }
 
     public void disabledPeriodic() {
-        WsInputManager.getInstance().updateOiData();
-        //Make LED stuff go in disabled.
-        // ((WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_LED))).update();
-        try {
-            WsConfigManager.getInstance().readConfigIfUpdateAvailable();
-        } catch (WsConfigManagerException e) {
-            System.out.println(e.toString());
-        }
+        FrameworkAbstraction.disabledPeriodic();
     }
 
     public void autonomousInit() {
-        WsSubsystemContainer.getInstance().init();
-        Logger.getLogger().readConfig();
-        WsAutonomousManager.getInstance().startCurrentProgram();
+        FrameworkAbstraction.autonomousInit();
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-        WsInputManager.getInstance().updateOiDataAutonomous();
-        WsInputManager.getInstance().updateSensorData();
-        WsAutonomousManager.getInstance().update();
-        WsSubsystemContainer.getInstance().update();
-        WsOutputManager.getInstance().update();
+        FrameworkAbstraction.autonomousPeriodic();
         Watchdog.getInstance().feed();
     }
 
@@ -111,8 +65,7 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopInit() {
-        WsSubsystemContainer.getInstance().init();
-        Logger.getLogger().readConfig();
+        FrameworkAbstraction.teleopInit();
         periodTimer.startTimingSection();
     }
 
@@ -120,11 +73,8 @@ public class RobotTemplate extends IterativeRobot {
 //        periodTimer.endTimingSection();
 //        periodTimer.startTimingSection();
 //        durationTimer.startTimingSection();
-        WsInputManager.getInstance().updateOiData();
-        WsInputManager.getInstance().updateSensorData();
-        WsSubsystemContainer.getInstance().update();
-        WsOutputManager.getInstance().update();
-        Watchdog.getInstance().feed();
+          FrameworkAbstraction.teleopPeriodic();
+          Watchdog.getInstance().feed();
 //        durationTimer.endTimingSection();
     }
 
