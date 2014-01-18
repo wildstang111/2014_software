@@ -27,12 +27,12 @@ public class FrameworkAbstraction {
         WsSubsystemContainer.getInstance().init();
         Logger.getLogger().readConfig();
     }
-    public static void robotInit(){
+    public static void robotInit(String fileName){
         System.out.println("RobotInit Start");
         //Enables the filelogger thread.
         //FileLogger.getFileLogger().startLogger();
         try {
-            WsConfigManager.getInstance().setFileName("/ws_config.txt");
+            WsConfigManager.getInstance().setFileName(fileName);
             WsConfigManager.getInstance().readConfig();
             //WsConfigFacade.getInstance().dumpConfigData();
         } catch (WsConfigManagerException wscfe) {
@@ -53,7 +53,6 @@ public class FrameworkAbstraction {
         WsInputManager.getInstance().updateSensorData();
         WsSubsystemContainer.getInstance().update();
         WsOutputManager.getInstance().update();
-        Watchdog.getInstance().feed();
     }
     public static void autonomousPeriodic() {
         WsInputManager.getInstance().updateOiDataAutonomous();
@@ -61,12 +60,11 @@ public class FrameworkAbstraction {
         WsAutonomousManager.getInstance().update();
         WsSubsystemContainer.getInstance().update();
         WsOutputManager.getInstance().update();
-        Watchdog.getInstance().feed();
     }
     public static void disabledPeriodic() {
         WsInputManager.getInstance().updateOiData();
         //Make LED stuff go in disabled.
-        ((WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_LED))).update();
+        //((WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_LED))).update();
     }
     public static void disabledInit(){
         WsAutonomousManager.getInstance().clear();

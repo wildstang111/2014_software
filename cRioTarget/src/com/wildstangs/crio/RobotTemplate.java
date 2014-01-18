@@ -27,7 +27,7 @@ public class RobotTemplate extends IterativeRobot {
      */
     public void robotInit() {
         startupTimer.startTimingSection();
-        FrameworkAbstraction.robotInit();
+        FrameworkAbstraction.robotInit("/ws_config.txt");
         Logger.getLogger().always(this.getClass().getName(), "robotInit", "Startup Completed");
         startupTimer.endTimingSection();
 
@@ -58,6 +58,7 @@ public class RobotTemplate extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         FrameworkAbstraction.autonomousPeriodic();
+        Watchdog.getInstance().feed();
     }
 
     /**
@@ -73,6 +74,7 @@ public class RobotTemplate extends IterativeRobot {
 //        periodTimer.startTimingSection();
 //        durationTimer.startTimingSection();
           FrameworkAbstraction.teleopPeriodic();
+          Watchdog.getInstance().feed();
 //        durationTimer.endTimingSection();
     }
 
