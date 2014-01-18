@@ -151,7 +151,6 @@ public class WsAutonomousManager implements IObserver {
         addProgram(new WsAutonomousProgramDriveDistanceMotionProfile());
         addProgram(new WsAutonomousProgramDrivePatterns());
         addProgram(new WsAutonomousProgramTestParallel());
-        addProgram(new WsAutonomousProgramTestSerial());
 
     }
     
