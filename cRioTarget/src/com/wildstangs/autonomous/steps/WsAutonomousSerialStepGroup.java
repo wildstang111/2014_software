@@ -1,7 +1,5 @@
 package com.wildstangs.autonomous.steps;
 
-import com.wildstangs.autonomous.WsAutonomousStep;
-import com.wildstangs.logger.Logger;
 import edu.wpi.first.wpilibj.networktables2.util.List;
 
 /**
@@ -15,7 +13,7 @@ public class WsAutonomousSerialStepGroup extends WsAutonomousStep {
     int currentStep = 0;
     boolean initialized = false;
     String name = "";
-    private boolean finishedPreviousStep, lastStepError;
+    private boolean finishedPreviousStep;
 
     public WsAutonomousSerialStepGroup() {
         name = "";
@@ -29,7 +27,8 @@ public class WsAutonomousSerialStepGroup extends WsAutonomousStep {
         finishedPreviousStep = false;
         currentStep = 0;
         if (!steps.isEmpty()) {
-            ((WsAutonomousStep) steps.get(0)).initialize();
+            ((WsAutonomousStep) steps.get(currentStep)).initialize();
+            System.out.println("Starting step " + ((WsAutonomousStep) steps.get(currentStep)).toString());
         }
         initialized = true;
     }
@@ -47,34 +46,14 @@ public class WsAutonomousSerialStepGroup extends WsAutonomousStep {
                 return;
             } else {
                 ((WsAutonomousStep) steps.get(currentStep)).initialize();
+                System.out.println("Starting step " + ((WsAutonomousStep) steps.get(currentStep)).toString());
             }
         }
         WsAutonomousStep step = (WsAutonomousStep) steps.get(currentStep);
         step.update();
         if (step.isFinished()) {
             finishedPreviousStep = true;
-            if (!step.isPassed()) {
-                failedStep(step, currentStep);
-                lastStepError = true;
-            } else {
-                finishedPreviousStep = true;
-                lastStepError = false;
-            }
         }
-    }
-
-    protected final void failedStep(WsAutonomousStep step, int i) {
-        if (step.isFatal()) {
-            finished = true;
-            fatal = true;
-        }
-        handleError(step, i);
-    }
-
-    protected void handleError(WsAutonomousStep step, int i) //Separate method for easy overrides.
-    {
-        pass = false;
-        Logger.getLogger().error("Substep " + i + "(" + step.toString() + ") of serial autonomous step group.", "Auto Step", step.errorInfo);
     }
 
     public void addStep(WsAutonomousStep step) {
@@ -97,25 +76,6 @@ public class WsAutonomousSerialStepGroup extends WsAutonomousStep {
         } else {
             return null;
         }
-    }
-
-    public void setNextStep(WsAutonomousStep newStep) {
-        if (steps.get(currentStep) instanceof WsAutonomousSerialStepGroup) {
-            if ((((WsAutonomousSerialStepGroup) steps.get(currentStep))).getNextStep() != null) {
-                ((WsAutonomousSerialStepGroup) steps.get(currentStep)).setNextStep(newStep);
-            } else {
-                steps.set(currentStep + 1, newStep);
-            }
-        } else if (currentStep + 1 < steps.size()) {
-            steps.set(currentStep + 1, newStep);
-        }
-    }
-
-    public boolean lastStepHadError() {
-        if (steps.get(currentStep) instanceof WsAutonomousSerialStepGroup) {
-            return ((WsAutonomousSerialStepGroup) steps.get(currentStep)).lastStepHadError();
-        }
-        return lastStepError;
     }
 
     public void finishGroup() {

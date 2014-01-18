@@ -150,6 +150,8 @@ public class WsAutonomousManager implements IObserver {
         addProgram(new WsAutonomousProgramSleeper()); //Always leave Sleeper as 0. Other parts of the code assume 0 is Sleeper.
         addProgram(new WsAutonomousProgramDriveDistanceMotionProfile());
         addProgram(new WsAutonomousProgramDrivePatterns());
+        addProgram(new WsAutonomousProgramTestParallel());
+        addProgram(new WsAutonomousProgramTestSerial());
 
     }
     

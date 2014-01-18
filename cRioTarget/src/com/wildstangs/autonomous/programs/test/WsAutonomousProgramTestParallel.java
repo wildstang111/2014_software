@@ -20,7 +20,7 @@ import com.wildstangs.autonomous.steps.drivebase.WsAutonomousStepDriveManual;
 public class WsAutonomousProgramTestParallel extends WsAutonomousProgram {
 
     public void defineSteps() {
-        WsAutonomousParallelStepGroup parallelGroup = new WsAutonomousParallelStepGroup();
+        WsAutonomousParallelStepGroup parallelGroup = new WsAutonomousParallelStepGroup("Test parallel step group");
             parallelGroup.addStep(new WsAutonomousStepDriveManual(WsAutonomousStepDriveManual.KEEP_PREVIOUS_STATE, 1.0));
             parallelGroup.addStep(new WsAutonomousStepDelay(250));
             parallelGroup.addStep(new WsAutonomousStepDriveManual(1.0, WsAutonomousStepDriveManual.KEEP_PREVIOUS_STATE));

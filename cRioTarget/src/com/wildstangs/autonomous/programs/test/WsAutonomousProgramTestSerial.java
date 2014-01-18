@@ -8,8 +8,6 @@ import com.wildstangs.autonomous.WsAutonomousProgram;
 import com.wildstangs.autonomous.steps.WsAutonomousSerialStepGroup;
 import com.wildstangs.autonomous.steps.control.WsAutonomousStepDelay;
 import com.wildstangs.autonomous.steps.drivebase.WsAutonomousStepDriveManual;
-import com.wildstangs.autonomous.steps.floorpickup.WsAutonomousStepIntakeMotorPullFrisbeesIn;
-import com.wildstangs.autonomous.steps.floorpickup.WsAutonomousStepIntakeMotorStop;
 
 /**
  *
@@ -23,10 +21,10 @@ public class WsAutonomousProgramTestSerial extends WsAutonomousProgram {
 
     public void defineSteps() {
         System.out.println("Define steps called");
-        WsAutonomousSerialStepGroup parallelGroup = new WsAutonomousSerialStepGroup("Test serial step container.");
-            parallelGroup.addStep(new WsAutonomousStepIntakeMotorPullFrisbeesIn());
+        WsAutonomousSerialStepGroup parallelGroup = new WsAutonomousSerialStepGroup("Test serial step group.");
+            parallelGroup.addStep(new WsAutonomousStepDriveManual(WsAutonomousStepDriveManual.KEEP_PREVIOUS_STATE, 1.0));
             parallelGroup.addStep(new WsAutonomousStepDelay(250));
-            parallelGroup.addStep(new WsAutonomousStepIntakeMotorStop());
+            parallelGroup.addStep(new WsAutonomousStepDriveManual(1.0, WsAutonomousStepDriveManual.KEEP_PREVIOUS_STATE));
         addStep(parallelGroup);
         addStep(new WsAutonomousStepDriveManual(0.0, 0.0));
 

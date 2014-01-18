@@ -4,7 +4,9 @@
  */
 package com.wildstangs.autonomous.steps.control;
 
-import com.wildstangs.autonomous.WsAutonomousStep;
+import com.wildstangs.autonomous.steps.WsAutonomousStep;
+import com.wildstangs.logger.Logger;
+import edu.wpi.first.wpilibj.Utility;
 
 /**
  *
@@ -16,29 +18,22 @@ public class WsAutonomousStepDelay extends WsAutonomousStep /* This step delays 
 
     private int count;
     protected final int msDelay;
-    private static final int MS_PER_FRAME = 20;
+    private double startTime = 0;
 
     public WsAutonomousStepDelay(int msDelay) {
-        int delay = (int) Math.ceil((double) msDelay / (double) MS_PER_FRAME);
-        count = delay - 1;
         this.msDelay = msDelay;
-        if (delay < 0) {
-            pass = false;
-            errorInfo = "Negative delay";
+        if (msDelay < 0) {
+            Logger.getLogger().debug(this.getClass().getName(), "WsAutonomousStepDelay", "Delay must be greater than 0");
         }
     }
 
-    public WsAutonomousStepDelay() {
-        this(1000);
-    }
-
-    public void initialize() // Do nothing, as the variables have been initialised in the constructor.
-    {
+    public void initialize() {
     }
 
     public void update() {
-        if (count-- <= 0) //Preventing stupid errors that could occur by passing a negative value into the constructor.
-        {
+        if (startTime == 0) {
+            startTime = Utility.getFPGATime();
+        } else if (startTime + msDelay < Utility.getFPGATime()) {
             finished = true;
         }
     }

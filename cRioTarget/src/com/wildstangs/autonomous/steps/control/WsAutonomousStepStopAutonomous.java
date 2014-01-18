@@ -4,7 +4,7 @@
  */
 package com.wildstangs.autonomous.steps.control;
 
-import com.wildstangs.autonomous.WsAutonomousStep;
+import com.wildstangs.autonomous.steps.WsAutonomousStep;
 
 /**
  *

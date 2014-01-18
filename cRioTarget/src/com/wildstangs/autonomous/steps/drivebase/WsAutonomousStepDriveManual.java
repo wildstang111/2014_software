@@ -4,7 +4,7 @@
  */
 package com.wildstangs.autonomous.steps.drivebase;
 
-import com.wildstangs.autonomous.WsAutonomousStep;
+import com.wildstangs.autonomous.steps.WsAutonomousStep;
 import com.wildstangs.inputmanager.base.WsInputManager;
 import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
 
