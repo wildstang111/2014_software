@@ -86,9 +86,9 @@ public class WsOutputManager {
     protected WsOutputManager() {
         //Add the facade data elements
         outputs.addToIndex(UNKNOWN_INDEX, new NoOutput());
-        outputs.addToIndex(RIGHT_DRIVE_SPEED_INDEX, new WsDriveSpeed(RIGHT_DRIVE_SPEED, 1, 2));
-        outputs.addToIndex(LEFT_DRIVE_SPEED_INDEX, new WsDriveSpeed(LEFT_DRIVE_SPEED, 3, 4));
-        outputs.addToIndex(SHIFTER_INDEX, new WsDoubleSolenoid(SHIFTER, 2, 1, 2));
+        outputs.addToIndex(RIGHT_DRIVE_SPEED_INDEX, new WsDriveSpeed(RIGHT_DRIVE_SPEED, 3, 4));
+        outputs.addToIndex(LEFT_DRIVE_SPEED_INDEX, new WsDriveSpeed(LEFT_DRIVE_SPEED, 1, 2));
+        outputs.addToIndex(SHIFTER_INDEX, new WsDoubleSolenoid(SHIFTER, 1, 1, 2));
         outputs.addToIndex(LIGHT_CANNON_RELAY_INDEX, new WsRelay(1, 2, Relay.Direction.kForward));
     }
 }

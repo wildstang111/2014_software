@@ -32,7 +32,7 @@ public class FrameworkAbstraction {
         //Enables the filelogger thread.
         //FileLogger.getFileLogger().startLogger();
         try {
-            WsConfigManager.getInstance().setFileName(fileName);
+            WsConfigManager.getInstance().setConfigFileName(fileName);
             WsConfigManager.getInstance().readConfig();
             //WsConfigFacade.getInstance().dumpConfigData();
         } catch (WsConfigManagerException wscfe) {
