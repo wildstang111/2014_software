@@ -4,11 +4,9 @@
  */
 package com.wildstangs.inputmanager.inputs.joystick.driver;
 
-import com.wildstangs.config.DoubleConfigFileParameter;
 import com.wildstangs.inputmanager.base.IInput;
 import com.wildstangs.inputmanager.base.IInputEnum;
 import com.wildstangs.inputmanager.inputs.joystick.IHardwareJoystick;
-import com.wildstangs.inputmanager.inputs.joystick.IJoystick;
 import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
 import com.wildstangs.inputmanager.inputs.joystick.WsJoystickButtonEnum;
 import com.wildstangs.subjects.base.BooleanSubject;
@@ -22,20 +20,20 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author Nathan
  */
 public class WsDriverJoystick implements IInput {
-
+    
     DoubleSubject throttle;
     DoubleSubject heading;
-    private DoubleSubject dPadUpDown;
+    DoubleSubject dPadUpDown;
     final static int numberOfButtons = 12;
     BooleanSubject[] buttons;
     Joystick driverJoystick = null;
-
+    
     public Subject getSubject(ISubjectEnum subjectEnum) {
         if (subjectEnum == WsJoystickAxisEnum.DRIVER_THROTTLE) {
             return throttle;
         } else if (subjectEnum == WsJoystickAxisEnum.DRIVER_HEADING) {
             return heading;
-        } else if (subjectEnum == WsJoystickAxisEnum.DRIVER_D_PAD_UP_DOWN) {
+        } else if (subjectEnum == WsJoystickAxisEnum.DRIVER_DPAD_Y) {
             return dPadUpDown;
         } else if (subjectEnum instanceof WsJoystickButtonEnum && ((WsJoystickButtonEnum) subjectEnum).isDriver() == true) {
             return buttons[((WsJoystickButtonEnum) subjectEnum).toValue()];
@@ -44,42 +42,42 @@ public class WsDriverJoystick implements IInput {
             return null;
         }
     }
-
+    
     public WsDriverJoystick() {
         throttle = new DoubleSubject("Throttle");
         heading = new DoubleSubject("Heading");
-        dPadUpDown = new DoubleSubject(WsJoystickAxisEnum.DRIVER_D_PAD_UP_DOWN);
+        dPadUpDown = new DoubleSubject(WsJoystickAxisEnum.DRIVER_DPAD_Y);
         driverJoystick = (Joystick) new Joystick(1);
         buttons = new BooleanSubject[numberOfButtons];
         driverJoystick.setAxisChannel(Joystick.AxisType.kThrottle, 6);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new BooleanSubject(WsJoystickButtonEnum.getEnumFromIndex(true, i));
         }
-
+        
     }
-
+    
     public void set(IInputEnum key, Object value) {
         if (key == WsJoystickAxisEnum.DRIVER_THROTTLE) {
             throttle.setValue(value);
             // this serves no purpose but an example
         } else if (key == WsJoystickAxisEnum.DRIVER_HEADING) {
             heading.setValue(value);
-        } else if (key == WsJoystickAxisEnum.DRIVER_D_PAD_UP_DOWN) {
+        } else if (key == WsJoystickAxisEnum.DRIVER_DPAD_Y) {
             dPadUpDown.setValue(value);
         } else if (key instanceof WsJoystickButtonEnum && ((WsJoystickButtonEnum) key).isDriver() == true) {
             buttons[((WsJoystickButtonEnum) key).toValue()].setValue(value);
         } else {
             System.out.println("key not supported or incorrect.");
         }
-
+        
     }
-
+    
     public Object get(IInputEnum key) {
         if (key == WsJoystickAxisEnum.DRIVER_THROTTLE) {
             return throttle.getValueAsObject();
         } else if (key == WsJoystickAxisEnum.DRIVER_HEADING) {
             return heading.getValueAsObject();
-        } else if (key == WsJoystickAxisEnum.DRIVER_D_PAD_UP_DOWN) {
+        } else if (key == WsJoystickAxisEnum.DRIVER_DPAD_Y) {
             return dPadUpDown.getValueAsObject();
         } else if (key instanceof WsJoystickButtonEnum && ((WsJoystickButtonEnum) key).isDriver() == true) {
             return buttons[((WsJoystickButtonEnum) key).toValue()].getValueAsObject();
@@ -87,7 +85,7 @@ public class WsDriverJoystick implements IInput {
             return new Double(-100);
         }
     }
-
+    
     public void update() {
         throttle.updateValue();
         heading.updateValue();
@@ -96,20 +94,20 @@ public class WsDriverJoystick implements IInput {
             buttons[i].updateValue();
         }
     }
-
+    
     public void pullData() {
         if (driverJoystick instanceof IHardwareJoystick) {
             ((IHardwareJoystick) driverJoystick).pullData();
         }
-        throttle.setValue(driverJoystick.getY() * -1);
-        heading.setValue(driverJoystick.getZ());
-        dPadUpDown.setValue(driverJoystick.getThrottle() * -1);
+        throttle.setValue(driverJoystick.getRawAxis(WsJoystickAxisEnum.LEFT_JOYSTICK_Y) * -1);
+        heading.setValue(driverJoystick.getRawAxis(WsJoystickAxisEnum.RIGHT_JOYSTICK_X));
+        dPadUpDown.setValue(driverJoystick.getRawAxis(WsJoystickAxisEnum.DPAD_Y) * -1);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setValue(driverJoystick.getRawButton(i + 1));
         }
-
+        
     }
-
+    
     public void notifyConfigChange() {
     }
 }

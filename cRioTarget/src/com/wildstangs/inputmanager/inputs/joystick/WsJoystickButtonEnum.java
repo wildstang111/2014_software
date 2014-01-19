@@ -14,6 +14,7 @@ public class WsJoystickButtonEnum implements IInputEnum{
     protected boolean isDriver;
     protected int index;
     protected String name;
+    
     public WsJoystickButtonEnum(boolean isDriver, int index, String desc) 
     {
         this.isDriver = isDriver;

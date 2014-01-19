@@ -21,7 +21,7 @@ public class WsLightCannon extends WsSubsystem implements IObserver {
     public WsLightCannon(String name) {
         super(name);
 
-        registerForJoystickButtonNotification(WsJoystickAxisEnum.DRIVER_D_PAD_UP_DOWN);
+        registerForJoystickButtonNotification(WsJoystickAxisEnum.MANIPULATOR_DPAD_Y);
     }
 
     public void acceptNotification(Subject subjectThatCaused) {

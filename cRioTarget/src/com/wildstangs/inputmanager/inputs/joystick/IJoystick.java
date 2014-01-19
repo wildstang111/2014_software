@@ -13,7 +13,7 @@ public interface IJoystick {
      *
      * @return True if the provided button is being pressed, false if not.
      */
-    boolean getRawButton(int but);
+    boolean getRawButton(int button);
 
     /**
      * The current state of the trigger on the Joystick.
@@ -58,6 +58,8 @@ public interface IJoystick {
      * -1 is left, 1 is right
      */
     double getTwist();
+    
+    double getRawAxis(int axisEnum);
 
     public int getAxisChannel(Joystick.AxisType axis);
 

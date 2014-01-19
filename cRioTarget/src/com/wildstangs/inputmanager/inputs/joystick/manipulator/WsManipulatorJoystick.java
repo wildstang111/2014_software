@@ -10,6 +10,7 @@ import com.wildstangs.subjects.base.DoubleSubject;
 import com.wildstangs.subjects.base.ISubjectEnum;
 import com.wildstangs.subjects.base.Subject;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -30,9 +31,9 @@ public class WsManipulatorJoystick implements IInput {
             return enterFlywheelAdjustment;
         } else if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT) {
             return exitFlywheelAdjustment;
-        } else if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_D_PAD_UP_DOWN) {
+        } else if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_DPAD_Y) {
             return dPadUpDown;
-        } else if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_D_PAD_LEFT_RIGHT) {
+        } else if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_DPAD_X) {
             return dPadLeftRight;
         } else if (subjectEnum instanceof WsJoystickButtonEnum && ((WsJoystickButtonEnum) subjectEnum).isDriver() == false) {
             return buttons[((WsJoystickButtonEnum) subjectEnum).toValue()];
@@ -45,8 +46,8 @@ public class WsManipulatorJoystick implements IInput {
     public WsManipulatorJoystick() {
         enterFlywheelAdjustment = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT);
         exitFlywheelAdjustment = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT);
-        dPadUpDown = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_D_PAD_UP_DOWN);
-        dPadLeftRight = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_D_PAD_LEFT_RIGHT);
+        dPadUpDown = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_DPAD_Y);
+        dPadLeftRight = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_DPAD_X);
         manipulatorJoystick = (Joystick) new Joystick(2);
         manipulatorJoystick.setAxisChannel(Joystick.AxisType.kX, 1);
         manipulatorJoystick.setAxisChannel(Joystick.AxisType.kY, 2);
@@ -66,9 +67,9 @@ public class WsManipulatorJoystick implements IInput {
             enterFlywheelAdjustment.setValue(value);
         } else if (key == WsJoystickAxisEnum.MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT) {
             exitFlywheelAdjustment.setValue(value);
-        } else if (key == WsJoystickAxisEnum.MANIPULATOR_D_PAD_UP_DOWN) {
+        } else if (key == WsJoystickAxisEnum.MANIPULATOR_DPAD_Y) {
             dPadUpDown.setValue(value);
-        } else if (key == WsJoystickAxisEnum.MANIPULATOR_D_PAD_LEFT_RIGHT) {
+        } else if (key == WsJoystickAxisEnum.MANIPULATOR_DPAD_X) {
             dPadLeftRight.setValue(value);
         } else if (key instanceof WsJoystickButtonEnum && ((WsJoystickButtonEnum) key).isDriver() == false) {
             buttons[((WsJoystickButtonEnum) key).toValue()].setValue(value);
@@ -82,9 +83,9 @@ public class WsManipulatorJoystick implements IInput {
             return enterFlywheelAdjustment.getValueAsObject();
         } else if (key == WsJoystickAxisEnum.MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT) {
             return exitFlywheelAdjustment.getValueAsObject();
-        } else if (key == WsJoystickAxisEnum.MANIPULATOR_D_PAD_UP_DOWN) {
+        } else if (key == WsJoystickAxisEnum.MANIPULATOR_DPAD_Y) {
             return dPadUpDown.getValueAsObject();
-        } else if (key == WsJoystickAxisEnum.MANIPULATOR_D_PAD_LEFT_RIGHT) {
+        } else if (key == WsJoystickAxisEnum.MANIPULATOR_DPAD_X) {
             return dPadLeftRight.getValueAsObject();
         } else if (key instanceof WsJoystickButtonEnum && ((WsJoystickButtonEnum) key).isDriver() == false) {
             return buttons[((WsJoystickButtonEnum) key).toValue()].getValueAsObject();
@@ -107,17 +108,21 @@ public class WsManipulatorJoystick implements IInput {
         if (manipulatorJoystick instanceof IHardwareJoystick) {
             ((IHardwareJoystick) manipulatorJoystick).pullData();
         }
-        enterFlywheelAdjustment.setValue(manipulatorJoystick.getY() * -1);
-        exitFlywheelAdjustment.setValue(manipulatorJoystick.getZ() * -1);
+        enterFlywheelAdjustment.setValue(manipulatorJoystick.getRawAxis(WsJoystickAxisEnum.LEFT_JOYSTICK_Y) * -1);
+        exitFlywheelAdjustment.setValue(manipulatorJoystick.getRawAxis(WsJoystickAxisEnum.RIGHT_JOYSTICK_Y) * -1);
         //Get data from the D-pad
         //We invert the values so up & left are 1, down & right are -1
-        dPadUpDown.setValue(manipulatorJoystick.getThrottle() * -1);
-        dPadLeftRight.setValue(manipulatorJoystick.getTwist() * -1);
+        dPadUpDown.setValue(manipulatorJoystick.getRawAxis(WsJoystickAxisEnum.DPAD_Y) * -1);
+        dPadLeftRight.setValue(manipulatorJoystick.getRawAxis(WsJoystickAxisEnum.DPAD_X) * -1);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setValue(manipulatorJoystick.getRawButton(i + 1));
         }
-
-        //System.out.println("X: "+  manipulatorJoystick.getX() + " Y: " + manipulatorJoystick.getY() + " Z:" + manipulatorJoystick.getZ() + " TH: " + manipulatorJoystick.getThrottle()+ " TW: " + manipulatorJoystick.getTwist());
+        SmartDashboard.putNumber("Rax Axis 1", manipulatorJoystick.getRawAxis(1));
+        SmartDashboard.putNumber("Rax Axis 2", manipulatorJoystick.getRawAxis(2));
+        SmartDashboard.putNumber("Rax Axis 3", manipulatorJoystick.getRawAxis(3));
+        SmartDashboard.putNumber("Rax Axis 4", manipulatorJoystick.getRawAxis(4));
+        SmartDashboard.putNumber("Rax Axis 5", manipulatorJoystick.getRawAxis(5));
+        SmartDashboard.putNumber("Rax Axis 6", manipulatorJoystick.getRawAxis(6));
     }
 
     public void notifyConfigChange() {
