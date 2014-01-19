@@ -6,20 +6,12 @@ package com.wildstangs.simulation;
 
 import com.wildstangs.simulation.solenoids.WsSolenoidContainer;
 import com.wildstangs.autonomous.WsAutonomousManager;
-import com.wildstangs.configmanager.WsConfigManager;
-import com.wildstangs.configmanager.WsConfigManagerException;
 import com.wildstangs.crio.FrameworkAbstraction;
 import com.wildstangs.input.Controllers;
 import com.wildstangs.inputmanager.base.WsInputManager;
-import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
 import com.wildstangs.logger.*;
 import com.wildstangs.logviewer.LogViewer;
-import com.wildstangs.outputmanager.base.WsOutputManager;
-import com.wildstangs.outputmanager.outputs.WsDriveSpeed;
 import com.wildstangs.profiling.WsProfilingTimer;
-import com.wildstangs.subjects.base.DoubleSubject;
-import com.wildstangs.subsystems.base.WsSubsystemContainer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.io.File;
 
 /**
@@ -58,12 +50,12 @@ public class WsSimulation {
 //        WsConfigManager.getInstance().dumpConfigData();
 
         Logger logger = Logger.getLogger();
-        
+
         //System.out.println(WsConfigManager.getInstance().getConfigItemName("com.wildstangs.WsInputManager.WsDriverJoystick.trim"));
         //System.out.println(WsConfigManager.getInstance().dumpConfigData());
         logger.always(c, "sim_startup", "Simulation starting.");
-        FileLogger.getFileLogger().logData("Sim Started"); 
-        
+        FileLogger.getFileLogger().logData("Sim Started");
+
 //        double pid_setpoint = 10;
 //        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).enableDistancePidControl();
 //        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).setDriveDistancePidSetpoint(pid_setpoint);
@@ -107,21 +99,16 @@ public class WsSimulation {
             periodTimer.endTimingSection();
             periodTimer.startTimingSection();
             durationTimer.startTimingSection();
-//            if (false == autonomousRun || (false == WsAutonomousManager.getInstance().getRunningProgramName().equalsIgnoreCase("Sleeper"))){
-            if (false == autonomousRun  || (false == WsAutonomousManager.getInstance().getRunningProgramName().equalsIgnoreCase("Sleeper"))){
-                
-//                gyro.update();
+            
+            if (false == autonomousRun || (false == WsAutonomousManager.getInstance().getRunningProgramName().equalsIgnoreCase("Sleeper"))) {
 
 //                gyro.update();
                 //Update the encoders
 //                dbEncoders.update();
                 WsInputManager.getInstance().updateSensorData();
-                if(autonomousRun)
-                {
-                   FrameworkAbstraction.autonomousPeriodic();
-                }
-                else
-                {
+                if (autonomousRun) {
+                    FrameworkAbstraction.autonomousPeriodic();
+                } else {
                     FrameworkAbstraction.teleopPeriodic();
                 }
                 WsSolenoidContainer.getInstance().update();
