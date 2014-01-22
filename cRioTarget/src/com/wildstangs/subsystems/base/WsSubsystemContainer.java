@@ -1,6 +1,11 @@
 package com.wildstangs.subsystems.base;
 
 import com.wildstangs.list.WsList;
+import com.wildstangs.subsystems.BallHandler;
+import com.wildstangs.subsystems.Catapult;
+import com.wildstangs.subsystems.HotGoalDetector;
+import com.wildstangs.subsystems.LandingGear;
+import com.wildstangs.subsystems.Wings;
 import com.wildstangs.subsystems.WsCompressor;
 import com.wildstangs.subsystems.WsDriveBase;
 import com.wildstangs.subsystems.WsLED;
@@ -68,11 +73,21 @@ public class WsSubsystemContainer {
     public static final String WS_COMPRESSOR = "WsCompressor";
     public static final String WS_LED = "WsLED";
     public static final String WS_LIGHT_CANNON = "WsLightCannon";
+    public static final String BALL_HANDLER = "BallHandler";
+    public static final String CATAPULT = "Catapult";
+    public static final String LANDING_GEAR = "LandingGear";
+    public static final String HOT_GOAL_DETECTOR = "HotGoalsDetector";
+    public static final String WINGS = "Wings";
     
     public static final int WS_DRIVE_BASE_INDEX = 0;
     public static final int WS_COMPRESSOR_INDEX = 1;
     public static final int WS_LED_INDEX = 2;
     public static final int WS_LIGHT_CANNON_INDEX = 3;
+    public static final int BALL_HANDLER_INDEX = 4;
+    public static final int CATAPULT_INDEX = 5;
+    public static final int LANDING_GEAR_INDEX = 6;
+    public static final int HOT_GOAL_DETECTOR_INDEX = 7;
+    public static final int WINGS_INDEX = 8;
     
     /**
      * Constructor for the subsystem container.
@@ -85,5 +100,10 @@ public class WsSubsystemContainer {
         subsystem.addToIndex(WS_COMPRESSOR_INDEX, new WsCompressor(WS_COMPRESSOR, 1, 1, 1, 1));
         subsystem.addToIndex(WS_LED_INDEX, new WsLED(WS_LED));
         subsystem.addToIndex(WS_LIGHT_CANNON_INDEX, new WsLightCannon(WS_LIGHT_CANNON));
+        subsystem.addToIndex(BALL_HANDLER_INDEX, new BallHandler(BALL_HANDLER));
+        subsystem.addToIndex(CATAPULT_INDEX, new Catapult(CATAPULT));
+        subsystem.addToIndex(LANDING_GEAR_INDEX, new LandingGear(LANDING_GEAR));
+        subsystem.addToIndex(HOT_GOAL_DETECTOR_INDEX, new HotGoalDetector(HOT_GOAL_DETECTOR));
+        subsystem.addToIndex(WINGS_INDEX, new Wings(WINGS));
     }
 }
