@@ -8,6 +8,7 @@ import com.wildstangs.outputmanager.base.WsOutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.base.WsSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -27,6 +28,8 @@ public class Wings extends WsSubsystem {
     }
 
     public void update() {
+        Boolean state = (Boolean) WsOutputManager.getInstance().getOutput(WsOutputManager.WINGS_SOLENOID_INDEX).get(null);
+        SmartDashboard.putBoolean("Wings (up)", state.booleanValue());
     }
 
     public void notifyConfigChange() {
