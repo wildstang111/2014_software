@@ -18,7 +18,7 @@ public class LandingGear extends WsSubsystem implements IObserver{
     
     public LandingGear(String name) {
         super(name);
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.DRIVER_BUTTON_6);
+        registerForJoystickButtonNotification(WsJoystickButtonEnum.DRIVER_BUTTON_5);
     }
 
     public void init() {
@@ -30,7 +30,7 @@ public class LandingGear extends WsSubsystem implements IObserver{
     }
     
     public void acceptNotification(Subject subjectThatCaused){
-         if (WsJoystickButtonEnum.DRIVER_BUTTON_6 == subjectThatCaused.getType()){
+         if (WsJoystickButtonEnum.DRIVER_BUTTON_5 == subjectThatCaused.getType()){
             if (((BooleanSubject)subjectThatCaused).getValue()){
                 landingGearState = !landingGearState;
             }
