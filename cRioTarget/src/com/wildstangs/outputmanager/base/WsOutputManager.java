@@ -6,6 +6,7 @@ import com.wildstangs.outputmanager.outputs.WsDriveSpeed;
 import com.wildstangs.outputmanager.outputs.WsRelay;
 import com.wildstangs.outputmanager.outputs.WsSolenoid;
 import com.wildstangs.outputmanager.outputs.no.NoOutput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
 
 /**
@@ -38,7 +39,9 @@ public class WsOutputManager {
     public void update() {
         for (int i = 0; i < outputs.size(); i++) {
             IOutput out = (IOutput) outputs.get(i);
-            if(out != null) out.update();
+            if (out != null) {
+                out.update();
+            }
         }
     }
 
@@ -49,24 +52,26 @@ public class WsOutputManager {
     public void notifyConfigChange() {
         for (int i = 0; i < outputs.size(); i++) {
             IOutput out = (IOutput) outputs.get(i);
-            if(out != null) out.notifyConfigChange();
+            if (out != null) {
+                out.notifyConfigChange();
+            }
         }
     }
 
     /**
      * Gets an output element based on a key.
      *
-     * @param key A string representation of the output element.
+     * @param index A string representation of the output element.
      *
      * @return The output element.
      */
     public IOutput getOutput(int index) {
-        if(index >= 0 && index < outputs.size())
-        {
+        if (index >= 0 && index < outputs.size()) {
             return (IOutput) outputs.get(index);
         }
         return (IOutput) outputs.get(UNKNOWN_INDEX);
     }
+    
     //Key Values - Need to update for each new output element.
     public static final int UNKNOWN_INDEX = 0;
     public static final int RIGHT_DRIVE_SPEED_INDEX = 1;
@@ -74,7 +79,9 @@ public class WsOutputManager {
     public static final int SHIFTER_INDEX = 3;
     public static final int LIGHT_CANNON_RELAY_INDEX = 4;
     public static final int WINGS_SOLENOID_INDEX = 5;
-    public static final int LANDING_GEAR_SOLENOID_INDEX = 6;     
+    public static final int LANDING_GEAR_SOLENOID_INDEX = 6;
+    public static final int ARM_CATAPAULT_SOLENOID_INDEX = 7;
+
     /**
      * Constructor for WsOutputManager.
      *
@@ -89,7 +96,7 @@ public class WsOutputManager {
         outputs.addToIndex(SHIFTER_INDEX, new WsDoubleSolenoid("Shifter", 1, 1, 2));
         outputs.addToIndex(LIGHT_CANNON_RELAY_INDEX, new WsRelay(1, 2, Relay.Direction.kForward));
         outputs.addToIndex(WINGS_SOLENOID_INDEX, new WsSolenoid("Wings Solenoid", 1, 3));
-        outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsSolenoid("Landing Gear Solenoid", 1, 4));       
-  
+        outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsSolenoid("Landing Gear Solenoid", 1, 4));
+        outputs.addToIndex(ARM_CATAPAULT_SOLENOID_INDEX, new WsSolenoid("Arm Catapult Solenoid", 1, 5));
     }
 }
