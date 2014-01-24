@@ -18,20 +18,13 @@ import edu.wpi.first.wpilibj.Joystick;
 public class WsHardwareJoystick implements IHardwareJoystick, IJoystick {
 
     int controllerIndex;
-
     boolean[] buttonStates;
-
     double rightJoystickY;
-
     double rightJoystickX;
-
     double leftJoystickY;
-
     double leftJoystickX;
-
     // Up is -1
     int dPadY;
-
     // Right is -1
     int dPadX;
 
