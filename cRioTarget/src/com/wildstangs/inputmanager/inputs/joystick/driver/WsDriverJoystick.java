@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.wildstangs.inputmanager.inputs.joystick.driver;
 
 import com.wildstangs.inputmanager.base.IInput;
@@ -20,21 +16,34 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author Nathan
  */
 public class WsDriverJoystick implements IInput {
-    
-    DoubleSubject throttle;
-    DoubleSubject heading;
-    DoubleSubject dPadUpDown;
+
+    final static int numberOfAxes = 6;
+    DoubleSubject[] axes;
     final static int numberOfButtons = 12;
     BooleanSubject[] buttons;
     Joystick driverJoystick = null;
-    
+
+    public WsDriverJoystick() {
+        driverJoystick = (Joystick) new Joystick(1);
+
+        axes = new DoubleSubject[numberOfAxes];
+        for (int i = 0; i < axes.length; i++) {
+            if (WsJoystickAxisEnum.getEnumFromIndex(true, i) != null) {
+                axes[i] = new DoubleSubject(WsJoystickAxisEnum.getEnumFromIndex(true, i));
+            } else {
+                axes[i] = new DoubleSubject("DriverSubject" + i);
+            }
+        }
+
+        buttons = new BooleanSubject[numberOfButtons];
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i] = new BooleanSubject(WsJoystickButtonEnum.getEnumFromIndex(true, i));
+        }
+    }
+
     public Subject getSubject(ISubjectEnum subjectEnum) {
-        if (subjectEnum == WsJoystickAxisEnum.DRIVER_THROTTLE) {
-            return throttle;
-        } else if (subjectEnum == WsJoystickAxisEnum.DRIVER_HEADING) {
-            return heading;
-        } else if (subjectEnum == WsJoystickAxisEnum.DRIVER_DPAD_Y) {
-            return dPadUpDown;
+        if (subjectEnum instanceof WsJoystickAxisEnum && ((WsJoystickAxisEnum) subjectEnum).isDriver() == true) {
+            return axes[((WsJoystickAxisEnum) subjectEnum).toValue() - 1];
         } else if (subjectEnum instanceof WsJoystickButtonEnum && ((WsJoystickButtonEnum) subjectEnum).isDriver() == true) {
             return buttons[((WsJoystickButtonEnum) subjectEnum).toValue()];
         } else {
@@ -42,72 +51,53 @@ public class WsDriverJoystick implements IInput {
             return null;
         }
     }
-    
-    public WsDriverJoystick() {
-        throttle = new DoubleSubject("Throttle");
-        heading = new DoubleSubject("Heading");
-        dPadUpDown = new DoubleSubject(WsJoystickAxisEnum.DRIVER_DPAD_Y);
-        driverJoystick = (Joystick) new Joystick(1);
-        buttons = new BooleanSubject[numberOfButtons];
-        driverJoystick.setAxisChannel(Joystick.AxisType.kThrottle, 6);
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i] = new BooleanSubject(WsJoystickButtonEnum.getEnumFromIndex(true, i));
-        }
-        
-    }
-    
+
     public void set(IInputEnum key, Object value) {
-        if (key == WsJoystickAxisEnum.DRIVER_THROTTLE) {
-            throttle.setValue(value);
-            // this serves no purpose but an example
-        } else if (key == WsJoystickAxisEnum.DRIVER_HEADING) {
-            heading.setValue(value);
-        } else if (key == WsJoystickAxisEnum.DRIVER_DPAD_Y) {
-            dPadUpDown.setValue(value);
+        if (key instanceof WsJoystickAxisEnum && ((WsJoystickAxisEnum) key).isDriver() == true) {
+            axes[((WsJoystickAxisEnum) key).toValue() - 1].setValue(value);
         } else if (key instanceof WsJoystickButtonEnum && ((WsJoystickButtonEnum) key).isDriver() == true) {
             buttons[((WsJoystickButtonEnum) key).toValue()].setValue(value);
         } else {
             System.out.println("key not supported or incorrect.");
         }
-        
     }
-    
+
     public Object get(IInputEnum key) {
-        if (key == WsJoystickAxisEnum.DRIVER_THROTTLE) {
-            return throttle.getValueAsObject();
-        } else if (key == WsJoystickAxisEnum.DRIVER_HEADING) {
-            return heading.getValueAsObject();
-        } else if (key == WsJoystickAxisEnum.DRIVER_DPAD_Y) {
-            return dPadUpDown.getValueAsObject();
+        if (key instanceof WsJoystickAxisEnum && ((WsJoystickAxisEnum) key).isDriver() == true) {
+            return axes[((WsJoystickAxisEnum) key).toValue() - 1].getValueAsObject();
         } else if (key instanceof WsJoystickButtonEnum && ((WsJoystickButtonEnum) key).isDriver() == true) {
             return buttons[((WsJoystickButtonEnum) key).toValue()].getValueAsObject();
         } else {
             return new Double(-100);
         }
     }
-    
+
     public void update() {
-        throttle.updateValue();
-        heading.updateValue();
-        dPadUpDown.updateValue();
+        for (int i = 0; i < axes.length; i++) {
+            axes[i].updateValue();
+        }
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].updateValue();
         }
     }
-    
+
     public void pullData() {
         if (driverJoystick instanceof IHardwareJoystick) {
             ((IHardwareJoystick) driverJoystick).pullData();
         }
-        throttle.setValue(driverJoystick.getRawAxis(WsJoystickAxisEnum.LEFT_JOYSTICK_Y) * -1);
-        heading.setValue(driverJoystick.getRawAxis(WsJoystickAxisEnum.RIGHT_JOYSTICK_X));
-        dPadUpDown.setValue(driverJoystick.getRawAxis(WsJoystickAxisEnum.DPAD_Y) * -1);
+        for (int i = 0; i < axes.length; i++) {
+            // Invert the vertical axes so that full up is 1
+            if (i % 2 != 0) {
+                axes[i].setValue(driverJoystick.getRawAxis(i + 1) * -1);
+            } else {
+                axes[i].setValue(driverJoystick.getRawAxis(i + 1));
+            }
+        }
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setValue(driverJoystick.getRawButton(i + 1));
         }
-        
     }
-    
+
     public void notifyConfigChange() {
     }
 }
