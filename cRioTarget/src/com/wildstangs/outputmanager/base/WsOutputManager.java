@@ -4,6 +4,7 @@ import com.wildstangs.list.WsList;
 import com.wildstangs.outputmanager.outputs.WsDoubleSolenoid;
 import com.wildstangs.outputmanager.outputs.WsDriveSpeed;
 import com.wildstangs.outputmanager.outputs.WsRelay;
+import com.wildstangs.outputmanager.outputs.WsSolenoid;
 import com.wildstangs.outputmanager.outputs.no.NoOutput;
 import edu.wpi.first.wpilibj.Relay;
 
@@ -66,17 +67,14 @@ public class WsOutputManager {
         }
         return (IOutput) outputs.get(UNKNOWN_INDEX);
     }
-    //Names to pass into some of the outputs
-    public static final String RIGHT_DRIVE_SPEED = "RightDriveSpeed";
-    public static final String LEFT_DRIVE_SPEED = "LeftDriveSpeed";
-    public static final String SHIFTER = "Shifter";
-    
     //Key Values - Need to update for each new output element.
     public static final int UNKNOWN_INDEX = 0;
     public static final int RIGHT_DRIVE_SPEED_INDEX = 1;
     public static final int LEFT_DRIVE_SPEED_INDEX = 2;
     public static final int SHIFTER_INDEX = 3;
     public static final int LIGHT_CANNON_RELAY_INDEX = 4;
+    public static final int WINGS_SOLENOID_INDEX = 5;
+    public static final int LANDING_GEAR_SOLENOID_INDEX = 6;     
     /**
      * Constructor for WsOutputManager.
      *
@@ -86,9 +84,12 @@ public class WsOutputManager {
     protected WsOutputManager() {
         //Add the facade data elements
         outputs.addToIndex(UNKNOWN_INDEX, new NoOutput());
-        outputs.addToIndex(RIGHT_DRIVE_SPEED_INDEX, new WsDriveSpeed(RIGHT_DRIVE_SPEED, 3, 4));
-        outputs.addToIndex(LEFT_DRIVE_SPEED_INDEX, new WsDriveSpeed(LEFT_DRIVE_SPEED, 1, 2));
-        outputs.addToIndex(SHIFTER_INDEX, new WsDoubleSolenoid(SHIFTER, 1, 1, 2));
+        outputs.addToIndex(RIGHT_DRIVE_SPEED_INDEX, new WsDriveSpeed("Right Drive Speed", 3, 4));
+        outputs.addToIndex(LEFT_DRIVE_SPEED_INDEX, new WsDriveSpeed("Left Drive Speed", 1, 2));
+        outputs.addToIndex(SHIFTER_INDEX, new WsDoubleSolenoid("Shifter", 1, 1, 2));
         outputs.addToIndex(LIGHT_CANNON_RELAY_INDEX, new WsRelay(1, 2, Relay.Direction.kForward));
+        outputs.addToIndex(WINGS_SOLENOID_INDEX, new WsSolenoid("Wings Solenoid", 1, 3));
+        outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsSolenoid("Landing Gear Solenoid", 1, 4));       
+  
     }
 }
