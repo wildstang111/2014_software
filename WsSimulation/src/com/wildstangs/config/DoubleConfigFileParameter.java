@@ -35,7 +35,7 @@ public class DoubleConfigFileParameter extends ConfigFileParameter {
             return Double.parseDouble(WsConfigManager.getInstance().getConfigParamByName(fullName));
         } catch (Throwable e) {
             Logger.getLogger().error(this.getClass().getName(), "getValue", fullName + " parameter not found. Using default value.");
-            WsConfigManager.getInstance().doNotReturnDefaultValue(fullName, "" + defaultValue);
+            WsConfigManager.getInstance().addParameterToConfigFile(fullName, "" + defaultValue);
             return defaultValue;
 
         }
