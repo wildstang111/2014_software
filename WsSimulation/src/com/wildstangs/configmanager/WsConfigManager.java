@@ -162,7 +162,7 @@ public class WsConfigManager {
         }
         return o;
     }
-    public void doNotReturnDefaultValue(String name, String defaultValue) {
+    public void addParameterToConfigFile(String name, String defaultValue) {
            try {
               configFile  = new File(configFileName);
               if (!configFile.exists()){
