@@ -5,6 +5,7 @@ import com.wildstangs.outputmanager.outputs.WsDoubleSolenoid;
 import com.wildstangs.outputmanager.outputs.WsDriveSpeed;
 import com.wildstangs.outputmanager.outputs.WsRelay;
 import com.wildstangs.outputmanager.outputs.WsSolenoid;
+import com.wildstangs.outputmanager.outputs.WsVictor;
 import com.wildstangs.outputmanager.outputs.no.NoOutput;
 import edu.wpi.first.wpilibj.Relay;
 
@@ -74,7 +75,12 @@ public class WsOutputManager {
     public static final int SHIFTER_INDEX = 3;
     public static final int LIGHT_CANNON_RELAY_INDEX = 4;
     public static final int WINGS_SOLENOID_INDEX = 5;
-    public static final int LANDING_GEAR_SOLENOID_INDEX = 6;     
+    public static final int LANDING_GEAR_SOLENOID_INDEX = 6;  
+    
+    public static final int FRONT_ARM_VICTOR_INDEX = 8;
+    public static final int BACK_ARM_VICTOR_INDEX = 9;
+    public static final int FRONT_ARM_SPIKE_INDEX = 10;
+    public static final int BACK_ARM_SPIKE_INDEX = 11;
     /**
      * Constructor for WsOutputManager.
      *
@@ -90,6 +96,10 @@ public class WsOutputManager {
         outputs.addToIndex(LIGHT_CANNON_RELAY_INDEX, new WsRelay(1, 2, Relay.Direction.kForward));
         outputs.addToIndex(WINGS_SOLENOID_INDEX, new WsSolenoid("Wings Solenoid", 1, 3));
         outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsSolenoid("Landing Gear Solenoid", 1, 4));       
-  
+        
+        outputs.addToIndex(FRONT_ARM_VICTOR_INDEX, new WsVictor("Front Arm Victor", 5));       
+        outputs.addToIndex(BACK_ARM_VICTOR_INDEX, new WsVictor("Back Arm Victor", 6));
+        outputs.addToIndex(FRONT_ARM_SPIKE_INDEX, new WsRelay(1, 6, Relay.Direction.kBoth));
+        outputs.addToIndex(BACK_ARM_SPIKE_INDEX, new WsRelay(1, 7, Relay.Direction.kBoth));
     }
 }

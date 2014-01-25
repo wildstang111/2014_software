@@ -1,5 +1,6 @@
 package com.wildstangs.inputmanager.base;
 
+import com.wildstangs.inputmanager.inputs.WsAnalogInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSAnalogInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSDigitalInput;
 import com.wildstangs.inputmanager.inputs.joystick.driver.WsDriverJoystick;
@@ -128,16 +129,22 @@ public class WsInputManager {
             Logger.getLogger().debug(this.getClass().getName(), "attachJoystickButton", "Oops! Check that the inputs implement the required interfaces.");
         }
     }
-    /**
-     * Keys to represent Inputs
-     */
     public static final int UNKNOWN_INDEX = 0;
+    
+    /**
+     * Keys to represent OI Inputs
+     */
     public static final int DRIVER_JOYSTICK_INDEX = 1;
     public static final int MANIPULATOR_JOYSTICK_INDEX = 2;
     public static final int AUTO_PROGRAM_SELECTOR_INDEX = 3;
     public static final int LOCK_IN_SWITCH_INDEX = 3;
     public static final int START_POSITION_SELECTOR_INDEX = 3;
-
+    
+    /**
+     * Keys to represent SENSOR Inputs
+     */
+    public static final int FRONT_ARM_POT_INDEX = 1;
+    public static final int BACK_ARM_POT_INDEX = 2;
     /**
      * Constructor for the WsInputManager.
      *
@@ -147,6 +154,8 @@ public class WsInputManager {
     protected WsInputManager() {
         //Add the facade data elements
         sensorInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
+        sensorInputs.addToIndex(FRONT_ARM_POT_INDEX, new WsAnalogInput(1));
+        sensorInputs.addToIndex(BACK_ARM_POT_INDEX, new WsAnalogInput(2));
         
         oiInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         oiInputs.addToIndex(DRIVER_JOYSTICK_INDEX, new WsDriverJoystick());
@@ -154,5 +163,6 @@ public class WsInputManager {
         oiInputs.addToIndex(AUTO_PROGRAM_SELECTOR_INDEX, new WsDSAnalogInput(1));
         oiInputs.addToIndex(LOCK_IN_SWITCH_INDEX, new WsDSDigitalInput(1));
         oiInputs.addToIndex(START_POSITION_SELECTOR_INDEX, new WsDSAnalogInput(2));
+        
     }
 }
