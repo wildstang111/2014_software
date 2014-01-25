@@ -1,15 +1,18 @@
 package com.wildstangs.subsystems;
 
 import com.wildstangs.inputmanager.base.WsInputManager;
+import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
 import com.wildstangs.inputmanager.inputs.joystick.WsJoystickButtonEnum;
 import com.wildstangs.outputmanager.base.WsOutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
+import com.wildstangs.subjects.base.DoubleSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.arm.Arm;
 import com.wildstangs.subsystems.base.WsSubsystem;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.Random;
 
 /**
  *
@@ -21,6 +24,9 @@ public class BallHandler extends WsSubsystem implements IObserver
     protected Arm frontArm, backArm;
     protected boolean frontForwardButton = false, frontReverseButton = false;
     protected boolean backForwardButton = false, backReverseButton = false;
+    protected double frontArmJoystickValue = 0.0, backArmJoystickValue = 0.0;
+    Random rnd = new Random();
+    int[] positions = {10, 100, 200, 350, 50, 90, 30, 120, 160, 212, 208, 240};
     
     public BallHandler(String name) 
     {
@@ -33,6 +39,13 @@ public class BallHandler extends WsSubsystem implements IObserver
         registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_6);
         registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_7);
         registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_8);
+        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_2);
+        
+        Subject subject = WsInputManager.getInstance().getOiInput(WsInputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL);
+        subject.attach(this);
+        
+        subject = WsInputManager.getInstance().getOiInput(WsInputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(WsJoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL);
+        subject.attach(this);
     }
 
     public void init() 
@@ -69,6 +82,9 @@ public class BallHandler extends WsSubsystem implements IObserver
             backArm.setRoller(Relay.Value.kReverse);
         }
         
+        frontArm.setVictor(frontArmJoystickValue);
+        backArm.setVictor(backArmJoystickValue);
+        
         frontArm.update();
         backArm.update();
         
@@ -76,12 +92,15 @@ public class BallHandler extends WsSubsystem implements IObserver
         Relay.Value backValue = backArm.getRollerValue();
         String frontString = frontValue == Relay.Value.kForward ? "Forward" : (frontValue == Relay.Value.kReverse ? "Reverse" : "Off");
         String backString = backValue == Relay.Value.kForward ? "Forward" : (backValue == Relay.Value.kReverse ? "Reverse" : "Off");
+        
         SmartDashboard.putNumber("Current Front Arm Angle", frontArm.getCurrentAngle());
         SmartDashboard.putNumber("Wanted Front Arm Angle", frontArm.getWantedAngle());
         SmartDashboard.putNumber("Current Back Arm Angle", backArm.getCurrentAngle());
         SmartDashboard.putNumber("Wanted Back Arm Angle", backArm.getWantedAngle());
         SmartDashboard.putString("Front Arm Roller", frontString);
         SmartDashboard.putString("Back Arm Roller", backString);
+        SmartDashboard.putNumber("Front Arm Victor", frontArm.getVictorSpeed());
+        SmartDashboard.putNumber("Back Arm Victor", backArm.getVictorSpeed());
     }
 
     public void notifyConfigChange() 
@@ -98,15 +117,29 @@ public class BallHandler extends WsSubsystem implements IObserver
         }
         else if(subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_6)
         {
-            this.frontReverseButton = ((BooleanSubject) subjectThatCaused).getValue();
+            this.backForwardButton = ((BooleanSubject) subjectThatCaused).getValue();
         }
         else if(subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_7)
         {
-            this.backForwardButton = ((BooleanSubject) subjectThatCaused).getValue();
+            this.frontReverseButton = ((BooleanSubject) subjectThatCaused).getValue();
         }
         else if(subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_8)
         {
             this.backReverseButton = ((BooleanSubject) subjectThatCaused).getValue();
+        }
+        else if(subjectThatCaused.getType() == WsJoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL)
+        {
+            this.frontArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
+        }
+        else if(subjectThatCaused.getType() == WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL)
+        {
+            this.backArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
+        }
+        else if(subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_2)
+        {
+            int position = positions[rnd.nextInt(positions.length)];
+            this.frontArm.setToAngle(position);
+            SmartDashboard.putNumber("Setting to position", position);
         }
     }
 }

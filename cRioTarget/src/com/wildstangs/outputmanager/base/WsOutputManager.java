@@ -93,13 +93,13 @@ public class WsOutputManager {
         outputs.addToIndex(RIGHT_DRIVE_SPEED_INDEX, new WsDriveSpeed("Right Drive Speed", 3, 4));
         outputs.addToIndex(LEFT_DRIVE_SPEED_INDEX, new WsDriveSpeed("Left Drive Speed", 1, 2));
         outputs.addToIndex(SHIFTER_INDEX, new WsDoubleSolenoid("Shifter", 1, 1, 2));
-        outputs.addToIndex(LIGHT_CANNON_RELAY_INDEX, new WsRelay(1, 2, Relay.Direction.kForward));
+        outputs.addToIndex(LIGHT_CANNON_RELAY_INDEX, new WsRelay(1, 5, Relay.Direction.kForward));
         outputs.addToIndex(WINGS_SOLENOID_INDEX, new WsSolenoid("Wings Solenoid", 1, 3));
         outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsSolenoid("Landing Gear Solenoid", 1, 4));       
         
         outputs.addToIndex(FRONT_ARM_VICTOR_INDEX, new WsVictor("Front Arm Victor", 5));       
         outputs.addToIndex(BACK_ARM_VICTOR_INDEX, new WsVictor("Back Arm Victor", 6));
-        outputs.addToIndex(FRONT_ARM_SPIKE_INDEX, new WsRelay(1, 6, Relay.Direction.kBoth));
+        outputs.addToIndex(FRONT_ARM_SPIKE_INDEX, new WsRelay(1, 2, Relay.Direction.kBoth));
         outputs.addToIndex(BACK_ARM_SPIKE_INDEX, new WsRelay(1, 7, Relay.Direction.kBoth));
     }
 }
