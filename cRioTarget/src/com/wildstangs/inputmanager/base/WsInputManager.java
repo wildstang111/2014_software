@@ -1,5 +1,6 @@
 package com.wildstangs.inputmanager.base;
 
+import com.wildstangs.inputmanager.inputs.WsDigitalInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSAnalogInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSDigitalInput;
 import com.wildstangs.inputmanager.inputs.joystick.driver.WsDriverJoystick;
@@ -43,7 +44,9 @@ public class WsInputManager {
         IInput sIn;
         for (int i = 0; i < sensorInputs.size(); i++) {
             sIn = (IInput) sensorInputs.get(i);
-            if(sIn == null) continue;
+            if (sIn == null) {
+                continue;
+            }
             sIn.pullData();
             sIn.update();
         }
@@ -56,7 +59,9 @@ public class WsInputManager {
         IInput oiIn;
         for (int i = 0; i < oiInputs.size(); i++) {
             oiIn = (IInput) oiInputs.get(i);
-            if(oiIn == null) continue;
+            if (oiIn == null) {
+                continue;
+            }
             oiIn.pullData();
             oiIn.update();
         }
@@ -66,7 +71,9 @@ public class WsInputManager {
         IInput oiIn;
         for (int i = 0; i < oiInputs.size(); i++) {
             oiIn = (IInput) oiInputs.get(i);
-            if(oiIn == null) continue;
+            if (oiIn == null) {
+                continue;
+            }
             if (!(oiIn instanceof WsDriverJoystick || oiIn instanceof WsManipulatorJoystick)) {
                 oiIn.pullData();
             }
@@ -82,11 +89,15 @@ public class WsInputManager {
     public void notifyConfigChange() {
         for (int i = 0; i < sensorInputs.size(); i++) {
             IInput sIn = (IInput) sensorInputs.get(i);
-            if(sIn != null) sIn.notifyConfigChange();
+            if (sIn != null) {
+                sIn.notifyConfigChange();
+            }
         }
         for (int i = 0; i < oiInputs.size(); i++) {
             IInput oiIn = (IInput) oiInputs.get(i);
-            if(oiIn != null) oiIn.notifyConfigChange();
+            if (oiIn != null) {
+                oiIn.notifyConfigChange();
+            }
         }
     }
 
@@ -97,8 +108,7 @@ public class WsInputManager {
      * @return A WsInputInterface.
      */
     public IInput getOiInput(int index) {
-        if(index >= 0 && index < oiInputs.size())
-        {
+        if (index >= 0 && index < oiInputs.size()) {
             return (IInput) oiInputs.get(index);
         }
         return (IInput) oiInputs.get(UNKNOWN_INDEX);
@@ -111,20 +121,17 @@ public class WsInputManager {
      * @return A WsInputInterface.
      */
     public IInput getSensorInput(int index) {
-        if(index >= 0 || index < sensorInputs.size())
-        {
+        if (index >= 0 || index < sensorInputs.size()) {
             return (IInput) sensorInputs.get(index);
         }
         return (IInput) sensorInputs.get(UNKNOWN_INDEX);
     }
-    
-    final public void attachJoystickButton(IInputEnum button, IObserver observer ) {
-        if (button instanceof WsJoystickButtonEnum)
-        {
+
+    final public void attachJoystickButton(IInputEnum button, IObserver observer) {
+        if (button instanceof WsJoystickButtonEnum) {
             Subject subject = WsInputManager.getInstance().getOiInput(((WsJoystickButtonEnum) button).isDriver() ? WsInputManager.DRIVER_JOYSTICK_INDEX : WsInputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(button);
             subject.attach(observer);
-        }
-        else {
+        } else {
             Logger.getLogger().debug(this.getClass().getName(), "attachJoystickButton", "Oops! Check that the inputs implement the required interfaces.");
         }
     }
@@ -135,8 +142,9 @@ public class WsInputManager {
     public static final int DRIVER_JOYSTICK_INDEX = 1;
     public static final int MANIPULATOR_JOYSTICK_INDEX = 2;
     public static final int AUTO_PROGRAM_SELECTOR_INDEX = 3;
-    public static final int LOCK_IN_SWITCH_INDEX = 3;
-    public static final int START_POSITION_SELECTOR_INDEX = 3;
+    public static final int LOCK_IN_SWITCH_INDEX = 4;
+    public static final int START_POSITION_SELECTOR_INDEX = 5;
+    public static final int CATAPULT_DOWN_LIMIT_SWITCH = 6;
 
     /**
      * Constructor for the WsInputManager.
@@ -147,7 +155,8 @@ public class WsInputManager {
     protected WsInputManager() {
         //Add the facade data elements
         sensorInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
-        
+        sensorInputs.addToIndex(CATAPULT_DOWN_LIMIT_SWITCH, new WsDigitalInput(1));
+
         oiInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         oiInputs.addToIndex(DRIVER_JOYSTICK_INDEX, new WsDriverJoystick());
         oiInputs.addToIndex(MANIPULATOR_JOYSTICK_INDEX, new WsManipulatorJoystick());
