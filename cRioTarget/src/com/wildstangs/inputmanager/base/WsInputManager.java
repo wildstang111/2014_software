@@ -145,6 +145,15 @@ public class WsInputManager {
     public static final int LOCK_IN_SWITCH_INDEX = 4;
     public static final int START_POSITION_SELECTOR_INDEX = 5;
     public static final int CATAPULT_DOWN_LIMIT_SWITCH = 6;
+    public static final int PRESSURE_SWITCH = 7;
+    public static final int LEFT_ENCODER_A = 8;
+    public static final int LEFT_ENCODER_B = 9;
+    public static final int RIGHT_ENCODER_A = 10;
+    public static final int RIGHT_ENCODER_B = 11;
+    public static final int TENSION_LIMIT_SWITCH = 12;
+    public static final int BALL_DETECT_SWITCH = 13;
+    public static final int LATCH_POSITION_SWITCH = 14;
+    public static final int CATAPULT_DOWN_SWITCH = 15;
 
     /**
      * Constructor for the WsInputManager.
@@ -155,7 +164,15 @@ public class WsInputManager {
     protected WsInputManager() {
         //Add the facade data elements
         sensorInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
-        sensorInputs.addToIndex(CATAPULT_DOWN_LIMIT_SWITCH, new WsDigitalInput(1));
+        sensorInputs.addToIndex(PRESSURE_SWITCH, new WsDigitalInput(1));
+        sensorInputs.addToIndex(LEFT_ENCODER_A, new WsDigitalInput(2));
+        sensorInputs.addToIndex(LEFT_ENCODER_B, new WsDigitalInput(3));
+        sensorInputs.addToIndex(RIGHT_ENCODER_A, new WsDigitalInput(4));
+        sensorInputs.addToIndex(RIGHT_ENCODER_B, new WsDigitalInput(5));
+        sensorInputs.addToIndex(TENSION_LIMIT_SWITCH, new WsDigitalInput(6));
+        sensorInputs.addToIndex(BALL_DETECT_SWITCH, new WsDigitalInput(7));
+        sensorInputs.addToIndex(LATCH_POSITION_SWITCH, new WsDigitalInput(8));
+        sensorInputs.addToIndex(CATAPULT_DOWN_SWITCH, new WsDigitalInput(9));
 
         oiInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         oiInputs.addToIndex(DRIVER_JOYSTICK_INDEX, new WsDriverJoystick());
