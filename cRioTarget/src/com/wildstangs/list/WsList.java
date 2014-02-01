@@ -10,32 +10,27 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
  *
  * @author Joey
  */
-public class WsList extends List
-{
+public class WsList extends List {
 
-    public WsList(int initialSize)
-    {
+    public WsList(int initialSize) {
         super(initialSize);
     }
 
-    public WsList()
-    {
+    public WsList() {
         super();
     }
-    
-    public void addToIndex(int index, Object object)
-    {
-        if(index >= this.size)
-        {
+
+    public void addToIndex(int index, Object object) {
+        if (index >= this.size) {
             Object[] newArray = new Object[index + 1];
-            
+
             System.arraycopy(this.array, 0, newArray, 0, this.size);
-            
+
             this.array = newArray;
-            
+
             size = index + 1;
         }
-        
+
         this.set(index, object);
     }
 }

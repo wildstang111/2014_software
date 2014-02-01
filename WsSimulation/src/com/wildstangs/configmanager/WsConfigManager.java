@@ -8,8 +8,10 @@ import com.wildstangs.inputmanager.base.WsInputManager;
 import com.wildstangs.outputmanager.base.WsOutputManager;
 import com.wildstangs.subsystems.base.WsSubsystemContainer;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -26,7 +28,9 @@ public class WsConfigManager {
     private static WsConfigManager instance = null;
     private static String configFileName = "/ws_config.txt";
     private static Hashtable config = new Hashtable();
-
+    String path;
+    File configFile;
+    BufferedWriter bw;
     /**
      * Gets the instance of the WsConfigManager Singleton.
      *
@@ -158,7 +162,25 @@ public class WsConfigManager {
         }
         return o;
     }
-
+    public void addParameterToConfigFile(String name, String defaultValue) {
+           try {
+              configFile  = new File(configFileName);
+              if (!configFile.exists()){
+                  configFile.createNewFile();
+              }
+              FileWriter out = new FileWriter(configFile, true);
+              bw = new BufferedWriter(out);
+              bw.newLine();
+              bw.append(name + "=" + defaultValue);
+              bw.flush();
+              bw.close();
+            } catch (IOException e) { 
+                System.out.println("Unable to open output file." + e.toString());
+                e.printStackTrace();
+            }
+    
+    
+    }
     public String dumpConfigData() {
         for (Enumeration e = config.keys(); e.hasMoreElements();) {
             Object name = e.nextElement();

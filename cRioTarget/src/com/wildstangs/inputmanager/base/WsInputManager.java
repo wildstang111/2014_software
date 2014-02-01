@@ -1,5 +1,6 @@
 package com.wildstangs.inputmanager.base;
 
+import com.wildstangs.inputmanager.inputs.WsDigitalInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSAnalogInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSDigitalInput;
 import com.wildstangs.inputmanager.inputs.joystick.driver.WsDriverJoystick;
@@ -141,8 +142,9 @@ public class WsInputManager {
     public static final int DRIVER_JOYSTICK_INDEX = 1;
     public static final int MANIPULATOR_JOYSTICK_INDEX = 2;
     public static final int AUTO_PROGRAM_SELECTOR_INDEX = 3;
-    public static final int LOCK_IN_SWITCH_INDEX = 3;
-    public static final int START_POSITION_SELECTOR_INDEX = 3;
+    public static final int LOCK_IN_SWITCH_INDEX = 4;
+    public static final int START_POSITION_SELECTOR_INDEX = 5;
+    public static final int CATAPULT_DOWN_LIMIT_SWITCH = 6;
 
     /**
      * Constructor for the WsInputManager.
@@ -153,6 +155,7 @@ public class WsInputManager {
     protected WsInputManager() {
         //Add the facade data elements
         sensorInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
+        sensorInputs.addToIndex(CATAPULT_DOWN_LIMIT_SWITCH, new WsDigitalInput(1));
 
         oiInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         oiInputs.addToIndex(DRIVER_JOYSTICK_INDEX, new WsDriverJoystick());
