@@ -41,7 +41,7 @@ public class Catapult extends WsSubsystem implements IObserver {
         // Fire the catapault
         registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_4);
         // Limit switch to detect when the catapult is down
-        registerForSensorNotification(WsInputManager.CATAPULT_DOWN_LIMIT_SWITCH);
+        registerForSensorNotification(WsInputManager.CATAPULT_DOWN_LIMIT_SWITCH_INDEX);
     }
 
     public void init() {
@@ -59,10 +59,10 @@ public class Catapult extends WsSubsystem implements IObserver {
         }
         
         if(catapultState == CatapultState.DOWN) {
-            (WsOutputManager.getInstance().getOutput(WsOutputManager.ARM_CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(false));
+            (WsOutputManager.getInstance().getOutput(WsOutputManager.CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(false));
             SmartDashboard.putString("Catapult state", "down");
         } else {
-            (WsOutputManager.getInstance().getOutput(WsOutputManager.ARM_CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(true));
+            (WsOutputManager.getInstance().getOutput(WsOutputManager.CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(true));
             SmartDashboard.putString("Catapult state", "up");
         }
     }
@@ -80,7 +80,7 @@ public class Catapult extends WsSubsystem implements IObserver {
             armCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_4) {
             fireCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.CATAPULT_DOWN_LIMIT_SWITCH).getSubject(null))) {
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.CATAPULT_DOWN_LIMIT_SWITCH_INDEX).getSubject(null))) {
             isCatapultDown = ((BooleanSubject) subjectThatCaused).getValue();
         }
     }

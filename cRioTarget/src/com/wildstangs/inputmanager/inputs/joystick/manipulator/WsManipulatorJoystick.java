@@ -26,9 +26,9 @@ public class WsManipulatorJoystick implements IInput {
     Joystick manipulatorJoystick = null;
 
     public Subject getSubject(ISubjectEnum subjectEnum) {
-        if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT) {
+        if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL) {
             return enterFlywheelAdjustment;
-        } else if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT) {
+        } else if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
             return exitFlywheelAdjustment;
         } else if (subjectEnum == WsJoystickAxisEnum.MANIPULATOR_D_PAD_UP_DOWN) {
             return dPadUpDown;
@@ -43,8 +43,8 @@ public class WsManipulatorJoystick implements IInput {
     }
 
     public WsManipulatorJoystick() {
-        enterFlywheelAdjustment = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT);
-        exitFlywheelAdjustment = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT);
+        enterFlywheelAdjustment = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL);
+        exitFlywheelAdjustment = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL);
         dPadUpDown = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_D_PAD_UP_DOWN);
         dPadLeftRight = new DoubleSubject(WsJoystickAxisEnum.MANIPULATOR_D_PAD_LEFT_RIGHT);
         manipulatorJoystick = (Joystick) new Joystick(2);
@@ -62,9 +62,9 @@ public class WsManipulatorJoystick implements IInput {
     }
 
     public void set(IInputEnum key, Object value) {
-        if (key == WsJoystickAxisEnum.MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT) {
+        if (key == WsJoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL) {
             enterFlywheelAdjustment.setValue(value);
-        } else if (key == WsJoystickAxisEnum.MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT) {
+        } else if (key == WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
             exitFlywheelAdjustment.setValue(value);
         } else if (key == WsJoystickAxisEnum.MANIPULATOR_D_PAD_UP_DOWN) {
             dPadUpDown.setValue(value);
@@ -78,9 +78,9 @@ public class WsManipulatorJoystick implements IInput {
     }
 
     public Object get(IInputEnum key) {
-        if (key == WsJoystickAxisEnum.MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT) {
+        if (key == WsJoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL) {
             return enterFlywheelAdjustment.getValueAsObject();
-        } else if (key == WsJoystickAxisEnum.MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT) {
+        } else if (key == WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
             return exitFlywheelAdjustment.getValueAsObject();
         } else if (key == WsJoystickAxisEnum.MANIPULATOR_D_PAD_UP_DOWN) {
             return dPadUpDown.getValueAsObject();
