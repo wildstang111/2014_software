@@ -81,6 +81,7 @@ public class WsOutputManager {
     public static final int WINGS_SOLENOID_INDEX = 5;
     public static final int LANDING_GEAR_SOLENOID_INDEX = 6;
     public static final int ARM_CATAPAULT_SOLENOID_INDEX = 7;
+    public static final int EARS_SOLENOID_INDEX = 8;
 
     /**
      * Constructor for WsOutputManager.
@@ -88,6 +89,7 @@ public class WsOutputManager {
      * All new output elements need to be added in the constructor as well as
      * having a key value added above.
      */
+    
     protected WsOutputManager() {
         //Add the facade data elements
         outputs.addToIndex(UNKNOWN_INDEX, new NoOutput());
@@ -98,5 +100,6 @@ public class WsOutputManager {
         outputs.addToIndex(WINGS_SOLENOID_INDEX, new WsSolenoid("Wings Solenoid", 1, 3));
         outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsSolenoid("Landing Gear Solenoid", 1, 4));
         outputs.addToIndex(ARM_CATAPAULT_SOLENOID_INDEX, new WsSolenoid("Arm Catapult Solenoid", 1, 5));
+        outputs.addToIndex(EARS_SOLENOID_INDEX, new WsDoubleSolenoid("Ears Double Solenoid", 2, 1, 2));
     }
 }
