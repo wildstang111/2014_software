@@ -82,6 +82,7 @@ public class WsOutputManager {
     public static final int LANDING_GEAR_SOLENOID_INDEX = 6;
     public static final int ARM_CATAPAULT_SOLENOID_INDEX = 7;
     public static final int WINGS_SOLENOID_LEFT_INDEX = 8;
+    public static final int EARS_SOLENOID_INDEX = 9;
     /**
      * Constructor for WsOutputManager.
      *
