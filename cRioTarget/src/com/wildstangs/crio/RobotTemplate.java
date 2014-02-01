@@ -32,6 +32,7 @@ public class RobotTemplate extends IterativeRobot {
         startupTimer.endTimingSection();
 
     }
+    
     WsProfilingTimer durationTimer = new WsProfilingTimer("Periodic method duration", 50);
     WsProfilingTimer periodTimer = new WsProfilingTimer("Periodic method period", 50);
     WsProfilingTimer startupTimer = new WsProfilingTimer("Startup duration", 1);
@@ -70,12 +71,8 @@ public class RobotTemplate extends IterativeRobot {
     }
 
     public void teleopPeriodic() {
-//        periodTimer.endTimingSection();
-//        periodTimer.startTimingSection();
-//        durationTimer.startTimingSection();
           FrameworkAbstraction.teleopPeriodic();
           Watchdog.getInstance().feed();
-//        durationTimer.endTimingSection();
     }
 
     /**
