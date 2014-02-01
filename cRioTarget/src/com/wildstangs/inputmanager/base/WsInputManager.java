@@ -163,20 +163,22 @@ public class WsInputManager
             Logger.getLogger().debug(this.getClass().getName(), "attachJoystickButton", "Oops! Check that the inputs implement the required interfaces.");
         }
     }
+    public static final int UNKNOWN_INDEX = 0;
+    
     /**
-     * Keys to represent Inputs
+     * Keys to represent OI Inputs
      */
     public static final int UNKNOWN_INDEX = 0;
-    //OI inputs
     public static final int DRIVER_JOYSTICK_INDEX = 1;
     public static final int MANIPULATOR_JOYSTICK_INDEX = 2;
     public static final int AUTO_PROGRAM_SELECTOR_INDEX = 3;
     public static final int LOCK_IN_SWITCH_INDEX = 4;
     public static final int START_POSITION_SELECTOR_INDEX = 5;
     //Sensor Inputs
-    public static final int CATAPULT_DOWN_LIMIT_SWITCH_INDEX = 1;
-    public static final int PRESSURE_TRANSDUCER_INDEX = 2;
-
+    public static final int CATAPULT_DOWN_LIMIT_SWITCH_INDEX = 6;
+    public static final int PRESSURE_TRANSDUCER_INDEX = 7;
+    public static final int FRONT_ARM_POT_INDEX = 8;
+    public static final int BACK_ARM_POT_INDEX = 9;
     /**
      * Constructor for the WsInputManager.
      *
@@ -189,6 +191,8 @@ public class WsInputManager
         sensorInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         sensorInputs.addToIndex(CATAPULT_DOWN_LIMIT_SWITCH_INDEX, new WsDigitalInput(9));
         sensorInputs.addToIndex(PRESSURE_TRANSDUCER_INDEX, new WsAnalogInput(4));
+        sensorInputs.addToIndex(FRONT_ARM_POT_INDEX, new WsAnalogInput(1));
+        sensorInputs.addToIndex(BACK_ARM_POT_INDEX, new WsAnalogInput(2));
 
         oiInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         oiInputs.addToIndex(DRIVER_JOYSTICK_INDEX, new WsDriverJoystick());
@@ -196,5 +200,6 @@ public class WsInputManager
         oiInputs.addToIndex(AUTO_PROGRAM_SELECTOR_INDEX, new WsDSAnalogInput(1));
         oiInputs.addToIndex(LOCK_IN_SWITCH_INDEX, new WsDSDigitalInput(1));
         oiInputs.addToIndex(START_POSITION_SELECTOR_INDEX, new WsDSAnalogInput(2));
+        
     }
 }

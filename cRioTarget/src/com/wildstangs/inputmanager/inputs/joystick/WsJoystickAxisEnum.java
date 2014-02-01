@@ -27,8 +27,8 @@ public class WsJoystickAxisEnum implements IInputEnum {
     public static final WsJoystickAxisEnum DRIVER_D_PAD_UP_DOWN = new WsJoystickAxisEnum(2, "DRIVER_D_PAD_UP_DOWN");
     
     //Manipulator Axis Control
-    public static final WsJoystickAxisEnum MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT = new WsJoystickAxisEnum(0, "MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT");
-    public static final WsJoystickAxisEnum MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT = new WsJoystickAxisEnum(1, "MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT");
+    public static final WsJoystickAxisEnum MANIPULATOR_FRONT_ARM_CONTROL = new WsJoystickAxisEnum(0, "MANIPULATOR_FRONT_ARM_CONTROL");
+    public static final WsJoystickAxisEnum MANIPULATOR_BACK_ARM_CONTROL = new WsJoystickAxisEnum(1, "MANIPULATOR_BACK_ARM_CONTROL");
     public static final WsJoystickAxisEnum MANIPULATOR_D_PAD_UP_DOWN = new WsJoystickAxisEnum(2, "MANIPULATOR_D_PAD_UP_DOWN");
     public static final WsJoystickAxisEnum MANIPULATOR_D_PAD_LEFT_RIGHT = new WsJoystickAxisEnum(3, "MANIPULATOR_D_PAD_LEFT_RIGHT");
 
