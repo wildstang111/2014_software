@@ -4,7 +4,7 @@
  */
 package com.wildstangs.simulation.accumulator;
 
-import com.wildstangs.simulation.digitalInputs.WsDigitalInputContainer;
+import com.wildstangs.simulation.digitalinputs.WsDigitalInputContainer;
 import com.wildstangs.outputmanager.base.WsOutputManager;
 
 /**

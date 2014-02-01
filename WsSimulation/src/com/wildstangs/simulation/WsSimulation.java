@@ -1,32 +1,40 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.wildstangs.simulation;
 
 import com.wildstangs.simulation.solenoids.WsSolenoidContainer;
-import com.wildstangs.autonomous.WsAutonomousManager;
-import com.wildstangs.configmanager.WsConfigManager;
-import com.wildstangs.configmanager.WsConfigManagerException;
 import com.wildstangs.crio.FrameworkAbstraction;
-import com.wildstangs.input.Controllers;
 import com.wildstangs.inputmanager.base.WsInputManager;
-import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
 import com.wildstangs.logger.*;
 import com.wildstangs.logviewer.LogViewer;
-import com.wildstangs.outputmanager.base.WsOutputManager;
-import com.wildstangs.outputmanager.outputs.WsDriveSpeed;
 import com.wildstangs.profiling.WsProfilingTimer;
-import com.wildstangs.subjects.base.DoubleSubject;
-import com.wildstangs.subsystems.base.WsSubsystemContainer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
+import javax.swing.JToggleButton;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
  * @author ChadS
  */
-public class WsSimulation {
+public class WsSimulation implements ActionListener, ChangeListener {
+
+    private static WsSimulation instance;
 
     static String c = "WsSimulation";
 
@@ -38,121 +46,259 @@ public class WsSimulation {
     static boolean flywheelSpeedGraphs = false;
     static boolean driveThrottleGraph = true;
 
+    // JComponents for control
+    private JFrame modeSwitcher;
+    private JRadioButton teleoperatedButton;
+    private JRadioButton autonomousButton;
+    private JButton enable;
+    private JButton disable;
+    private JSlider autonProgram;
+    private JSlider autonPosition;
+    private JToggleButton autonLockIn;
+
+    // Store what state we're in
+    private boolean isEnabled = false;
+    private boolean isTeleop = true;
+
+    // Threads for running teleop/autonomous
+    Thread teleopThread;
+    Thread autonThread;
+    Thread disabledThread;
+
     static WsProfilingTimer durationTimer = new WsProfilingTimer("Periodic method duration", 50);
     static WsProfilingTimer periodTimer = new WsProfilingTimer("Periodic method period", 50);
+
+    public WsSimulation() {
+        modeSwitcher = new JFrame("WildStang Simulation");
+        teleoperatedButton = new JRadioButton("Teleoperated");
+        teleoperatedButton.addActionListener(this);
+        autonomousButton = new JRadioButton("Autonomous");
+        autonomousButton.addActionListener(this);
+        enable = new JButton("Enable");
+        enable.addActionListener(this);
+        disable = new JButton("Disable");
+        disable.addActionListener(this);
+        disable.setEnabled(false);
+        autonProgram = new JSlider(0, 500, 0);
+        autonProgram.addChangeListener(this);
+        autonPosition = new JSlider(0, 500, 0);
+        autonPosition.addChangeListener(this);
+        autonLockIn = new JToggleButton("Lock-in switch");
+        autonLockIn.addActionListener(this);
+
+        ButtonGroup modeGroup = new ButtonGroup();
+        modeGroup.add(teleoperatedButton);
+        modeGroup.add(autonomousButton);
+
+        JPanel modeButtons = new JPanel();
+        modeButtons.setLayout(new GridLayout(0, 1));
+        modeButtons.add(teleoperatedButton);
+        modeButtons.add(autonomousButton);
+        teleoperatedButton.setSelected(true);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1;
+        c.weighty = 1;
+
+        JComponent content = (JComponent) modeSwitcher.getContentPane();
+        content.setLayout(new GridBagLayout());
+        content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        c.gridx = 0;
+        c.gridy = 0;
+        content.add(modeButtons, c);
+        c.gridy = 1;
+        content.add(enable, c);
+        c.gridx = 1;
+        content.add(disable, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 2;
+        JLabel autonProgramLabel = new JLabel("Auton Program");
+        autonProgramLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        content.add(autonProgramLabel, c);
+        c.gridy = 3;
+        autonProgram.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        content.add(autonProgram, c);
+        c.gridy = 4;
+        content.add(new JLabel("Auton Position"), c);
+        c.gridy = 5;
+        autonPosition.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        content.add(autonPosition, c);
+        c.gridy = 6;
+        autonLockIn.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        content.add(autonLockIn, c);
+
+        modeSwitcher.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        modeSwitcher.setSize(new Dimension(500, 500));
+        modeSwitcher.setResizable(false);
+        modeSwitcher.pack();
+        modeSwitcher.setLocation(new Point(600, 650));
+        modeSwitcher.setVisible(true);
+    }
+
+    public static WsSimulation getInstance() {
+        if (instance == null) {
+            instance = new WsSimulation();
+        }
+        return instance;
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
 
+        getInstance();
+
+        // Set the property for the JInput library path
         System.setProperty("net.java.games.input.librarypath", System.getProperty("user.dir") + File.separator + "lib");
 
-        // testInput();
-        //Instantiate the Facades and Containers
-        //start the log viewer.
+        // Start the log viewer.
         (new Thread(new LogViewer())).start();
         FileLogger.getFileLogger().startLogger();
 
         FrameworkAbstraction.robotInit("/Config/ws_config.txt");
-//        WsConfigManager.getInstance().dumpConfigData();
 
         Logger logger = Logger.getLogger();
-        
-        //System.out.println(WsConfigManager.getInstance().getConfigItemName("com.wildstangs.WsInputManager.WsDriverJoystick.trim"));
-        //System.out.println(WsConfigManager.getInstance().dumpConfigData());
+
         logger.always(c, "sim_startup", "Simulation starting.");
-        FileLogger.getFileLogger().logData("Sim Started"); 
-        
-//        double pid_setpoint = 10;
-//        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).enableDistancePidControl();
-//        ((WsDriveBase) WsSubsystemContainer.getInstance().getSubsystem(WsSubsystemContainer.WS_DRIVE_BASE)).setDriveDistancePidSetpoint(pid_setpoint);
-//        DriveBaseEncoders dbEncoders = new DriveBaseEncoders(); 
-//        FlywheelEncoders flywheelEncoders = new FlywheelEncoders(); 
-//        HopperLimitSwitches limitSwitches = new HopperLimitSwitches(); 
-//        AccumulatorLimitSwitch aclimitSwitches = new AccumulatorLimitSwitch(); 
-//        FunnelatorLimitSwitch funnellimitSwitches = new FunnelatorLimitSwitch();
-//        GyroSimulation gyro = new GyroSimulation();
-        periodTimer.startTimingSection();
+        FileLogger.getFileLogger().logData("Sim Started");
 
-//        ContinuousAccelFilter accelFilter = new ContinuousAccelFilter(0, 0, 0);
-//        double distance_to_go = 60.5;
-//        double currentProfileX =0.0; 
-//        double currentProfileV =0.0; 
-//        double currentProfileA =0.0; 
-//        for (int i = 0; i < 60; i++) {
-//            //Update measured values 
-//            
-//            //Update PID using profile velocity as setpoint and measured velocity as PID input 
-//            
-//            //Update system to get feed forward terms
-//            double distance_left = distance_to_go - currentProfileX;
-//            logger.debug(c, "AccelFilter", "distance_left: " + distance_left + " p: " + accelFilter.getCurrPos()+ " v: " + accelFilter.getCurrVel() + " a: " + accelFilter.getCurrAcc() );
-//            accelFilter.calculateSystem(distance_left , currentProfileV, 0, 600, 102, 0.020);
-//            currentProfileX = accelFilter.getCurrPos();
-//            currentProfileV = accelFilter.getCurrVel();
-//            currentProfileA = accelFilter.getCurrAcc();
-//            
-//            //Update motor output with PID output and feed forward velocity and acceleration 
-//            
-//        }
         logger.always(c, "sim_startup", "Simulation init done.");
-        if (autonomousRun) {
-            WsAutonomousManager.getInstance().setPosition(1);
-            WsAutonomousManager.getInstance().setProgram(4);
-            WsAutonomousManager.getInstance().startCurrentProgram();
-        }
 
-        while (true) {
-            periodTimer.endTimingSection();
-            periodTimer.startTimingSection();
-            durationTimer.startTimingSection();
-//            if (false == autonomousRun || (false == WsAutonomousManager.getInstance().getRunningProgramName().equalsIgnoreCase("Sleeper"))){
-            if (false == autonomousRun  || (false == WsAutonomousManager.getInstance().getRunningProgramName().equalsIgnoreCase("Sleeper"))){
-                
-//                gyro.update();
+        getInstance().startDisabledThread();
+    }
 
-//                gyro.update();
-                //Update the encoders
-//                dbEncoders.update();
-                WsInputManager.getInstance().updateSensorData();
-                if(autonomousRun)
-                {
-                   FrameworkAbstraction.autonomousPeriodic();
-                }
-                else
-                {
-                    FrameworkAbstraction.teleopPeriodic();
-                }
-                WsSolenoidContainer.getInstance().update();
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        Object source = ae.getSource();
+        if (source == autonomousButton) {
+            isTeleop = false;
+            System.out.println("Autonomous");
+        } else if (source == teleoperatedButton) {
+            isTeleop = true;
+            System.out.println("Teleop");
+        } else if (source == enable) {
+            System.out.println("Enable");
+            // Disable the enable button
+            enable.setEnabled(false);
+            disable.setEnabled(true);
 
-//                flywheelEncoders.update(); 
-//                limitSwitches.update();
-//                aclimitSwitches.update();
-//                funnellimitSwitches.update();
+            // Set the enabled flag
+            isEnabled = true;
+
+            // Start the appropriate mode
+            if (isTeleop) {
+                FrameworkAbstraction.teleopInit();
+                startTeleopThread();
+            } else {
+                FrameworkAbstraction.autonomousInit();
+                startAutonThread();
             }
+        } else if (source == disable) {
+            System.out.println("Disable");
+            // Disable the disable button
+            enable.setEnabled(true);
+            disable.setEnabled(false);
 
-            double spentTime = durationTimer.endTimingSection();
-            int spentMS = (int) (spentTime * 1000);
-            int timeToSleep = ((20 - spentMS) > 0 ? (20 - spentMS) : 0);
-            try {
-                Thread.sleep(timeToSleep);
-            } catch (InterruptedException e) {
+            // Setting isEnabled to false should stop our threads
+            isEnabled = false;
+            FrameworkAbstraction.disabledInit();
+            startDisabledThread();
+        } else if (source == autonLockIn) {
+            DriverStation.getInstance().setDigitalIn(1, !autonLockIn.isSelected());
+            if(autonLockIn.isSelected()) {
+                autonLockIn.setText("Autonomous locked in");
+            } else {
+                autonLockIn.setText("Autonomous not locked in");
             }
         }
     }
 
-    private static void testInput() {
-        try {
-            Controllers.create();
-            System.out.println("Controllers found: " + Controllers.getControllerCount());
-            for (int i = 0; i < Controllers.getControllerCount(); i++) {
-                System.out.println("Controller name: " + Controllers.getController(i).getName());
-                System.out.println("Controller index: " + Controllers.getController(i).getIndex());
-                System.out.println("Controller axis count: " + Controllers.getController(i).getAxisCount());
+    private void startAutonThread() {
+        autonThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isEnabled) {
+                    periodTimer.endTimingSection();
+                    periodTimer.startTimingSection();
+                    durationTimer.startTimingSection();
+
+                    WsInputManager.getInstance().updateSensorData();
+                    FrameworkAbstraction.autonomousPeriodic();
+                    WsSolenoidContainer.getInstance().update();
+
+                    double spentTime = durationTimer.endTimingSection();
+                    int spentMS = (int) (spentTime * 1000);
+                    int timeToSleep = ((20 - spentMS) > 0 ? (20 - spentMS) : 0);
+                    try {
+                        Thread.sleep(timeToSleep);
+                    } catch (InterruptedException e) {
+                    }
+                }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        });
+        autonThread.start();
+    }
+
+    private void startTeleopThread() {
+        teleopThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isEnabled) {
+                    periodTimer.endTimingSection();
+                    periodTimer.startTimingSection();
+                    durationTimer.startTimingSection();
+
+                    WsInputManager.getInstance().updateSensorData();
+                    FrameworkAbstraction.teleopPeriodic();
+                    WsSolenoidContainer.getInstance().update();
+
+                    double spentTime = durationTimer.endTimingSection();
+                    int spentMS = (int) (spentTime * 1000);
+                    int timeToSleep = ((20 - spentMS) > 0 ? (20 - spentMS) : 0);
+                    try {
+                        Thread.sleep(timeToSleep);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        });
+        teleopThread.start();
+    }
+
+    private void startDisabledThread() {
+        disabledThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isEnabled == false) {
+                    periodTimer.endTimingSection();
+                    periodTimer.startTimingSection();
+                    durationTimer.startTimingSection();
+
+                    FrameworkAbstraction.disabledPeriodic();
+
+                    double spentTime = durationTimer.endTimingSection();
+                    int spentMS = (int) (spentTime * 1000);
+                    int timeToSleep = ((20 - spentMS) > 0 ? (20 - spentMS) : 0);
+                    try {
+                        Thread.sleep(timeToSleep);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        });
+        disabledThread.start();
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent ce) {
+        Object source = ce.getSource();
+        if (source == autonProgram) {
+            DriverStation.getInstance().setAnalogIn(1, ((double) autonProgram.getValue()) / 100);
+        } else if (source == autonPosition) {
+            DriverStation.getInstance().setAnalogIn(2, ((double) autonPosition.getValue()) / 100);
         }
     }
 }

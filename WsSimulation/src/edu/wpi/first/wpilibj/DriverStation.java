@@ -9,24 +9,35 @@ package edu.wpi.first.wpilibj;
 import edu.wpi.first.wpilibj.parsing.IInputOutput;
 
 /**
- * Provide access to the network communication data to / from the Driver Station.
+ * Provide access to the network communication data to / from the Driver
+ * Station.
  */
 public class DriverStation implements IInputOutput {
 
     public static class Alliance {
 
-        /** The integer value representing this enumeration. */
+        /**
+         * The integer value representing this enumeration.
+         */
         public final int value;
-        /** The Alliance name. */
+        /**
+         * The Alliance name.
+         */
         public final String name;
         public static final int kRed_val = 0;
         public static final int kBlue_val = 1;
         public static final int kInvalid_val = 2;
-        /** alliance: Red */
+        /**
+         * alliance: Red
+         */
         public static final Alliance kRed = new Alliance(kRed_val, "Red");
-        /** alliance: Blue */
+        /**
+         * alliance: Blue
+         */
         public static final Alliance kBlue = new Alliance(kBlue_val, "Blue");
-        /** alliance: Invalid */
+        /**
+         * alliance: Invalid
+         */
         public static final Alliance kInvalid = new Alliance(kInvalid_val, "invalid");
 
         private Alliance(int value, String name) {
@@ -36,10 +47,17 @@ public class DriverStation implements IInputOutput {
     } /* Alliance */
 
 
-
     private static DriverStation instance = new DriverStation();
     private int m_digitalOut;
-    private double[] analogValues = {0.0, 0.0, 0.0, 0.0};
+    private static double[] analogValues = {0.0, 0.0, 0.0, 0.0};
+    private static boolean[] digitalValues;
+
+    static {
+        digitalValues = new boolean[8];
+        for (int i = 0; i < 8; i++) {
+            digitalValues[i] = false;
+        }
+    }
 
     /**
      * Gets an instance of the DriverStation
@@ -53,8 +71,8 @@ public class DriverStation implements IInputOutput {
     /**
      * DriverStation constructor.
      *
-     * The single DriverStation instance is created statically with the
-     * instance static member variable.
+     * The single DriverStation instance is created statically with the instance
+     * static member variable.
      */
     protected DriverStation() {
     }
@@ -71,18 +89,17 @@ public class DriverStation implements IInputOutput {
     public void waitForData() {
     }
 
-
     /**
-     * Copy data from the DS task for the user.
-     * If no new data exists, it will just be returned, otherwise
-     * the data will be copied from the DS polling loop.
+     * Copy data from the DS task for the user. If no new data exists, it will
+     * just be returned, otherwise the data will be copied from the DS polling
+     * loop.
      */
     protected synchronized void getData() {
     }
 
     /**
-     * Copy status data from the DS task for the user.
-     * This is used primarily to set digital outputs on the DS.
+     * Copy status data from the DS task for the user. This is used primarily to
+     * set digital outputs on the DS.
      */
     protected void setData() {
     }
@@ -90,8 +107,8 @@ public class DriverStation implements IInputOutput {
     /**
      * Read the battery voltage from the specified AnalogChannel.
      *
-     * This accessor assumes that the battery voltage is being measured
-     * through the voltage divider on an analog breakout.
+     * This accessor assumes that the battery voltage is being measured through
+     * the voltage divider on an analog breakout.
      *
      * @return The battery voltage.
      */
@@ -103,8 +120,8 @@ public class DriverStation implements IInputOutput {
     }
 
     /**
-     * Get the value of the axis on a joystick.
-     * This depends on the mapping of the joystick connected to the specified port.
+     * Get the value of the axis on a joystick. This depends on the mapping of
+     * the joystick connected to the specified port.
      *
      * @param stick The joystick to read.
      * @param axis The analog axis value to read from the joystick.
@@ -115,57 +132,67 @@ public class DriverStation implements IInputOutput {
     }
 
     /**
-     * The state of the buttons on the joystick.
-     * 12 buttons (4 msb are unused) from the joystick.
+     * The state of the buttons on the joystick. 12 buttons (4 msb are unused)
+     * from the joystick.
      *
      * @param stick The joystick to read.
      * @return The state of the buttons on the joystick.
      */
     public int getStickButtons(final int stick) {
-                return 0;
+        return 0;
     }
 
     /**
-     * Get an analog voltage from the Driver Station.
-     * The analog values are returned as voltage values for the Driver Station analog inputs.
-     * These inputs are typically used for advanced operator interfaces consisting of potentiometers
-     * or resistor networks representing values on a rotary switch.
+     * Get an analog voltage from the Driver Station. The analog values are
+     * returned as voltage values for the Driver Station analog inputs. These
+     * inputs are typically used for advanced operator interfaces consisting of
+     * potentiometers or resistor networks representing values on a rotary
+     * switch.
      *
-     * @param channel The analog input channel on the driver station to read from. Valid range is 1 - 4.
+     * @param channel The analog input channel on the driver station to read
+     * from. Valid range is 1 - 4.
      * @return The analog voltage on the input.
      */
     public double getAnalogIn(final int channel) {
-        if(channel < analogValues.length)
-        {
-            return analogValues[channel];
+        if (channel - 1 < analogValues.length) {
+            return analogValues[channel - 1];
         }
         return 0.0;
     }
-    
-    public void setAnalogIn(final int channel, final double value)
-    {
-        if(channel < analogValues.length)
-        {
-            analogValues[channel] = value;
+
+    public void setAnalogIn(final int channel, final double value) {
+        if (channel - 1 < analogValues.length) {
+            analogValues[channel - 1] = value;
         }
     }
 
     /**
-     * Get values from the digital inputs on the Driver Station.
-     * Return digital values from the Drivers Station. These values are typically used for buttons
-     * and switches on advanced operator interfaces.
+     * Get values from the digital inputs on the Driver Station. Return digital
+     * values from the Drivers Station. These values are typically used for
+     * buttons and switches on advanced operator interfaces.
+     *
      * @param channel The digital input to get. Valid range is 1 - 8.
      * @return The value of the digital input
      */
     public boolean getDigitalIn(final int channel) {
-        return false; 
+        if (channel - 1 < digitalValues.length) {
+            return digitalValues[channel - 1];
+        }
+        return false;
+    }
+
+    public void setDigitalIn(final int channel, final boolean value) {
+        if (channel - 1 < digitalValues.length) {
+            digitalValues[channel - 1] = value;
+        }
     }
 
     /**
      * Set a value for the digital outputs on the Driver Station.
      *
-     * Control digital outputs on the Drivers Station. These values are typically used for
-     * giving feedback on a custom operator station such as LEDs.
+     * Control digital outputs on the Drivers Station. These values are
+     * typically used for giving feedback on a custom operator station such as
+     * LEDs.
      *
      * @param channel The digital output to set. Valid range is 1 - 8.
      * @param value The state to set the digital output.
@@ -177,6 +204,7 @@ public class DriverStation implements IInputOutput {
 
     /**
      * Get a value that was set for the digital outputs on the Driver Station.
+     *
      * @param channel The digital ouput to monitor. Valid range is 1 through 8.
      * @return A digital value being output on the Drivers Station.
      */
@@ -185,56 +213,60 @@ public class DriverStation implements IInputOutput {
     }
 
     /**
-     * Gets a value indicating whether the Driver Station requires the
-     * robot to be enabled.
+     * Gets a value indicating whether the Driver Station requires the robot to
+     * be enabled.
      *
      * @return True if the robot is enabled, false otherwise.
      */
     public boolean isEnabled() {
-        return false; 
+        return false;
     }
 
     /**
-     * Gets a value indicating whether the Driver Station requires the
-     * robot to be disabled.
+     * Gets a value indicating whether the Driver Station requires the robot to
+     * be disabled.
      *
      * @return True if the robot should be disabled, false otherwise.
      */
     public boolean isDisabled() {
-        return false; 
+        return false;
     }
 
     /**
-     * Gets a value indicating whether the Driver Station requires the
-     * robot to be running in autonomous mode.
+     * Gets a value indicating whether the Driver Station requires the robot to
+     * be running in autonomous mode.
      *
      * @return True if autonomous mode should be enabled, false otherwise.
      */
     public boolean isAutonomous() {
-        return false; 
+        return false;
     }
-    
+
     /**
-     * Gets a value indicating whether the Driver Station requires the
-     * robot to be running in test mode.
+     * Gets a value indicating whether the Driver Station requires the robot to
+     * be running in test mode.
+     *
      * @return True if test mode should be enabled, false otherwise.
      */
     public boolean isTest() {
-        return false; 
+        return false;
     }
 
     /**
-     * Gets a value indicating whether the Driver Station requires the
-     * robot to be running in operator-controlled mode.
+     * Gets a value indicating whether the Driver Station requires the robot to
+     * be running in operator-controlled mode.
      *
-     * @return True if operator-controlled mode should be enabled, false otherwise.
+     * @return True if operator-controlled mode should be enabled, false
+     * otherwise.
      */
     public boolean isOperatorControl() {
-        return false; 
+        return false;
     }
 
     /**
-     * Has a new control packet from the driver station arrived since the last time this function was called?
+     * Has a new control packet from the driver station arrived since the last
+     * time this function was called?
+     *
      * @return True if the control data has been updated since the last call.
      */
     public synchronized boolean isNewControlData() {
@@ -242,18 +274,19 @@ public class DriverStation implements IInputOutput {
     }
 
     /**
-     * Return the DS packet number.
-     * The packet number is the index of this set of data returned by the driver station.
-     * Each time new data is received, the packet number (included with the sent data) is returned.
+     * Return the DS packet number. The packet number is the index of this set
+     * of data returned by the driver station. Each time new data is received,
+     * the packet number (included with the sent data) is returned.
      *
      * @return The DS packet number.
      */
     public int getPacketNumber() {
-        return 0; 
+        return 0;
     }
 
     /**
      * Get the current alliance from the FMS
+     *
      * @return the current alliance
      */
     public Alliance getAlliance() {
@@ -271,6 +304,7 @@ public class DriverStation implements IInputOutput {
 
     /**
      * Return the team number that the Driver Station is configured for
+     *
      * @return The team number
      */
     public int getTeamNumber() {
@@ -298,7 +332,7 @@ public class DriverStation implements IInputOutput {
      * @return the default Dashboard object; it may be idle
      */
     public Dashboard getDashboardPackerHigh() {
-        return null; 
+        return null;
     }
 
     /**
@@ -309,7 +343,7 @@ public class DriverStation implements IInputOutput {
      * @return the current IDashboard object
      */
     public IDashboard getDashboardPackerInUseHigh() {
-        return null; 
+        return null;
     }
 
     /**
@@ -322,8 +356,8 @@ public class DriverStation implements IInputOutput {
     }
 
     /**
-     * Gets the default dashboard packer for sending low priority user data to
-     * a dashboard receiver. This instance stays around even after a call to
+     * Gets the default dashboard packer for sending low priority user data to a
+     * dashboard receiver. This instance stays around even after a call to
      * {@link #setDashboardPackerToUseLow} changes which packer is in use.
      *
      * @return the default Dashboard object; it may be idle
@@ -345,8 +379,9 @@ public class DriverStation implements IInputOutput {
 
     /**
      * Gets the status data monitor
-     * @return The status data monitor for use with IDashboard objects which must
-     * send data across the network.
+     *
+     * @return The status data monitor for use with IDashboard objects which
+     * must send data across the network.
      */
     public Object getStatusDataMonitor() {
         return null;
@@ -360,16 +395,19 @@ public class DriverStation implements IInputOutput {
     }
 
     /**
-     * Is the driver station attached to a Field Management System?
-     * Note: This does not work with the Blue DS.
-     * @return True if the robot is competing on a field being controlled by a Field Management System
+     * Is the driver station attached to a Field Management System? Note: This
+     * does not work with the Blue DS.
+     *
+     * @return True if the robot is competing on a field being controlled by a
+     * Field Management System
      */
     public boolean isFMSAttached() {
-        return false; 
+        return false;
     }
 
     /**
      * Get the interface to the enhanced IO of the new driver station.
+     *
      * @return An enhanced IO object for the advanced features of the driver
      * station.
      */
@@ -378,36 +416,56 @@ public class DriverStation implements IInputOutput {
     }
 
     /**
-     * Return the approximate match time
-     * The FMS does not currently send the official match time to the robots
-     * This returns the time since the enable signal sent from the Driver Station
-     * At the beginning of autonomous, the time is reset to 0.0 seconds
-     * At the beginning of teleop, the time is reset to +15.0 seconds
-     * If the robot is disabled, this returns 0.0 seconds
-     * Warning: This is not an official time (so it cannot be used to argue with referees)
+     * Return the approximate match time The FMS does not currently send the
+     * official match time to the robots This returns the time since the enable
+     * signal sent from the Driver Station At the beginning of autonomous, the
+     * time is reset to 0.0 seconds At the beginning of teleop, the time is
+     * reset to +15.0 seconds If the robot is disabled, this returns 0.0 seconds
+     * Warning: This is not an official time (so it cannot be used to argue with
+     * referees)
+     *
      * @return Match time in seconds since the beginning of autonomous
      */
     public double getMatchTime() {
-        return Timer.getFPGATimestamp() ;
+        return Timer.getFPGATimestamp();
     }
 
-    /** Only to be used to tell the Driver Station what code you claim to be executing
-	 *   for diagnostic purposes only
-	 * @param entering If true, starting disabled code; if false, leaving disabled code */
-	public void InDisabled(boolean entering) {}
+    /**
+     * Only to be used to tell the Driver Station what code you claim to be
+     * executing for diagnostic purposes only
+     *
+     * @param entering If true, starting disabled code; if false, leaving
+     * disabled code
+     */
+    public void InDisabled(boolean entering) {
+    }
 
-        /** Only to be used to tell the Driver Station what code you claim to be executing
-	 *   for diagnostic purposes only
-	 * @param entering If true, starting autonomous code; if false, leaving autonomous code */
-	public void InAutonomous(boolean entering) {}
-	
-        /** Only to be used to tell the Driver Station what code you claim to be executing
-	 *   for diagnostic purposes only
-	 * @param entering If true, starting teleop code; if false, leaving teleop code */
-	public void InOperatorControl(boolean entering) {}
-        
-        /** Only to be used to tell the Driver Station what code you claim to be executing
-         *   for diagnostic purposes only
-         * @param entering If true, starting test code; if false, leaving test code */
-        public void InTest(boolean entering) {}
+    /**
+     * Only to be used to tell the Driver Station what code you claim to be
+     * executing for diagnostic purposes only
+     *
+     * @param entering If true, starting autonomous code; if false, leaving
+     * autonomous code
+     */
+    public void InAutonomous(boolean entering) {
+    }
+
+    /**
+     * Only to be used to tell the Driver Station what code you claim to be
+     * executing for diagnostic purposes only
+     *
+     * @param entering If true, starting teleop code; if false, leaving teleop
+     * code
+     */
+    public void InOperatorControl(boolean entering) {
+    }
+
+    /**
+     * Only to be used to tell the Driver Station what code you claim to be
+     * executing for diagnostic purposes only
+     *
+     * @param entering If true, starting test code; if false, leaving test code
+     */
+    public void InTest(boolean entering) {
+    }
 }

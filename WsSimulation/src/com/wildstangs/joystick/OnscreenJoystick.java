@@ -40,8 +40,7 @@ import java.awt.event.KeyListener;
  * @author Nick DiRienzo, Patrick Jameson
  * @version 11.11.2010.7
  */
-public class OnscreenJoystick implements KeyListener, IJoystick
-{
+public class OnscreenJoystick implements KeyListener, IJoystick {
     //TODO: Add Joystick button support using KeyListener
     //      -The above is done for one button at a time. Detecting many buttons being pressed at the same 
     //       time is apparently not a trivial task for at least linux.
@@ -62,12 +61,12 @@ public class OnscreenJoystick implements KeyListener, IJoystick
      *
      * @param port The port the Joystick is connected to on the Driver Station.
      */
-    public OnscreenJoystick(int port)
-    {
+    public OnscreenJoystick(int port) {
         frame = new JFrame("Joystick Emulator: " + port);
-        if (port == 2)
-        {
-            frame.setLocation(820, 0);
+        if (port == 1) {
+            frame.setLocation(0, 0);
+        } else {
+            frame.setLocation(600, 0);
         }
 
         frame.setLayout(new BorderLayout());
@@ -87,8 +86,7 @@ public class OnscreenJoystick implements KeyListener, IJoystick
         frame.setVisible(true);
     }
 
-    public double getX()
-    {
+    public double getX() {
         return -x;
     }
 
@@ -97,8 +95,7 @@ public class OnscreenJoystick implements KeyListener, IJoystick
      *
      * @return The Y value of the Joystick, ranges from -1.0 to +1.0.
      */
-    public double getY()
-    {
+    public double getY() {
         return -y;
     }
 
@@ -107,23 +104,19 @@ public class OnscreenJoystick implements KeyListener, IJoystick
      *
      * @return The Z value of the Joystick, ranges from -1.0 to +1.0.
      */
-    public double getZ()
-    {
+    public double getZ() {
         return z;
     }
 
-    public double getTwist()
-    {
+    public double getTwist() {
         return 0;
     }
 
-    public double getThrottle()
-    {
+    public double getThrottle() {
         return 0;
     }
 
-    public int getAxisChannel(AxisType axis)
-    {
+    public int getAxisChannel(AxisType axis) {
         return 0;
     }
 
@@ -133,8 +126,7 @@ public class OnscreenJoystick implements KeyListener, IJoystick
      * @param axis The axis to set the channel for.
      * @param channel The channel to set the axis to.
      */
-    public void setAxisChannel(AxisType axis, int channel)
-    {
+    public void setAxisChannel(AxisType axis, int channel) {
     }
 
     /**
@@ -142,8 +134,7 @@ public class OnscreenJoystick implements KeyListener, IJoystick
      *
      * @return True if the trigger is being pressed down, false if not.
      */
-    public boolean getTrigger()
-    {
+    public boolean getTrigger() {
         return trigger;
     }
 
@@ -152,51 +143,40 @@ public class OnscreenJoystick implements KeyListener, IJoystick
      *
      * @return True if the provided button is being pressed, false if not.
      */
-    public boolean getRawButton(int but)
-    {
+    public boolean getRawButton(int but) {
         return (but == button);
     }
 
-    public void keyPressed(KeyEvent e)
-    {
+    public void keyPressed(KeyEvent e) {
         int key = (int) e.getKeyChar() - 48;
-        if (key >= 0 && key <= 9)
-        {
-            if (key == 0)
-            {
+        if (key >= 0 && key <= 9) {
+            if (key == 0) {
                 button = 10;
-            }
-            else
-            {
+            } else {
                 button = key;
             }
         }
         grid.repaint();
     }
 
-    public void keyReleased(KeyEvent e)
-    {
+    public void keyReleased(KeyEvent e) {
         button = -1;
         grid.repaint();
     }
 
-    public void keyTyped(KeyEvent e)
-    {
+    public void keyTyped(KeyEvent e) {
     }
 
     @SuppressWarnings("serial")
-    class Grid extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener
-    {
+    class Grid extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 
-        Grid()
-        {
+        Grid() {
             addMouseListener(this);
             addMouseMotionListener(this);
             addMouseWheelListener(this);
         }
 
-        public void paintComponent(Graphics g)
-        {
+        public void paintComponent(Graphics g) {
             g.setFont(new Font("Helvetica", Font.BOLD, 14));
 
             //clears graph.
@@ -205,8 +185,7 @@ public class OnscreenJoystick implements KeyListener, IJoystick
             g.setColor(Color.black);
 
             //checks if trigger is set and draws a red filled rectangle if it is.
-            if (trigger)
-            {
+            if (trigger) {
                 g.setColor(Color.red);
                 g.fillRect(xpos - 20, ypos - 20, 40, 40);
                 g.setColor(Color.black);
@@ -243,14 +222,11 @@ public class OnscreenJoystick implements KeyListener, IJoystick
             g.drawLine(xpos - 20, ypos, xpos + 20, ypos);
         }
 
-        public void determineMousePos(MouseEvent e)
-        {
-            if (!mouseClicked)
-            {
+        public void determineMousePos(MouseEvent e) {
+            if (!mouseClicked) {
                 xpos = e.getX();
                 ypos = e.getY();
-                if (ypos > JSHEIGHT)
-                {
+                if (ypos > JSHEIGHT) {
                     ypos = JSHEIGHT;
                 }
                 x = (double) (xpos - JSHEIGHT / 2.0) / (JSHEIGHT / 2.0);
@@ -259,76 +235,58 @@ public class OnscreenJoystick implements KeyListener, IJoystick
             repaint();
         }
 
-        public double round(double preNum, int decPlaces)
-        {
+        public double round(double preNum, int decPlaces) {
             return (double) Math.round((preNum * Math.pow(10, decPlaces))) / Math.pow(10, decPlaces);
         }
 
-        public void mouseMoved(MouseEvent e)
-        {
+        public void mouseMoved(MouseEvent e) {
             determineMousePos(e);
         }
 
-        public void mouseDragged(MouseEvent e)
-        {
+        public void mouseDragged(MouseEvent e) {
             determineMousePos(e);
         }
 
-        public void mousePressed(MouseEvent e)
-        {
-            if (e.getButton() == 1)
-            {
+        public void mousePressed(MouseEvent e) {
+            if (e.getButton() == 1) {
                 mouseClicked = !mouseClicked;
-            }
-            else if (e.getButton() == 3)
-            {
+            } else if (e.getButton() == 3) {
                 trigger = true;
             }
             repaint();
         }
 
-        public void mouseReleased(MouseEvent e)
-        {
-            if (e.getButton() == 3)
-            {
+        public void mouseReleased(MouseEvent e) {
+            if (e.getButton() == 3) {
                 trigger = false;
                 repaint();
             }
         }
 
-        public void mouseWheelMoved(MouseWheelEvent e)
-        {
+        public void mouseWheelMoved(MouseWheelEvent e) {
             zpos -= e.getWheelRotation() * 10;
-            if (zpos < 0)
-            {
+            if (zpos < 0) {
                 zpos = 0;
-            }
-            else if (zpos > 460)
-            {
+            } else if (zpos > 460) {
                 zpos = 460;
             }
             z = ((double) zpos / 460 * 2) - 1;
             repaint();
         }
 
-        public void mouseClicked(MouseEvent e)
-        {
+        public void mouseClicked(MouseEvent e) {
         }
 
-        public void mouseEntered(MouseEvent e)
-        {
+        public void mouseEntered(MouseEvent e) {
         }
 
-        public void mouseExited(MouseEvent e)
-        {
+        public void mouseExited(MouseEvent e) {
         }
 
-        public void keyReleased(KeyEvent e)
-        {
+        public void keyReleased(KeyEvent e) {
         }
 
-        public void keyTyped(KeyEvent e)
-        {
+        public void keyTyped(KeyEvent e) {
         }
     }
 }
