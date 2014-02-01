@@ -4,18 +4,24 @@
  */
 package com.wildstangs.subsystems.arm;
 
+import com.wildstangs.config.IntegerConfigFileParameter;
+
 /**
  *
  * @author Jason
  */
 public class ArmPreset {
     
-    int wantedAngleMeasureFront, wantedAngleMeasureBack;     
+    protected IntegerConfigFileParameter wantedAngleMeasureFront_config, wantedAngleMeasureBack_config;
+    protected int wantedAngleMeasureFront, wantedAngleMeasureBack;
     
-    public ArmPreset(int wantedAngleMeasureFront, int wantedAngleMeasureBack){
+    public ArmPreset(int wantedAngleMeasureFrontDefault, int wantedAngleMeasureBackDefault, String presetName){
         
-        this.wantedAngleMeasureBack = wantedAngleMeasureBack;
-        this.wantedAngleMeasureFront = wantedAngleMeasureFront;
+        this.wantedAngleMeasureBack_config = new IntegerConfigFileParameter(this.getClass().getName() + "." + presetName, "WantedBackArmAngle", wantedAngleMeasureBackDefault);
+        this.wantedAngleMeasureFront_config = new IntegerConfigFileParameter(this.getClass().getName() + "." + presetName, "WantedFrontArmAngle", wantedAngleMeasureFrontDefault);
+        
+        this.wantedAngleMeasureBack = wantedAngleMeasureBack_config.getValue();
+        this.wantedAngleMeasureFront = wantedAngleMeasureFront_config.getValue();
     }
     
     public int getwantedAngleMeasureFront(){
@@ -24,6 +30,11 @@ public class ArmPreset {
     
     public int getwantedAngleMeasureBack(){
         return wantedAngleMeasureBack;
+    }
     
+    public void notifyConfigChange()
+    {
+        this.wantedAngleMeasureBack = this.wantedAngleMeasureBack_config.getValue();
+        this.wantedAngleMeasureFront = this.wantedAngleMeasureFront_config.getValue();
     }
 }
