@@ -38,10 +38,6 @@ public class BallHandler extends WsSubsystem implements IObserver {
         registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_6);
         registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_7);
         registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_8);
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_2);
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_1);
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_4);
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_3);
         
         Subject subject = WsInputManager.getInstance().getOiInput(WsInputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL);
         subject.attach(this);
@@ -112,14 +108,6 @@ public class BallHandler extends WsSubsystem implements IObserver {
             this.frontArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
             this.backArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_2) {
-            this.setArmPreset(armPresetTest);
-        } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_3) {
-            this.setArmPreset(armPresetTestTwo);
-        } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_4) {
-            this.setArmPreset(armPresetTestThree);
-            } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_1) {
-            this.setArmPreset(armPresetTestFour);
         }
     }
 
@@ -133,8 +121,4 @@ public class BallHandler extends WsSubsystem implements IObserver {
             this.backArm.setToAngle(backArmPreset);
         }
     }
-    ArmPreset armPresetTest = new ArmPreset(112, -100);
-    ArmPreset armPresetTestTwo = new ArmPreset(45, 45);
-    ArmPreset armPresetTestThree = new  ArmPreset(-100, -100);
-    ArmPreset armPresetTestFour = new  ArmPreset(-100, 100);
 }
