@@ -45,7 +45,7 @@ public class Catapult extends WsSubsystem implements IObserver {
         // Fire the catapault
         registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_4);
         // Limit switch to detect when the catapult is down
-        registerForSensorNotification(WsInputManager.CATAPULT_DOWN_LIMIT_SWITCH_INDEX);
+        registerForSensorNotification(WsInputManager.CATAPULT_DOWN_SWITCH_INDEX);
     }
 
     public void init() {
@@ -102,15 +102,15 @@ public class Catapult extends WsSubsystem implements IObserver {
             armCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_4) {
             fireCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.CATAPULT_DOWN_LIMIT_SWITCH_INDEX).getSubject(null))) {
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.CATAPULT_DOWN_SWITCH_INDEX).getSubject(null))) {
+            isCatapultDown = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_10) {
             overrideFlag = ((BooleanSubject) subjectThatCaused).getValue();
-            isCatapultDown = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.LATCH_POSITION_SWITCH).getSubject(null))) {
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.LATCH_POSITION_SWITCH_INDEX).getSubject(null))) {
             isLatched = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.BALL_DETECT_SWITCH).getSubject(null))) {
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.BALL_DETECT_SWITCH_INDEX).getSubject(null))) {
             isBallIn = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.TENSION_LIMIT_SWITCH).getSubject(null))) {
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.TENSION_LIMIT_SWITCH_INDEX).getSubject(null))) {
             isTension = ((BooleanSubject) subjectThatCaused).getValue();
         }
     }
