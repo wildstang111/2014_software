@@ -16,22 +16,35 @@ public class WsDSDigitalInput implements IInput {
 
     BooleanSubject digitalValue;
     int channel;
-    BooleanConfigFileParameter startState = new BooleanConfigFileParameter(
-            this.getClass().getName(), "startState", false);
 
     //By giving the input number in the constructor we can make this generic for all digital inputs
     public WsDSDigitalInput(int channel) {
         this.digitalValue = new BooleanSubject("DigitalInput" + channel);
         this.channel = channel;
 
-        digitalValue.setValue(startState.getValue());
+        digitalValue.setValue(false);
     }
 
     public void set(IInputEnum key, Object value) {
         digitalValue.setValue(((Boolean) value).booleanValue());
 
     }
+    
+    public void set(Object value)
+    {
+        this.set((IInputEnum) null, value);
+    }
+    
+    public Subject getSubject()
+    {
+        return this.getSubject((ISubjectEnum) null);
+    }
 
+    public Object get()
+    {
+        return this.get((IInputEnum) null);
+    }
+    
     public Subject getSubject(ISubjectEnum subjectEnum) {
         return digitalValue;
     }
@@ -39,7 +52,7 @@ public class WsDSDigitalInput implements IInput {
     public Object get(IInputEnum key) {
         return digitalValue.getValueAsObject();
     }
-
+    
     public void update() {
         digitalValue.updateValue();
     }

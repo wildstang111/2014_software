@@ -24,9 +24,9 @@ public class WsAutonomousManager implements IObserver {
 
     private WsAutonomousManager() {
         definePrograms();
-        WsInputManager.getInstance().getOiInput(WsInputManager.AUTO_PROGRAM_SELECTOR_INDEX).getSubject((ISubjectEnum) null).attach(this);
-        WsInputManager.getInstance().getOiInput(WsInputManager.LOCK_IN_SWITCH_INDEX).getSubject((ISubjectEnum) null).attach(this);
-        WsInputManager.getInstance().getOiInput(WsInputManager.START_POSITION_SELECTOR_INDEX).getSubject((ISubjectEnum) null).attach(this);
+        WsInputManager.getInstance().getOiInput(WsInputManager.AUTO_PROGRAM_SELECTOR_INDEX).getSubject().attach(this);
+        WsInputManager.getInstance().getOiInput(WsInputManager.LOCK_IN_SWITCH_INDEX).getSubject().attach(this);
+        WsInputManager.getInstance().getOiInput(WsInputManager.START_POSITION_SELECTOR_INDEX).getSubject().attach(this);
         selectorSwitch = 0;
         lockInSwitch = false;
         positionSwitch = 0;
@@ -95,7 +95,7 @@ public class WsAutonomousManager implements IObserver {
     public void acceptNotification(Subject cause) {
         if (cause instanceof DoubleSubject) {
             if (cause == WsInputManager.getInstance().getOiInput(WsInputManager.START_POSITION_SELECTOR_INDEX)
-                    .getSubject((ISubjectEnum) null)) {
+                    .getSubject()) {
                 positionSwitch = (float) ((DoubleSubject) cause).getValue();
                 if (positionSwitch >= 3.3) {
                     positionSwitch = 3.3f;
@@ -106,7 +106,7 @@ public class WsAutonomousManager implements IObserver {
                 currentPosition = WsAutonomousStartPositionEnum.getEnumFromValue((int) (Math.floor((positionSwitch / 3.4) * WsAutonomousStartPositionEnum.POSITION_COUNT)));
                 SmartDashboard.putString("Current Start Position", currentPosition.toString());
             } else if (cause == WsInputManager.getInstance().getOiInput(WsInputManager.AUTO_PROGRAM_SELECTOR_INDEX)
-                    .getSubject((ISubjectEnum) null)) {
+                    .getSubject()) {
                 selectorSwitch = (float) ((DoubleSubject) cause).getValue();
                 if (selectorSwitch >= 3.3) {
                     selectorSwitch = 3.3f;
@@ -151,7 +151,6 @@ public class WsAutonomousManager implements IObserver {
         addProgram(new WsAutonomousProgramDriveDistanceMotionProfile());
         addProgram(new WsAutonomousProgramDrivePatterns());
         addProgram(new WsAutonomousProgramTestParallel());
-
     }
     
     private void addProgram(WsAutonomousProgram program) {

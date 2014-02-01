@@ -53,6 +53,16 @@ public class WsServo implements IServo {
             this.servo.set(this.position.getValue());
         }
     }
+    
+    public void set(Object value)
+    {
+        this.set((IOutputEnum) null, value);
+    }
+
+    public Object get()
+    {
+        return this.get((IOutputEnum) null);
+    }
 
     public void notifyConfigChange() {
     }

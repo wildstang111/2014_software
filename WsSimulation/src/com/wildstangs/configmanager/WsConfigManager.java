@@ -164,16 +164,37 @@ public class WsConfigManager {
     }
     public void addParameterToConfigFile(String name, String defaultValue) {
            try {
-              configFile  = new File(configFileName);
+              if(configFile == null) 
+              {
+                  configFile = new File(configFileName);
+              }
+              
               if (!configFile.exists()){
                   configFile.createNewFile();
               }
+              
               FileWriter out = new FileWriter(configFile, true);
               bw = new BufferedWriter(out);
               bw.newLine();
               bw.append(name + "=" + defaultValue);
               bw.flush();
               bw.close();
+              out.close();
+              
+              File cRioConfigFile = new File(configFile.getParentFile().getParentFile().getParentFile(), "cRioTarget/Config/ws_config.txt");
+              
+              if(cRioConfigFile.exists())
+              {
+                  out = new FileWriter(cRioConfigFile, true);
+                  BufferedWriter cRioWriter = new BufferedWriter(out);
+                  cRioWriter.newLine();
+                  cRioWriter.append(name + "=" + defaultValue);
+                  cRioWriter.flush();
+                  cRioWriter.close();
+                  out.close();
+              }
+              
+              config.put(name, defaultValue);
             } catch (IOException e) { 
                 System.out.println("Unable to open output file." + e.toString());
                 e.printStackTrace();

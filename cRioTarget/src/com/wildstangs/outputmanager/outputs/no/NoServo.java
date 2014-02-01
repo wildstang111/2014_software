@@ -47,6 +47,16 @@ public class NoServo implements IServo {
     public void update() {
         this.position.updateValue();
     }
+    
+    public void set(Object value)
+    {
+        this.set((IOutputEnum) null, value);
+    }
+
+    public Object get()
+    {
+        return this.get((IOutputEnum) null);
+    }
 
     public void notifyConfigChange() {
     }

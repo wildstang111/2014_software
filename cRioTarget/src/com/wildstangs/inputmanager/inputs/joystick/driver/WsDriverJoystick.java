@@ -109,6 +109,21 @@ public class WsDriverJoystick implements IInput {
         }
 
     }
+    
+    public void set(Object value)
+    {
+        this.set((IInputEnum) null, value);
+    }
+    
+    public Subject getSubject()
+    {
+        return this.getSubject((ISubjectEnum) null);
+    }
+
+    public Object get()
+    {
+        return this.get((IInputEnum) null);
+    }
 
     public void notifyConfigChange() {
     }

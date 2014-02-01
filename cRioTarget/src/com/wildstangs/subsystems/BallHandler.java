@@ -13,7 +13,6 @@ import com.wildstangs.subsystems.arm.ArmPreset;
 import com.wildstangs.subsystems.base.WsSubsystem;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.util.Random;
 
 /**
  *
@@ -25,8 +24,6 @@ public class BallHandler extends WsSubsystem implements IObserver {
     protected boolean frontForwardButton = false, frontReverseButton = false;
     protected boolean backForwardButton = false, backReverseButton = false;
     protected double frontArmJoystickValue = 0.0, backArmJoystickValue = 0.0;
-    Random rnd = new Random();
-    int[] positions = {10, 100, 200, 350, 50, 90, 30, 120, 160, 212, 208, 240};
 
     public BallHandler(String name) {
         super(name);
@@ -93,6 +90,7 @@ public class BallHandler extends WsSubsystem implements IObserver {
     public void notifyConfigChange() {
         frontArm.notifyConfigChange();
         backArm.notifyConfigChange();
+        Arm.notifyConfigChangeStatic();
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
@@ -114,10 +112,10 @@ public class BallHandler extends WsSubsystem implements IObserver {
     public void setArmPreset(ArmPreset preset) {
         int frontArmPreset = preset.getwantedAngleMeasureFront();
         int backArmPreset = preset.getwantedAngleMeasureBack();
-        if (frontArmPreset <= 359 && frontArmPreset >= 0) {
+        if (frontArmPreset <= Arm.getHighBound() && frontArmPreset >= Arm.getLowBound()) {
             this.frontArm.setToAngle(frontArmPreset);
         }
-        if (backArmPreset <= 359 && backArmPreset>=0){
+        if (backArmPreset <= Arm.getHighBound() && backArmPreset >= Arm.getLowBound()){
             this.backArm.setToAngle(backArmPreset);
         }
     }

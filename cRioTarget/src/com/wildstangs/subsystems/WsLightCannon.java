@@ -31,6 +31,6 @@ public class WsLightCannon extends WsSubsystem implements IObserver {
         } else {
             relayState = Relay.Value.kOff;
         }
-        WsOutputManager.getInstance().getOutput(WsOutputManager.LIGHT_CANNON_RELAY_INDEX).set((IOutputEnum) null, relayState);
+        WsOutputManager.getInstance().getOutput(WsOutputManager.LIGHT_CANNON_RELAY_INDEX).set(relayState);
     }
 }

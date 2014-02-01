@@ -16,15 +16,13 @@ public class WsAnalogInput implements IInput {
 
     DoubleSubject analogValue;
     AnalogChannel input;
-    DoubleConfigFileParameter startState = new DoubleConfigFileParameter(
-            this.getClass().getName(), "startState", 0.0f);
 
     //By giving the input number in the constructor we can make this generic for all digital inputs
     public WsAnalogInput(int channel) {
         this.analogValue = new DoubleSubject("AnalogInput" + channel);
         this.input = new AnalogChannel(channel);
 
-        analogValue.setValue(startState.getValue());
+        analogValue.setValue(0.0);
     }
 
     public void set(IInputEnum key, Object value) {
@@ -51,6 +49,21 @@ public class WsAnalogInput implements IInput {
 
     public void pullData() {
         analogValue.setValue(input.getVoltage());
+    }
+    
+    public void set(Object value)
+    {
+        this.set((IInputEnum) null, value);
+    }
+    
+    public Subject getSubject()
+    {
+        return this.getSubject((ISubjectEnum) null);
+    }
+
+    public Object get()
+    {
+        return this.get((IInputEnum) null);
     }
 
     public void notifyConfigChange() {

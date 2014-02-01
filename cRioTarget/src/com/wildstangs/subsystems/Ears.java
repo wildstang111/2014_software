@@ -36,7 +36,7 @@ public class Ears extends WsSubsystem implements IObserver{
        else {
            earValue = DoubleSolenoid.Value.kForward_val;
        }
-       (WsOutputManager.getInstance().getOutput(WsOutputManager.EARS_SOLENOID_INDEX)).set((IOutputEnum) null, new Integer(earValue));      
+       (WsOutputManager.getInstance().getOutput(WsOutputManager.EARS_SOLENOID_INDEX)).set(new Integer(earValue));      
     }
 
     public void notifyConfigChange() {

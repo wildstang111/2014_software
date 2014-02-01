@@ -25,7 +25,7 @@ public class ArmPotPidInput implements IPidInput
     
     public double pidRead()
     {
-        double currentVoltage = ((Double) WsInputManager.getInstance().getSensorInput(potIndex).get((IInputEnum) null)).doubleValue();
+        double currentVoltage = ((Double) WsInputManager.getInstance().getSensorInput(potIndex).get()).doubleValue();
         return 360.0 * ((currentVoltage - lowerVoltage) / (upperVoltage - lowerVoltage));
     }
     

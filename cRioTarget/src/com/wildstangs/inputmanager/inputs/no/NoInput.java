@@ -49,6 +49,21 @@ public class NoInput implements IInput
     public void notifyConfigChange()
     {
     }
+    
+    public void set(Object value)
+    {
+        this.set((IInputEnum) null, value);
+    }
+    
+    public Subject getSubject()
+    {
+        return this.getSubject((ISubjectEnum) null);
+    }
+
+    public Object get()
+    {
+        return this.get((IInputEnum) null);
+    }
 
     public Subject getSubject(ISubjectEnum subjectEnum)
     {

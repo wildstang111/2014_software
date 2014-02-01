@@ -119,6 +119,21 @@ public class WsManipulatorJoystick implements IInput {
 
         //System.out.println("X: "+  manipulatorJoystick.getX() + " Y: " + manipulatorJoystick.getY() + " Z:" + manipulatorJoystick.getZ() + " TH: " + manipulatorJoystick.getThrottle()+ " TW: " + manipulatorJoystick.getTwist());
     }
+    
+    public void set(Object value)
+    {
+        this.set((IInputEnum) null, value);
+    }
+    
+    public Subject getSubject()
+    {
+        return this.getSubject((ISubjectEnum) null);
+    }
+
+    public Object get()
+    {
+        return this.get((IInputEnum) null);
+    }
 
     public void notifyConfigChange() {
     }

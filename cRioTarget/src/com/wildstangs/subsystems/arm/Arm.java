@@ -5,21 +5,22 @@
 package com.wildstangs.subsystems.arm;
 
 import com.wildstangs.config.DoubleConfigFileParameter;
+import com.wildstangs.config.IntegerConfigFileParameter;
 import com.wildstangs.outputmanager.base.IOutputEnum;
 import com.wildstangs.outputmanager.base.WsOutputManager;
 import com.wildstangs.pid.controller.base.WsPidController;
 import com.wildstangs.pid.inputs.ArmPotPidInput;
 import com.wildstangs.pid.outputs.ArmVictorPidOutput;
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  *
  * @author Joey
  */
 public class Arm
 {
-    protected static final int HIGH_BOUND = 358, LOW_BOUND = 1;
+    protected static final IntegerConfigFileParameter HIGH_BOUND_CONFIG = new IntegerConfigFileParameter(Arm.class.getName(), "HighAngle", 359);
+    protected static final IntegerConfigFileParameter LOW_BOUND_CONFIG = new IntegerConfigFileParameter(Arm.class.getName(), "LowAngle", 0);
+    protected static int highBound = HIGH_BOUND_CONFIG.getValue(), lowBound = LOW_BOUND_CONFIG.getValue();
     
     protected final DoubleConfigFileParameter TOP_VOLTAGE_VALUE_CONFIG, BOTTOM_VOLTAGE_VALUE_CONFIG;
     protected final int VICTOR_INDEX, RELAY_INDEX, POT_INDEX;
@@ -49,8 +50,8 @@ public class Arm
     
     public void setToAngle(int angle)
     {
-        if(angle < LOW_BOUND) angle = LOW_BOUND;
-        else if(angle > HIGH_BOUND) angle = HIGH_BOUND;
+        if(angle < lowBound) angle = lowBound;
+        else if(angle > highBound) angle = highBound;
         
         this.wantedAngle = angle;
         pid.setSetPoint(this.wantedAngle);
@@ -78,27 +79,27 @@ public class Arm
         
         double currentAngle = this.getCurrentAngle();
         
-        if(currentAngle <= LOW_BOUND && speed < 0)
+        if(currentAngle <= lowBound && speed < 0)
         {
             speed = 0.0;
         }
-        else if(currentAngle >= HIGH_BOUND && speed > 0)
+        else if(currentAngle >= highBound && speed > 0)
         {
             speed = 0.0;
         }
         
-        WsOutputManager.getInstance().getOutput(VICTOR_INDEX).set((IOutputEnum) null, new Double(speed));
+        WsOutputManager.getInstance().getOutput(VICTOR_INDEX).set(new Double(speed));
     }
     
     public double getVictorSpeed()
     {
-        return ((Double) WsOutputManager.getInstance().getOutput(VICTOR_INDEX).get((IOutputEnum) null)).doubleValue();
+        return ((Double) WsOutputManager.getInstance().getOutput(VICTOR_INDEX).get()).doubleValue();
     }
     
     public void setRoller(Relay.Value value)
     {
         this.rollerValue = value;
-        WsOutputManager.getInstance().getOutput(this.RELAY_INDEX).set((IOutputEnum) null, rollerValue);
+        WsOutputManager.getInstance().getOutput(this.RELAY_INDEX).set(rollerValue);
     }
     
     public Relay.Value getRollerValue()
@@ -114,12 +115,12 @@ public class Arm
         double victorSpeed = this.getVictorSpeed();
         double currentAngle = this.getCurrentAngle();
         
-        if(currentAngle <= LOW_BOUND && victorSpeed < 0)
+        if(currentAngle <= lowBound && victorSpeed < 0)
         {
             this.setVictor(0.0);
             if(pid.isEnabled()) pid.disable();
         }
-        else if(currentAngle >= HIGH_BOUND && victorSpeed > 0)
+        else if(currentAngle >= highBound && victorSpeed > 0)
         {
             this.setVictor(0.0);
             if(pid.isEnabled()) pid.disable();
@@ -129,5 +130,21 @@ public class Arm
     public void notifyConfigChange()
     {
         pidInput.setVoltageValues(TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
+    }
+    
+    public static void notifyConfigChangeStatic()
+    {
+        highBound = HIGH_BOUND_CONFIG.getValue();
+        lowBound = LOW_BOUND_CONFIG.getValue();
+    }
+    
+    public static int getHighBound()
+    {
+        return highBound;
+    }
+    
+    public static int getLowBound()
+    {
+        return lowBound;
     }
 }

@@ -39,6 +39,16 @@ public class NoVictor implements IOutput {
     public void update() {
         motorSpeed.updateValue();
     }
+    
+    public void set(Object value)
+    {
+        this.set((IOutputEnum) null, value);
+    }
+
+    public Object get()
+    {
+        return this.get((IOutputEnum) null);
+    }
 
     public void notifyConfigChange() {
         //Nothing to update here, since the config value only affect the

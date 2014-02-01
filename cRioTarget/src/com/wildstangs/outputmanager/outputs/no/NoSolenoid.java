@@ -44,6 +44,16 @@ public class NoSolenoid implements IOutput {
     public void update() {
         subject.updateValue();
     }
+    
+    public void set(Object value)
+    {
+        this.set((IOutputEnum) null, value);
+    }
+
+    public Object get()
+    {
+        return this.get((IOutputEnum) null);
+    }
 
     public void notifyConfigChange() {
         //Nothing to update here, since the config value only affect the
