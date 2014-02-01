@@ -18,7 +18,11 @@ public class Catapult extends WsSubsystem implements IObserver {
 
     private boolean armCatapultFlag;
     private boolean fireCatapultFlag;
+    private boolean overrideFlag;
     private boolean isCatapultDown;
+    private boolean isTension;
+    private boolean isBallIn;
+    private boolean isLatched;
     private CatapultState catapultState;
 
     public static class CatapultState {
@@ -45,16 +49,22 @@ public class Catapult extends WsSubsystem implements IObserver {
     }
 
     public void init() {
+        overrideFlag = false;
         armCatapultFlag = false;
         fireCatapultFlag = false;
         isCatapultDown = false;
+        isTension = false;
+        isBallIn = false;
+        isLatched = false;
         catapultState = CatapultState.DOWN;
     }
 
     public void update() {
         if (armCatapultFlag == true && fireCatapultFlag == false) {
             catapultState = CatapultState.DOWN;
-        } else if (armCatapultFlag == false && fireCatapultFlag == true) {
+        } else if (armCatapultFlag == false && fireCatapultFlag == true && isTension && isBallIn && isLatched) {
+            catapultState = CatapultState.UP;
+        } else if (!armCatapultFlag && fireCatapultFlag && overrideFlag) {
             catapultState = CatapultState.UP;
         }
         
@@ -74,14 +84,34 @@ public class Catapult extends WsSubsystem implements IObserver {
     public boolean isCatapultDown() {
         return isCatapultDown;
     }
+    
+    public boolean isBallIn() {
+        return isBallIn;
+    }
+    
+    public boolean isTension() {
+        return isTension;
+    }
+    
+    public boolean isLatched() {
+        return isLatched;
+    }
 
     public void acceptNotification(Subject subjectThatCaused) {
         if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_2) {
             armCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_4) {
             fireCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
+        } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_10) {
+            overrideFlag = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.CATAPULT_DOWN_LIMIT_SWITCH).getSubject(null))) {
             isCatapultDown = ((BooleanSubject) subjectThatCaused).getValue();
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.LATCH_POSITION_SWITCH).getSubject(null))) {
+            isLatched = ((BooleanSubject) subjectThatCaused).getValue();
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.BALL_DETECT_SWITCH).getSubject(null))) {
+            isBallIn = ((BooleanSubject) subjectThatCaused).getValue();
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.TENSION_LIMIT_SWITCH).getSubject(null))) {
+            isTension = ((BooleanSubject) subjectThatCaused).getValue();
         }
     }
 }
