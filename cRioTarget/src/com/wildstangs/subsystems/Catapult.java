@@ -59,10 +59,10 @@ public class Catapult extends WsSubsystem implements IObserver {
         }
         
         if(catapultState == CatapultState.DOWN) {
-            (WsOutputManager.getInstance().getOutput(WsOutputManager.ARM_CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(false));
+            (WsOutputManager.getInstance().getOutput(WsOutputManager.CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(false));
             SmartDashboard.putString("Catapult state", "down");
         } else {
-            (WsOutputManager.getInstance().getOutput(WsOutputManager.ARM_CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(true));
+            (WsOutputManager.getInstance().getOutput(WsOutputManager.CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(true));
             SmartDashboard.putString("Catapult state", "up");
         }
     }

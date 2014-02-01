@@ -163,8 +163,6 @@ public class WsInputManager
             Logger.getLogger().debug(this.getClass().getName(), "attachJoystickButton", "Oops! Check that the inputs implement the required interfaces.");
         }
     }
-    public static final int UNKNOWN_INDEX = 0;
-    
     /**
      * Keys to represent OI Inputs
      */
