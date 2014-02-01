@@ -240,7 +240,9 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
 
             throttleValue = ((Double) ((WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX))).get(WsJoystickAxisEnum.DRIVER_THROTTLE)).doubleValue();
             headingValue = ((Double) ((WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX))).get(WsJoystickAxisEnum.DRIVER_HEADING)).doubleValue();
-
+            
+            SmartDashboard.putNumber("Heading Joystick Value", headingValue);
+            
             setThrottleValue(throttleValue);
             setHeadingValue(headingValue);
 
@@ -254,6 +256,7 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
             SmartDashboard.putNumber("Heading Value", driveBaseHeadingValue);
             SmartDashboard.putBoolean("Shifter State", shifterFlag.equals(DoubleSolenoid.Value.kReverse));
             SmartDashboard.putBoolean("Anti-Turbo Flag", antiTurboFlag);
+            SmartDashboard.putBoolean("Quickturn", quickTurnFlag);
 
             //Set gear shift output
             WsOutputManager.getInstance().getOutput(WsOutputManager.SHIFTER_INDEX).set(null, new Integer(shifterFlag.value));
@@ -488,7 +491,7 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
 
         //If our throttle is within the zero deadband and our velocity is above the threshold,
         //use deceleration to slow us down
-        if ((Math.abs(driveBaseThrottleValue) < DEADBAND) && (Math.abs(currentVelocity) > DECELERATION_VELOCITY_THRESHOLD)) {
+        if ((Math.abs(driveBaseThrottleValue) < DEADBAND) && (Math.abs(currentVelocity) > DECELERATION_VELOCITY_THRESHOLD) && !quickTurnFlag) {
             //We are above the velocity threshold, apply a small inverse motor speed to decelerate
             if (currentVelocity > 0) {
                 //We are moving forward, apply a negative motor value
@@ -499,7 +502,7 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
                 rightMotorSpeed = DECELERATION_MOTOR_SPEED;
                 leftMotorSpeed = DECELERATION_MOTOR_SPEED;
             }
-        } else if ((Math.abs(driveBaseThrottleValue) < DEADBAND) && (Math.abs(currentVelocity) <= DECELERATION_VELOCITY_THRESHOLD)) {
+        } else if ((Math.abs(driveBaseThrottleValue) < DEADBAND) && (Math.abs(currentVelocity) <= DECELERATION_VELOCITY_THRESHOLD) && !quickTurnFlag) {
             //We are below the velocity threshold, zero the motor values to brake
             rightMotorSpeed = 0.0;
             leftMotorSpeed = 0.0;
@@ -512,7 +515,10 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
             rightMotorSpeed = 0.0;
             leftMotorSpeed = 0.0;
         }
-
+        
+        SmartDashboard.putNumber("LeftDriveSpeed", leftMotorSpeed);
+        SmartDashboard.putNumber("RightDriveSpeed", rightMotorSpeed);
+        
         //Update Output Facade.
         (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(leftMotorSpeed));
         (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(rightMotorSpeed));

@@ -195,12 +195,12 @@ public class WsInputManager
         //Add the facade data elements
         sensorInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         sensorInputs.addToIndex(PRESSURE_TRANSDUCER_INDEX, new WsAnalogInput(4));
-        sensorInputs.addToIndex(FRONT_ARM_POT_INDEX, new WsAnalogInput(1));
-        sensorInputs.addToIndex(BACK_ARM_POT_INDEX, new WsAnalogInput(2));
-        sensorInputs.addToIndex(LEFT_ENCODER_A_INDEX, new WsDigitalInput(2));
-        sensorInputs.addToIndex(LEFT_ENCODER_B_INDEX, new WsDigitalInput(3));
-        sensorInputs.addToIndex(RIGHT_ENCODER_A_INDEX, new WsDigitalInput(4));
-        sensorInputs.addToIndex(RIGHT_ENCODER_B_INDEX, new WsDigitalInput(5));
+        sensorInputs.addToIndex(FRONT_ARM_POT_INDEX, new WsAnalogInput(2));
+        sensorInputs.addToIndex(BACK_ARM_POT_INDEX, new WsAnalogInput(3));
+//        sensorInputs.addToIndex(LEFT_ENCODER_A_INDEX, new WsDigitalInput(2));
+//        sensorInputs.addToIndex(LEFT_ENCODER_B_INDEX, new WsDigitalInput(3));
+//        sensorInputs.addToIndex(RIGHT_ENCODER_A_INDEX, new WsDigitalInput(4));
+//        sensorInputs.addToIndex(RIGHT_ENCODER_B_INDEX, new WsDigitalInput(5));
         sensorInputs.addToIndex(TENSION_LIMIT_SWITCH_INDEX, new WsDigitalInput(6));
         sensorInputs.addToIndex(BALL_DETECT_SWITCH_INDEX, new WsDigitalInput(7));
         sensorInputs.addToIndex(LATCH_POSITION_SWITCH_INDEX, new WsDigitalInput(8));
