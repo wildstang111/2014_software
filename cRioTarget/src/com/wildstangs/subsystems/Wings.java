@@ -23,7 +23,7 @@ public class Wings extends WsSubsystem implements IObserver
     public Wings(String name)
     {
         super(name);
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_6);
+        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_1);
     }
 
     public void init()
@@ -51,7 +51,7 @@ public class Wings extends WsSubsystem implements IObserver
     
     public void acceptNotification(Subject subjectThatCaused)
     {
-        if(subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_6)
+        if(subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_1)
         {
             if(((BooleanSubject)subjectThatCaused).getValue())
             {
