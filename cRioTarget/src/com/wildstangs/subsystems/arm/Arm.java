@@ -130,4 +130,9 @@ public class Arm
     {
         pidInput.setVoltageValues(TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
     }
+    
+    public boolean isArmPidActive()
+    {
+        return pid.isEnabled();
+    }
 }

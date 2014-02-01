@@ -24,6 +24,10 @@ public class ArmPreset {
     
     public int getwantedAngleMeasureBack(){
         return wantedAngleMeasureBack;
-    
+    }
+
+    public String toString()
+    {
+        return "Wanted Front Arm Angle: " + this.wantedAngleMeasureFront + ", Wanted Back Arm Angle: " + this.wantedAngleMeasureBack;
     }
 }
