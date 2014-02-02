@@ -7,8 +7,8 @@ package com.wildstangs.subsystems.arm;
 import com.wildstangs.config.DoubleConfigFileParameter;
 import com.wildstangs.config.IntegerConfigFileParameter;
 import com.wildstangs.outputmanager.base.IOutputEnum;
-import com.wildstangs.outputmanager.base.WsOutputManager;
-import com.wildstangs.pid.controller.base.WsPidController;
+import com.wildstangs.outputmanager.base.OutputManager;
+import com.wildstangs.pid.controller.base.PidController;
 import com.wildstangs.pid.inputs.ArmPotPidInput;
 import com.wildstangs.pid.outputs.ArmVictorPidOutput;
 import edu.wpi.first.wpilibj.Relay;
@@ -26,7 +26,7 @@ public class Arm
     protected final int VICTOR_INDEX, RELAY_INDEX, POT_INDEX;
     
     protected int currentAngle = 0, wantedAngle = 0;
-    protected WsPidController pid;
+    protected PidController pid;
     protected ArmPotPidInput pidInput;
     protected Relay.Value rollerValue = Relay.Value.kOff;
     
@@ -44,7 +44,7 @@ public class Arm
         
         this.front = front;
         this.pidInput = new ArmPotPidInput(potIndex, TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
-        this.pid = new WsPidController(this.pidInput, new ArmVictorPidOutput(victorIndex), front ? "FrontArmPid" : "BackArmPid");
+        this.pid = new PidController(this.pidInput, new ArmVictorPidOutput(victorIndex), front ? "FrontArmPid" : "BackArmPid");
         this.pid.disable();
     }
     
@@ -88,18 +88,18 @@ public class Arm
             speed = 0.0;
         }
         
-        WsOutputManager.getInstance().getOutput(VICTOR_INDEX).set(new Double(speed));
+        OutputManager.getInstance().getOutput(VICTOR_INDEX).set(new Double(speed));
     }
     
     public double getVictorSpeed()
     {
-        return ((Double) WsOutputManager.getInstance().getOutput(VICTOR_INDEX).get()).doubleValue();
+        return ((Double) OutputManager.getInstance().getOutput(VICTOR_INDEX).get()).doubleValue();
     }
     
     public void setRoller(Relay.Value value)
     {
         this.rollerValue = value;
-        WsOutputManager.getInstance().getOutput(this.RELAY_INDEX).set(rollerValue);
+        OutputManager.getInstance().getOutput(this.RELAY_INDEX).set(rollerValue);
     }
     
     public Relay.Value getRollerValue()

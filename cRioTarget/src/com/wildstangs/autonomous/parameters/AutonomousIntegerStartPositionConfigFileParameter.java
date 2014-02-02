@@ -4,7 +4,7 @@
  */
 package com.wildstangs.autonomous.parameters;
 
-import com.wildstangs.autonomous.WsAutonomousManager;
+import com.wildstangs.autonomous.AutonomousManager;
 
 /**
  *
@@ -13,7 +13,7 @@ import com.wildstangs.autonomous.WsAutonomousManager;
 public class AutonomousIntegerStartPositionConfigFileParameter extends AutonomousIntegerConfigFileParameter{
 
     public AutonomousIntegerStartPositionConfigFileParameter(String pName, int defValue) {
-        super(pName + "." + WsAutonomousManager.getInstance().getStartPosition().toConfigString(), defValue);
+        super(pName + "." + AutonomousManager.getInstance().getStartPosition().toConfigString(), defValue);
     }
     
 }

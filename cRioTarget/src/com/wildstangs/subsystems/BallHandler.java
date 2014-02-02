@@ -1,16 +1,16 @@
 package com.wildstangs.subsystems;
 
-import com.wildstangs.inputmanager.base.WsInputManager;
-import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
-import com.wildstangs.inputmanager.inputs.joystick.WsJoystickButtonEnum;
-import com.wildstangs.outputmanager.base.WsOutputManager;
+import com.wildstangs.inputmanager.base.InputManager;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickAxisEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.DoubleSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.arm.Arm;
 import com.wildstangs.subsystems.arm.ArmPreset;
-import com.wildstangs.subsystems.base.WsSubsystem;
+import com.wildstangs.subsystems.base.Subsystem;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * @author mail929
  */
-public class BallHandler extends WsSubsystem implements IObserver {
+public class BallHandler extends Subsystem implements IObserver {
 
     protected Arm frontArm, backArm;
     protected boolean frontForwardButton = false, frontReverseButton = false;
@@ -28,18 +28,18 @@ public class BallHandler extends WsSubsystem implements IObserver {
     public BallHandler(String name) {
         super(name);
 
-        this.frontArm = new Arm(WsOutputManager.FRONT_ARM_VICTOR_INDEX, WsOutputManager.FRONT_ARM_SPIKE_INDEX, WsInputManager.FRONT_ARM_POT_INDEX, true);
-        this.backArm = new Arm(WsOutputManager.BACK_ARM_VICTOR_INDEX, WsOutputManager.BACK_ARM_SPIKE_INDEX, WsInputManager.BACK_ARM_POT_INDEX, false);
+        this.frontArm = new Arm(OutputManager.FRONT_ARM_VICTOR_INDEX, OutputManager.FRONT_ARM_SPIKE_INDEX, InputManager.FRONT_ARM_POT_INDEX, true);
+        this.backArm = new Arm(OutputManager.BACK_ARM_VICTOR_INDEX, OutputManager.BACK_ARM_SPIKE_INDEX, InputManager.BACK_ARM_POT_INDEX, false);
 
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_5);
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_6);
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_7);
-        registerForJoystickButtonNotification(WsJoystickButtonEnum.MANIPULATOR_BUTTON_8);
+        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_5);
+        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_6);
+        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_7);
+        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_8);
         
-        Subject subject = WsInputManager.getInstance().getOiInput(WsInputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL);
+        Subject subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL);
         subject.attach(this);
 
-        subject = WsInputManager.getInstance().getOiInput(WsInputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(WsJoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL);
+        subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL);
         subject.attach(this);
     }
 
@@ -94,17 +94,17 @@ public class BallHandler extends WsSubsystem implements IObserver {
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
-        if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_5) {
+        if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_5) {
             this.frontForwardButton = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_6) {
+        } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_6) {
             this.backForwardButton = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_7) {
+        } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_7) {
             this.frontReverseButton = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_8) {
+        } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_8) {
             this.backReverseButton = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.getType() == WsJoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL) {
+        } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL) {
             this.frontArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.getType() == WsJoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
+        } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
             this.backArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
         }
     }

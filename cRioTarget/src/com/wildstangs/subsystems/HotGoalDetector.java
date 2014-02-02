@@ -1,12 +1,12 @@
 package com.wildstangs.subsystems;
 
-import com.wildstangs.subsystems.base.WsSubsystem;
+import com.wildstangs.subsystems.base.Subsystem;
 
 /**
  *
  * @author mail929
  */
-public class HotGoalDetector extends WsSubsystem {
+public class HotGoalDetector extends Subsystem {
     
     public HotGoalDetector(String name) {
         super(name);

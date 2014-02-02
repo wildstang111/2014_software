@@ -4,13 +4,13 @@
  */
 package com.wildstangs.crio;
 
-import com.wildstangs.autonomous.WsAutonomousManager;
-import com.wildstangs.configmanager.WsConfigManager;
-import com.wildstangs.configmanager.WsConfigManagerException;
-import com.wildstangs.inputmanager.base.WsInputManager;
+import com.wildstangs.autonomous.AutonomousManager;
+import com.wildstangs.configmanager.ConfigManager;
+import com.wildstangs.configmanager.ConfigManagerException;
+import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
-import com.wildstangs.outputmanager.base.WsOutputManager;
-import com.wildstangs.subsystems.base.WsSubsystemContainer;
+import com.wildstangs.outputmanager.base.OutputManager;
+import com.wildstangs.subsystems.base.SubsystemContainer;
 
 /**
  *
@@ -19,59 +19,59 @@ import com.wildstangs.subsystems.base.WsSubsystemContainer;
 public class FrameworkAbstraction {
 
     public static void autonomousInit() {
-        WsSubsystemContainer.getInstance().init();
+        SubsystemContainer.getInstance().init();
         Logger.getLogger().readConfig();
-        WsAutonomousManager.getInstance().startCurrentProgram();
+        AutonomousManager.getInstance().startCurrentProgram();
     }
 
     public static void teleopInit() {
-        WsSubsystemContainer.getInstance().init();
+        SubsystemContainer.getInstance().init();
         Logger.getLogger().readConfig();
     }
 
     public static void robotInit(String fileName) {
         try {
-            WsConfigManager.getInstance().setConfigFileName(fileName);
-            WsConfigManager.getInstance().readConfig();
-        } catch (WsConfigManagerException wscfe) {
+            ConfigManager.getInstance().setConfigFileName(fileName);
+            ConfigManager.getInstance().readConfig();
+        } catch (ConfigManagerException wscfe) {
             System.out.println(wscfe.toString());
         }
 
-        WsInputManager.getInstance();
-        WsOutputManager.getInstance();
-        WsSubsystemContainer.getInstance().init();
+        InputManager.getInstance();
+        OutputManager.getInstance();
+        SubsystemContainer.getInstance().init();
         Logger.getLogger().readConfig();
-        WsAutonomousManager.getInstance();
+        AutonomousManager.getInstance();
     }
 
     public static void teleopPeriodic() {
-        WsInputManager.getInstance().updateOiData();
-        WsInputManager.getInstance().updateSensorData();
-        WsSubsystemContainer.getInstance().update();
-        WsOutputManager.getInstance().update();
+        InputManager.getInstance().updateOiData();
+        InputManager.getInstance().updateSensorData();
+        SubsystemContainer.getInstance().update();
+        OutputManager.getInstance().update();
     }
 
     public static void autonomousPeriodic() {
-        WsInputManager.getInstance().updateOiDataAutonomous();
-        WsInputManager.getInstance().updateSensorData();
-        WsAutonomousManager.getInstance().update();
-        WsSubsystemContainer.getInstance().update();
-        WsOutputManager.getInstance().update();
+        InputManager.getInstance().updateOiDataAutonomous();
+        InputManager.getInstance().updateSensorData();
+        AutonomousManager.getInstance().update();
+        SubsystemContainer.getInstance().update();
+        OutputManager.getInstance().update();
     }
 
     public static void disabledPeriodic() {
-        WsInputManager.getInstance().updateOiData();
+        InputManager.getInstance().updateOiData();
     }
 
     public static void disabledInit() {
-        WsAutonomousManager.getInstance().clear();
+        AutonomousManager.getInstance().clear();
         try {
-            WsConfigManager.getInstance().readConfig();
-        } catch (WsConfigManagerException e) {
+            ConfigManager.getInstance().readConfig();
+        } catch (ConfigManagerException e) {
             System.out.println(e.getMessage());
         }
 
-        WsSubsystemContainer.getInstance().init();
+        SubsystemContainer.getInstance().init();
         Logger.getLogger().readConfig();
     }
 

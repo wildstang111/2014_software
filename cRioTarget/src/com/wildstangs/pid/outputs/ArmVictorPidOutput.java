@@ -5,7 +5,7 @@
 package com.wildstangs.pid.outputs;
 
 import com.wildstangs.outputmanager.base.IOutputEnum;
-import com.wildstangs.outputmanager.base.WsOutputManager;
+import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.pid.outputs.base.IPidOutput;
 
 /**
@@ -22,7 +22,7 @@ public class ArmVictorPidOutput implements IPidOutput
     
     public void pidWrite(double output)
     {
-        WsOutputManager.getInstance().getOutput(victorIndex).set(new Double(output));
+        OutputManager.getInstance().getOutput(victorIndex).set(new Double(output));
     }
     
 }

@@ -4,7 +4,7 @@
  */
 package com.wildstangs.autonomous.parameters;
 
-import com.wildstangs.autonomous.WsAutonomousManager;
+import com.wildstangs.autonomous.AutonomousManager;
 
 /**
  *
@@ -13,7 +13,7 @@ import com.wildstangs.autonomous.WsAutonomousManager;
 public class AutonomousBooleanStartPositionConfigFileParameter extends AutonomousBooleanConfigFileParameter{
 
     public AutonomousBooleanStartPositionConfigFileParameter(String pName, boolean defValue) {
-        super(pName + "." + WsAutonomousManager.getInstance().getStartPosition().toConfigString(), defValue);
+        super(pName + "." + AutonomousManager.getInstance().getStartPosition().toConfigString(), defValue);
     }
     
 }

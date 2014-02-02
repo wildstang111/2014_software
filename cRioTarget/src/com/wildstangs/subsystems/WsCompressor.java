@@ -3,8 +3,8 @@ package com.wildstangs.subsystems;
 import com.wildstangs.config.DoubleConfigFileParameter;
 import com.wildstangs.inputmanager.base.IInput;
 import com.wildstangs.inputmanager.base.IInputEnum;
-import com.wildstangs.inputmanager.base.WsInputManager;
-import com.wildstangs.subsystems.base.WsSubsystem;
+import com.wildstangs.inputmanager.base.InputManager;
+import com.wildstangs.subsystems.base.Subsystem;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * @author Liam
  */
-public class WsCompressor extends WsSubsystem
+public class WsCompressor extends Subsystem
 {
     protected final DoubleConfigFileParameter LOW_VOLTAGE_CONFIG, HIGH_VOLTAGE_CONFIG, MAX_PSI_CONFIG;
     protected double lowVoltage, highVoltage, maxPSI;
@@ -40,7 +40,7 @@ public class WsCompressor extends WsSubsystem
 
     public void update()
     {
-        IInput pressureTransducer = WsInputManager.getInstance().getSensorInput(WsInputManager.PRESSURE_TRANSDUCER_INDEX);
+        IInput pressureTransducer = InputManager.getInstance().getSensorInput(InputManager.PRESSURE_TRANSDUCER_INDEX);
         
         double voltage = ((Double) pressureTransducer.get()).doubleValue();
         

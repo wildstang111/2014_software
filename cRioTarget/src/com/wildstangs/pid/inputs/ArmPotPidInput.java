@@ -5,7 +5,7 @@
 package com.wildstangs.pid.inputs;
 
 import com.wildstangs.inputmanager.base.IInputEnum;
-import com.wildstangs.inputmanager.base.WsInputManager;
+import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.pid.inputs.base.IPidInput;
 
 /**
@@ -25,7 +25,7 @@ public class ArmPotPidInput implements IPidInput
     
     public double pidRead()
     {
-        double currentVoltage = ((Double) WsInputManager.getInstance().getSensorInput(potIndex).get()).doubleValue();
+        double currentVoltage = ((Double) InputManager.getInstance().getSensorInput(potIndex).get()).doubleValue();
         return 360.0 * ((currentVoltage - lowerVoltage) / (upperVoltage - lowerVoltage));
     }
     

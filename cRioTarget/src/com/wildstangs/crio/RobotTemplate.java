@@ -8,7 +8,7 @@ package com.wildstangs.crio;
 
 
 import com.wildstangs.logger.Logger;
-import com.wildstangs.profiling.WsProfilingTimer;
+import com.wildstangs.profiling.ProfilingTimer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Watchdog;
 
@@ -33,10 +33,10 @@ public class RobotTemplate extends IterativeRobot {
 
     }
     
-    WsProfilingTimer durationTimer = new WsProfilingTimer("Periodic method duration", 50);
-    WsProfilingTimer periodTimer = new WsProfilingTimer("Periodic method period", 50);
-    WsProfilingTimer startupTimer = new WsProfilingTimer("Startup duration", 1);
-    WsProfilingTimer initTimer = new WsProfilingTimer("Init duration", 1);
+    ProfilingTimer durationTimer = new ProfilingTimer("Periodic method duration", 50);
+    ProfilingTimer periodTimer = new ProfilingTimer("Periodic method period", 50);
+    ProfilingTimer startupTimer = new ProfilingTimer("Startup duration", 1);
+    ProfilingTimer initTimer = new ProfilingTimer("Init duration", 1);
 
     public void disabledInit() {
         initTimer.startTimingSection();
