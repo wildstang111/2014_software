@@ -14,7 +14,9 @@ public interface IInput extends IObservable {
      * @param key An enumerated key that to get to a specific value.
      * @param value The value to set to.
      */
-    abstract void set(IInputEnum key, Object value);
+    public void set(IInputEnum key, Object value);
+    
+    public void set(Object value);
 
     /**
      * Method to get a value from the data element.
@@ -22,21 +24,23 @@ public interface IInput extends IObservable {
      * @param key An enumerated key that represents the value wanted.
      * @return An Object value of the element.
      */
-    abstract Object get(IInputEnum key);
+    public Object get(IInputEnum key);
+    
+    public Object get();
 
     /**
      * Method to force a periodic update of the data element.
      */
-    abstract void update();
+    public void update();
 
     /**
      * Method to pull input info for the data element.
      */
-    abstract void pullData();
+    public void pullData();
 
     /**
      * Method to notify the data element that config data has changed and needs
      * to be re-read.
      */
-    abstract void notifyConfigChange();
+    public void notifyConfigChange();
 }

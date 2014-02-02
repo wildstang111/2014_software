@@ -41,6 +41,16 @@ public class WsVictor implements IOutput {
         motorSpeed.updateValue();
         this.victor.set(motorSpeed.getValue());
     }
+    
+    public void set(Object value)
+    {
+        this.set((IOutputEnum) null, value);
+    }
+
+    public Object get()
+    {
+        return this.get((IOutputEnum) null);
+    }
 
     public void notifyConfigChange() {
         //Nothing to update here, since the config value only affect the

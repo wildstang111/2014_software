@@ -22,6 +22,16 @@ public class NoOutput implements IOutput
     {
         return object;
     }
+    
+    public void set(Object value)
+    {
+        this.set((IOutputEnum) null, value);
+    }
+
+    public Object get()
+    {
+        return this.get((IOutputEnum) null);
+    }
 
     public void update()
     {

@@ -179,8 +179,8 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
         currentProfileX = 0.0;
         continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
         //Zero out all motor values left over from autonomous
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(0.0));
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(0.0));
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED_INDEX)).set(new Double(0.0));
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED_INDEX)).set(new Double(0.0));
         (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED_INDEX)).update();
         (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED_INDEX)).update();
         WsInputManager.getInstance().getOiInput(WsInputManager.DRIVER_JOYSTICK_INDEX).set(WsJoystickAxisEnum.DRIVER_THROTTLE, new Double(0.0));
@@ -259,7 +259,7 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
             SmartDashboard.putBoolean("Quickturn", quickTurnFlag);
 
             //Set gear shift output
-            WsOutputManager.getInstance().getOutput(WsOutputManager.SHIFTER_INDEX).set(null, new Integer(shifterFlag.value));
+            WsOutputManager.getInstance().getOutput(WsOutputManager.SHIFTER_INDEX).set(new Integer(shifterFlag.value));
         }
 
 
@@ -520,8 +520,8 @@ public class WsDriveBase extends WsSubsystem implements IObserver {
         SmartDashboard.putNumber("RightDriveSpeed", rightMotorSpeed);
         
         //Update Output Facade.
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(leftMotorSpeed));
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED_INDEX)).set((IOutputEnum) null, new Double(rightMotorSpeed));
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.LEFT_DRIVE_SPEED_INDEX)).set(new Double(leftMotorSpeed));
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.RIGHT_DRIVE_SPEED_INDEX)).set(new Double(rightMotorSpeed));
     }
 
     public void checkAutoQuickTurn() {

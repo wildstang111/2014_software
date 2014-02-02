@@ -25,7 +25,7 @@ public class LandingGear extends WsSubsystem implements IObserver{
     }
 
     public void update() {
-        (WsOutputManager.getInstance().getOutput(WsOutputManager.LANDING_GEAR_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(landingGearState));
+        (WsOutputManager.getInstance().getOutput(WsOutputManager.LANDING_GEAR_SOLENOID_INDEX)).set(new Boolean(landingGearState));
         SmartDashboard.putBoolean("LandingGearState", landingGearState);
     }
     

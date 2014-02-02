@@ -16,15 +16,13 @@ public class WsDSAnalogInput implements IInput {
 
     DoubleSubject analogValue;
     int channel;
-    DoubleConfigFileParameter startState = new DoubleConfigFileParameter(
-            this.getClass().getName(), "startState", 0.0f);
 
     //By giving the input number in the constructor we can make this generic for all analog inputs
     public WsDSAnalogInput(int channel) {
-        this.analogValue = new DoubleSubject("AnalogInput" + channel, WsDSAnalogInputEnum.getEnumFromValue(channel));
+        this.analogValue = new DoubleSubject("AnalogInput" + channel);
         this.channel = channel;
 
-        analogValue.setValue(startState.getValue());
+        analogValue.setValue(0.0);
     }
 
     public void set(IInputEnum key, Object value) {
@@ -54,6 +52,21 @@ public class WsDSAnalogInput implements IInput {
         analogValue.updateValue();
     }
 
+        public void set(Object value)
+    {
+        this.set((IInputEnum) null, value);
+    }
+    
+    public Subject getSubject()
+    {
+        return this.getSubject((ISubjectEnum) null);
+    }
+
+    public Object get()
+    {
+        return this.get((IInputEnum) null);
+    }
+    
     public void pullData() {
         
         analogValue.setValue(DriverStation.getInstance().getAnalogIn(channel));

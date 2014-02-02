@@ -69,10 +69,10 @@ public class Catapult extends WsSubsystem implements IObserver {
         }
         
         if(catapultState == CatapultState.DOWN) {
-            (WsOutputManager.getInstance().getOutput(WsOutputManager.CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(false));
+            (WsOutputManager.getInstance().getOutput(WsOutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(false));
             SmartDashboard.putString("Catapult state", "down");
         } else {
-            (WsOutputManager.getInstance().getOutput(WsOutputManager.CATAPAULT_SOLENOID_INDEX)).set((IOutputEnum) null, new Boolean(true));
+            (WsOutputManager.getInstance().getOutput(WsOutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(true));
             SmartDashboard.putString("Catapult state", "up");
         }
     }
@@ -102,15 +102,15 @@ public class Catapult extends WsSubsystem implements IObserver {
             armCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_4) {
             fireCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.CATAPULT_DOWN_SWITCH_INDEX).getSubject(null))) {
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.CATAPULT_DOWN_SWITCH_INDEX).getSubject())) {
             isCatapultDown = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == WsJoystickButtonEnum.MANIPULATOR_BUTTON_10) {
             overrideFlag = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.LATCH_POSITION_SWITCH_INDEX).getSubject(null))) {
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.LATCH_POSITION_SWITCH_INDEX).getSubject())) {
             isLatched = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.BALL_DETECT_SWITCH_INDEX).getSubject(null))) {
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.BALL_DETECT_SWITCH_INDEX).getSubject())) {
             isBallIn = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.TENSION_LIMIT_SWITCH_INDEX).getSubject(null))) {
+        } else if (subjectThatCaused.equals(WsInputManager.getInstance().getSensorInput(WsInputManager.TENSION_LIMIT_SWITCH_INDEX).getSubject())) {
             isTension = ((BooleanSubject) subjectThatCaused).getValue();
         }
     }

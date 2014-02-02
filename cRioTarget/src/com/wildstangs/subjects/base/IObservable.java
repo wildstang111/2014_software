@@ -7,4 +7,6 @@ package com.wildstangs.subjects.base;
 public interface IObservable {
 
     public Subject getSubject(ISubjectEnum subjectEnum);
+    
+    public Subject getSubject();
 }

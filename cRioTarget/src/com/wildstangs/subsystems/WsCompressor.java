@@ -42,7 +42,7 @@ public class WsCompressor extends WsSubsystem
     {
         IInput pressureTransducer = WsInputManager.getInstance().getSensorInput(WsInputManager.PRESSURE_TRANSDUCER_INDEX);
         
-        double voltage = ((Double) pressureTransducer.get((IInputEnum) null)).doubleValue();
+        double voltage = ((Double) pressureTransducer.get()).doubleValue();
         
         SmartDashboard.putNumber("Pressure Transducer Voltage", voltage);
         
