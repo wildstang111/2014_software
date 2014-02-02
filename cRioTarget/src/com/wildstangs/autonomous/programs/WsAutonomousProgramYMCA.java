@@ -15,10 +15,10 @@ import com.wildstangs.subsystems.arm.ArmPreset;
  */
 public class WsAutonomousProgramYMCA extends WsAutonomousProgram
 {
-    protected ArmPreset yPreset = new ArmPreset(180, 180);
-    protected ArmPreset mPreset = new ArmPreset(0, 0);
-    protected ArmPreset cPreset = new ArmPreset(150, 270);
-    protected ArmPreset aPreset = new ArmPreset(200, 200);
+    protected ArmPreset yPreset = new ArmPreset(180, 180, "yPreset");
+    protected ArmPreset mPreset = new ArmPreset(0, 0, "mPreset");
+    protected ArmPreset cPreset = new ArmPreset(150, 270, "cPreset");
+    protected ArmPreset aPreset = new ArmPreset(200, 200, "aPreset");
     protected void defineSteps()
     {
         addStep(new WsAutonomousStepSetArmPresets(yPreset));
