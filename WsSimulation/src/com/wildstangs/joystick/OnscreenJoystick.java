@@ -17,6 +17,7 @@
 package com.wildstangs.joystick;
 
 import com.wildstangs.inputmanager.inputs.joystick.IJoystick;
+import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -63,10 +64,8 @@ public class OnscreenJoystick implements KeyListener, IJoystick {
      */
     public OnscreenJoystick(int port) {
         frame = new JFrame("Joystick Emulator: " + port);
-        if (port == 1) {
-            frame.setLocation(0, 0);
-        } else {
-            frame.setLocation(600, 0);
+        if (port == 2) {
+            frame.setLocation(820, 0);
         }
 
         frame.setLayout(new BorderLayout());
@@ -115,6 +114,19 @@ public class OnscreenJoystick implements KeyListener, IJoystick {
     public double getThrottle() {
         return 0;
     }
+    
+    public double getRawAxis(int axisEnum) {
+        switch(axisEnum) {
+            case WsJoystickAxisEnum.LEFT_JOYSTICK_X:
+                return getX();
+            case WsJoystickAxisEnum.LEFT_JOYSTICK_Y:
+                return getY();
+            case WsJoystickAxisEnum.RIGHT_JOYSTICK_X:
+                return getZ();
+            default:
+                return 0;
+        }
+    }
 
     public int getAxisChannel(AxisType axis) {
         return 0;
@@ -143,8 +155,8 @@ public class OnscreenJoystick implements KeyListener, IJoystick {
      *
      * @return True if the provided button is being pressed, false if not.
      */
-    public boolean getRawButton(int but) {
-        return (but == button);
+    public boolean getRawButton(int button) {
+        return (button == this.button);
     }
 
     public void keyPressed(KeyEvent e) {
@@ -250,6 +262,7 @@ public class OnscreenJoystick implements KeyListener, IJoystick {
         public void mousePressed(MouseEvent e) {
             if (e.getButton() == 1) {
                 mouseClicked = !mouseClicked;
+                determineMousePos(e);
             } else if (e.getButton() == 3) {
                 trigger = true;
             }

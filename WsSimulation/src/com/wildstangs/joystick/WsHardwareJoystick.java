@@ -7,31 +7,26 @@ package com.wildstangs.joystick;
 import com.wildstangs.input.Controller;
 import com.wildstangs.input.Controllers;
 import com.wildstangs.inputmanager.inputs.joystick.IHardwareJoystick;
+import com.wildstangs.inputmanager.inputs.joystick.IJoystick;
+import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
  *
  * @author chadschmidt
  */
-public class WsHardwareJoystick implements IHardwareJoystick {
+public class WsHardwareJoystick implements IHardwareJoystick, IJoystick {
 
     int controllerIndex;
-
     boolean[] buttonStates;
-
     double rightJoystickY;
-
     double rightJoystickX;
-
     double leftJoystickY;
-
     double leftJoystickX;
-
     // Up is -1
-    int dPadUpDown;
-
+    int dPadY;
     // Right is -1
-    int dPadLeftRight;
+    int dPadX;
 
     private final byte[] m_axes_mapping;
     private final byte[] m_buttons_mapping;
@@ -81,8 +76,8 @@ public class WsHardwareJoystick implements IHardwareJoystick {
         leftJoystickY = controller.getYAxisValue();
         leftJoystickX = controller.getXAxisValue();
 
-        dPadLeftRight = (int) controller.getPovX();
-        dPadUpDown = (int) controller.getPovY();
+        dPadX = (int) controller.getPovX();
+        dPadY = (int) controller.getPovY();
     }
 
     static final byte kDefaultXAxis = 1;
@@ -205,7 +200,7 @@ public class WsHardwareJoystick implements IHardwareJoystick {
      * @return The Twist value of the joystick.
      */
     public double getTwist() {
-        return dPadLeftRight;
+        return dPadX;
     }
 
     /**
@@ -215,7 +210,7 @@ public class WsHardwareJoystick implements IHardwareJoystick {
      * @return The Throttle value of the joystick.
      */
     public double getThrottle() {
-        return dPadUpDown;
+        return dPadY;
     }
 
     /**
@@ -224,8 +219,23 @@ public class WsHardwareJoystick implements IHardwareJoystick {
      * @param axis The axis to read [1-6].
      * @return The value of the axis.
      */
-    public double getRawAxis(final int axis) {
-        return 0;
+    public double getRawAxis(int axisEnum) {
+        switch (axisEnum) {
+            case WsJoystickAxisEnum.LEFT_JOYSTICK_Y:
+                return leftJoystickY;
+            case WsJoystickAxisEnum.LEFT_JOYSTICK_X:
+                return leftJoystickX;
+            case WsJoystickAxisEnum.RIGHT_JOYSTICK_Y:
+                return rightJoystickY;
+            case WsJoystickAxisEnum.RIGHT_JOYSTICK_X:
+                return rightJoystickX;
+            case WsJoystickAxisEnum.DPAD_Y:
+                return dPadY;
+            case WsJoystickAxisEnum.DPAD_X:
+                return dPadX;
+            default:
+                return 0;
+        }
     }
 
     /**

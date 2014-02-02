@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.wpi.first.wpilibj;
 
 import com.wildstangs.inputmanager.inputs.joystick.IHardwareJoystick;
@@ -10,18 +9,20 @@ import com.wildstangs.joystick.OnscreenJoystick;
 import com.wildstangs.inputmanager.inputs.joystick.IJoystick;
 import com.wildstangs.joystick.WsHardwareJoystick;
 
+public class Joystick implements IJoystick, IHardwareJoystick {
 
-public class Joystick implements IJoystick, IHardwareJoystick{
-    IJoystick joystick; 
-    public Joystick(int channel){ 
-        WsHardwareJoystick hardwareJoystick = new WsHardwareJoystick(); 
-        if (hardwareJoystick.initializeJoystick()){
+    IJoystick joystick;
+    boolean isHardwareJoystick;
+
+    public Joystick(int channel) {
+        WsHardwareJoystick hardwareJoystick = new WsHardwareJoystick();
+        if (hardwareJoystick.initializeJoystick()) {
             joystick = hardwareJoystick;
-        }else { 
+            isHardwareJoystick = true;
+        } else {
             joystick = new OnscreenJoystick(channel);
-            
+            isHardwareJoystick = false;
         }
-
     }
 
     public boolean getRawButton(int but) {
@@ -29,7 +30,7 @@ public class Joystick implements IJoystick, IHardwareJoystick{
     }
 
     public boolean getTrigger() {
-        return joystick.getTrigger(); 
+        return joystick.getTrigger();
     }
 
     public double getX() {
@@ -43,22 +44,26 @@ public class Joystick implements IJoystick, IHardwareJoystick{
     public double getZ() {
         return joystick.getZ();
     }
-    
+
     public double getTwist() {
         return joystick.getTwist();
     }
-    
+
     public double getThrottle() {
         return joystick.getThrottle();
     }
 
+    public double getRawAxis(int axisEnum) {
+        return joystick.getRawAxis(axisEnum);
+    }
+
     @Override
     public void pullData() {
-        if (joystick instanceof IHardwareJoystick){
-            ((IHardwareJoystick)joystick).pullData();
+        if (joystick instanceof IHardwareJoystick) {
+            ((IHardwareJoystick) joystick).pullData();
         }
     }
-    
+
     public int getAxisChannel(AxisType axis) {
         return joystick.getAxisChannel(axis);
     }
@@ -72,7 +77,7 @@ public class Joystick implements IJoystick, IHardwareJoystick{
     public void setAxisChannel(AxisType axis, int channel) {
         joystick.setAxisChannel(axis, channel);
     }
-    
+
     public static class AxisType {
 
         /**
@@ -113,6 +118,10 @@ public class Joystick implements IJoystick, IHardwareJoystick{
         private AxisType(int value) {
             this.value = value;
         }
+    }
+    
+    public boolean isHardwareJoystick() {
+        return isHardwareJoystick;
     }
 
 }
