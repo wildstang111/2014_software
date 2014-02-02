@@ -16,14 +16,14 @@ import javax.swing.JLabel;
  *
  * @author coder65535
  */
-public class WsDigitalInputContainer implements KeyListener {
+public class DigitalInputContainer implements KeyListener {
 
-    public WsDigitalInputSimulation[] inputs;
+    public DigitalInputSimulation[] inputs;
     JFrame frame;
-    private static WsDigitalInputContainer instance = null;
+    private static DigitalInputContainer instance = null;
 
-    private WsDigitalInputContainer() {
-        inputs = new WsDigitalInputSimulation[16];
+    private DigitalInputContainer() {
+        inputs = new DigitalInputSimulation[16];
         for (int i = 0; i < 16; i++) {
             int channel;
             if (i == 0) {
@@ -33,7 +33,7 @@ public class WsDigitalInputContainer implements KeyListener {
             } else {
                 channel = i;
             }
-            inputs[i] = new WsDigitalInputSimulation(channel);
+            inputs[i] = new DigitalInputSimulation(channel);
         }
         frame = new JFrame("Digital Input Emulator");
         JLabel label = new JLabel("Focus and Press 1-9 to toggle Inputs ");
@@ -53,9 +53,9 @@ public class WsDigitalInputContainer implements KeyListener {
         frame.setVisible(true);
     }
 
-    public static WsDigitalInputContainer getInstance() {
+    public static DigitalInputContainer getInstance() {
         if (instance == null) {
-            instance = new WsDigitalInputContainer();
+            instance = new DigitalInputContainer();
         }
         return instance;
     }

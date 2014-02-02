@@ -1,20 +1,20 @@
 package com.wildstangs.simulation;
 
-import com.wildstangs.simulation.solenoids.WsSolenoidContainer;
-import com.wildstangs.autonomous.WsAutonomousManager;
+import com.wildstangs.simulation.solenoids.SolenoidContainer;
+import com.wildstangs.autonomous.AutonomousManager;
 import com.wildstangs.crio.FrameworkAbstraction;
 import com.wildstangs.input.Controllers;
-import com.wildstangs.inputmanager.base.WsInputManager;
+import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.*;
 import com.wildstangs.logviewer.LogViewer;
-import com.wildstangs.profiling.WsProfilingTimer;
+import com.wildstangs.profiling.ProfilingTimer;
 import java.io.File;
 
 /**
  *
  * @author ChadS
  */
-public class WsSimulation {
+public class Simulation {
 
     static String c = "WsSimulation";
 
@@ -26,8 +26,8 @@ public class WsSimulation {
     static boolean flywheelSpeedGraphs = false;
     static boolean driveThrottleGraph = true;
 
-    static WsProfilingTimer durationTimer = new WsProfilingTimer("Periodic method duration", 50);
-    static WsProfilingTimer periodTimer = new WsProfilingTimer("Periodic method period", 50);
+    static ProfilingTimer durationTimer = new ProfilingTimer("Periodic method duration", 50);
+    static ProfilingTimer periodTimer = new ProfilingTimer("Periodic method period", 50);
 
     /**
      * @param args the command line arguments
@@ -47,7 +47,7 @@ public class WsSimulation {
 
         Logger logger = Logger.getLogger();
 
-        //System.out.println(WsConfigManager.getInstance().getConfigItemName("com.wildstangs.WsInputManager.WsDriverJoystick.trim"));
+        //System.out.println(WsConfigManager.getInstance().getConfigItemName("com.wildstangs.InputManager.WsDriverJoystick.trim"));
         //System.out.println(WsConfigManager.getInstance().dumpConfigData());
         logger.always(c, "sim_startup", "Simulation starting.");
         FileLogger.getFileLogger().logData("Sim Started");
@@ -86,9 +86,9 @@ public class WsSimulation {
 //        }
         logger.always(c, "sim_startup", "Simulation init done.");
         if (autonomousRun) {
-            WsAutonomousManager.getInstance().setPosition(1);
-            WsAutonomousManager.getInstance().setProgram(4);
-            WsAutonomousManager.getInstance().startCurrentProgram();
+            AutonomousManager.getInstance().setPosition(1);
+            AutonomousManager.getInstance().setProgram(4);
+            AutonomousManager.getInstance().startCurrentProgram();
         }
 
         while (true) {
@@ -96,18 +96,18 @@ public class WsSimulation {
             periodTimer.startTimingSection();
             durationTimer.startTimingSection();
             
-            if (false == autonomousRun || (false == WsAutonomousManager.getInstance().getRunningProgramName().equalsIgnoreCase("Sleeper"))) {
+            if (false == autonomousRun || (false == AutonomousManager.getInstance().getRunningProgramName().equalsIgnoreCase("Sleeper"))) {
 
 //                gyro.update();
                 //Update the encoders
 //                dbEncoders.update();
-                WsInputManager.getInstance().updateSensorData();
+                InputManager.getInstance().updateSensorData();
                 if (autonomousRun) {
                     FrameworkAbstraction.autonomousPeriodic();
                 } else {
                     FrameworkAbstraction.teleopPeriodic();
                 }
-                WsSolenoidContainer.getInstance().update();
+                SolenoidContainer.getInstance().update();
 
 //                flywheelEncoders.update(); 
 //                limitSwitches.update();

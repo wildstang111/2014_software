@@ -4,9 +4,9 @@
  */
 package com.wildstangs.configmanager;
 
-import com.wildstangs.inputmanager.base.WsInputManager;
-import com.wildstangs.outputmanager.base.WsOutputManager;
-import com.wildstangs.subsystems.base.WsSubsystemContainer;
+import com.wildstangs.inputmanager.base.InputManager;
+import com.wildstangs.outputmanager.base.OutputManager;
+import com.wildstangs.subsystems.base.SubsystemContainer;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,27 +23,27 @@ import java.util.logging.Logger;
  *
  * @author Nathan
  */
-public class WsConfigManager {
+public class ConfigManager {
 
-    private static WsConfigManager instance = null;
+    private static ConfigManager instance = null;
     private static String configFileName = "/ws_config.txt";
     private static Hashtable config = new Hashtable();
     String path;
     File configFile;
     BufferedWriter bw;
     /**
-     * Gets the instance of the WsConfigManager Singleton.
+     * Gets the instance of the ConfigManager Singleton.
      *
-     * @return The instance of the WsConfigManager.
+     * @return The instance of the ConfigManager.
      */
-    public static WsConfigManager getInstance() {
+    public static ConfigManager getInstance() {
         if (instance == null) {
-            instance = new WsConfigManager();
+            instance = new ConfigManager();
         }
         return instance;
     }
 
-    protected WsConfigManager() {
+    protected ConfigManager() {
     }
 
     /**
@@ -51,9 +51,9 @@ public class WsConfigManager {
      * filename will only be set if it exists and is readable.
      *
      * @param filename The new filename to use for reading.
-     * @throws WsConfigManagerException
+     * @throws ConfigManagerException
      */
-    public void setConfigFileName(String filename) throws WsConfigManagerException {
+    public void setConfigFileName(String filename) throws ConfigManagerException {
         String path = System.getProperty("user.dir");
         path += filename;
         System.out.println("Path " + path);
@@ -61,16 +61,16 @@ public class WsConfigManager {
         try {
             testFile.createNewFile();
         } catch (IOException ex) {
-            Logger.getLogger(WsConfigManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (testFile.exists()) {
             if (testFile.canRead()) {
                 configFileName = path;
             } else {
-                throw new WsConfigManagerException("File " + path + " is not readable.");
+                throw new ConfigManagerException("File " + path + " is not readable.");
             }
         } else {
-            throw new WsConfigManagerException("File " + path + " does not exist.");
+            throw new ConfigManagerException("File " + path + " does not exist.");
         }
     }
 
@@ -80,11 +80,11 @@ public class WsConfigManager {
      * can be by themselves on a line or at the end of the line.
      *
      * The config file should be on the format key=value Example:
-     * com.wildstangs.WsInputManager.WsDriverJoystick.trim=0.1
+     * com.wildstangs.InputManager.WsDriverJoystick.trim=0.1
      *
      * @throws WsConfigFacadeException
      */
-    public void readConfig() throws WsConfigManagerException {
+    public void readConfig() throws ConfigManagerException {
         File configFile = new File(configFileName);
         BufferedReader br = null;
         String line;
@@ -118,30 +118,30 @@ public class WsConfigManager {
                                 value = st.nextToken();
                                 config.put(key, value);
                             } else {
-                                throw new WsConfigManagerException("Bad line in config file " + line);
+                                throw new ConfigManagerException("Bad line in config file " + line);
                             }
                         }
                     }
 
                 } catch (IOException ioe) {
-                    throw new WsConfigManagerException(ioe.toString());
+                    throw new ConfigManagerException(ioe.toString());
                 }
             }
         } else {
-            throw new WsConfigManagerException("File " + configFileName + " does not exist");
+            throw new ConfigManagerException("File " + configFileName + " does not exist");
         }
         if (br != null) {
             try {
                 br.close();
             } catch (IOException ioe) {
-                throw new WsConfigManagerException("Error closing file.");
+                throw new ConfigManagerException("Error closing file.");
             }
         }
 
         //Update all the facades
-        WsInputManager.getInstance().notifyConfigChange();
-        WsOutputManager.getInstance().notifyConfigChange();
-        WsSubsystemContainer.getInstance().notifyConfigChange();
+        InputManager.getInstance().notifyConfigChange();
+        OutputManager.getInstance().notifyConfigChange();
+        SubsystemContainer.getInstance().notifyConfigChange();
 
     }
 
@@ -152,13 +152,13 @@ public class WsConfigManager {
      * @return An Object that contains the value.
      * @throws WsConfigFacadeException if the key cannot be found.
      */
-    public String getConfigParamByName(String name) throws WsConfigManagerException {
+    public String getConfigParamByName(String name) throws ConfigManagerException {
         String o = null;
         if (config.get(name) != null) {
             o = (config.get(name)).toString();
         }
         if (o == null) {
-            throw new WsConfigManagerException("Config Param " + name + " not found");
+            throw new ConfigManagerException("Config Param " + name + " not found");
         }
         return o;
     }
@@ -213,7 +213,7 @@ public class WsConfigManager {
     /**
      * Config Item name parser
      *
-     * Example: com.wildstangs.WsInputManager.WsDriverJoystick.trim will return
+     * Example: com.wildstangs.InputManager.WsDriverJoystick.trim will return
      * trim.
      *
      * @return The config Item name or null if the string is unparsable

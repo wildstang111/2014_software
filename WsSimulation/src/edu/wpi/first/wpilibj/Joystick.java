@@ -7,7 +7,7 @@ package edu.wpi.first.wpilibj;
 import com.wildstangs.inputmanager.inputs.joystick.IHardwareJoystick;
 import com.wildstangs.joystick.OnscreenJoystick;
 import com.wildstangs.inputmanager.inputs.joystick.IJoystick;
-import com.wildstangs.joystick.WsHardwareJoystick;
+import com.wildstangs.joystick.HardwareJoystick;
 
 public class Joystick implements IJoystick, IHardwareJoystick {
 
@@ -15,7 +15,7 @@ public class Joystick implements IJoystick, IHardwareJoystick {
     boolean isHardwareJoystick;
 
     public Joystick(int channel) {
-        WsHardwareJoystick hardwareJoystick = new WsHardwareJoystick();
+        HardwareJoystick hardwareJoystick = new HardwareJoystick();
         if (hardwareJoystick.initializeJoystick()) {
             joystick = hardwareJoystick;
             isHardwareJoystick = true;

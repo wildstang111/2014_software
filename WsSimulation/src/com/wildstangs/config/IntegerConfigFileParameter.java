@@ -1,7 +1,7 @@
 package com.wildstangs.config;
 
-import com.wildstangs.configmanager.WsConfigManager;
-import com.wildstangs.configmanager.WsConfigManager;
+import com.wildstangs.configmanager.ConfigManager;
+import com.wildstangs.configmanager.ConfigManager;
 import com.wildstangs.logger.Logger;
 
 /**
@@ -33,10 +33,10 @@ public class IntegerConfigFileParameter extends ConfigFileParameter {
     public int getValue() {
         String fullName = getFullParamName();
         try {
-            return Integer.parseInt(WsConfigManager.getInstance().getConfigParamByName(fullName));
+            return Integer.parseInt(ConfigManager.getInstance().getConfigParamByName(fullName));
         } catch (Throwable e) {
             Logger.getLogger().error(this.getClass().getName(), "getValue", fullName + " parameter not found. Using default value.");
-            WsConfigManager.getInstance().addParameterToConfigFile(fullName, "" + defaultValue);
+            ConfigManager.getInstance().addParameterToConfigFile(fullName, "" + defaultValue);
             return defaultValue;
         }
     }

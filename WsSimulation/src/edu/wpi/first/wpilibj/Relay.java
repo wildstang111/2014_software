@@ -283,7 +283,7 @@ public class Relay
             default:
             //Cannot hit this, limited by Value enum
         }
-        SmartDashboard.putString("Relay: " + mChannel + " Direction", mDirection.toString());
+        SmartDashboard.putString("Relay: " + mChannel + " Direction", mDirection.toString(mDirection));
         SmartDashboard.putBoolean("Relay: " + mChannel + " State", relayState);
     }
 

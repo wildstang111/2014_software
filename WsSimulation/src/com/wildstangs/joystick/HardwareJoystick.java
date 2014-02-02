@@ -8,14 +8,14 @@ import com.wildstangs.input.Controller;
 import com.wildstangs.input.Controllers;
 import com.wildstangs.inputmanager.inputs.joystick.IHardwareJoystick;
 import com.wildstangs.inputmanager.inputs.joystick.IJoystick;
-import com.wildstangs.inputmanager.inputs.joystick.WsJoystickAxisEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickAxisEnum;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
  *
  * @author chadschmidt
  */
-public class WsHardwareJoystick implements IHardwareJoystick, IJoystick {
+public class HardwareJoystick implements IHardwareJoystick, IJoystick {
 
     int controllerIndex;
     boolean[] buttonStates;
@@ -31,7 +31,7 @@ public class WsHardwareJoystick implements IHardwareJoystick, IJoystick {
     private final byte[] m_axes_mapping;
     private final byte[] m_buttons_mapping;
 
-    public WsHardwareJoystick() {
+    public HardwareJoystick() {
         m_axes_mapping = new byte[6];
         m_buttons_mapping = new byte[2];
 
@@ -221,17 +221,17 @@ public class WsHardwareJoystick implements IHardwareJoystick, IJoystick {
      */
     public double getRawAxis(int axisEnum) {
         switch (axisEnum) {
-            case WsJoystickAxisEnum.LEFT_JOYSTICK_Y:
+            case JoystickAxisEnum.LEFT_JOYSTICK_Y:
                 return leftJoystickY;
-            case WsJoystickAxisEnum.LEFT_JOYSTICK_X:
+            case JoystickAxisEnum.LEFT_JOYSTICK_X:
                 return leftJoystickX;
-            case WsJoystickAxisEnum.RIGHT_JOYSTICK_Y:
+            case JoystickAxisEnum.RIGHT_JOYSTICK_Y:
                 return rightJoystickY;
-            case WsJoystickAxisEnum.RIGHT_JOYSTICK_X:
+            case JoystickAxisEnum.RIGHT_JOYSTICK_X:
                 return rightJoystickX;
-            case WsJoystickAxisEnum.DPAD_Y:
+            case JoystickAxisEnum.DPAD_Y:
                 return dPadY;
-            case WsJoystickAxisEnum.DPAD_X:
+            case JoystickAxisEnum.DPAD_X:
                 return dPadX;
             default:
                 return 0;

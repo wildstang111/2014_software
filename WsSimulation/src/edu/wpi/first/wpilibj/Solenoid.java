@@ -7,7 +7,7 @@
 
 package edu.wpi.first.wpilibj;
 
-import com.wildstangs.simulation.solenoids.WsSolenoidContainer;
+import com.wildstangs.simulation.solenoids.SolenoidContainer;
 
 
      /**
@@ -34,7 +34,7 @@ public class Solenoid {
      * @param channel The channel on the module to control.
      */
     public Solenoid(final int moduleNumber, final int channel) {
-        WsSolenoidContainer.getInstance().add(this, moduleNumber, channel);
+        SolenoidContainer.getInstance().add(this, moduleNumber, channel);
         initSolenoid();
     }
 

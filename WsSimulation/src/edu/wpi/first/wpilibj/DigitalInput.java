@@ -6,9 +6,9 @@
 /*----------------------------------------------------------------------------*/
 package edu.wpi.first.wpilibj;
 
-import com.wildstangs.simulation.digitalinputs.WsDigitalInputContainer;
-import com.wildstangs.simulation.digitalinputs.WsDigitalInputEnum;
-import com.wildstangs.simulation.digitalinputs.WsDigitalInputSimulation;
+import com.wildstangs.simulation.digitalinputs.DigitalInputContainer;
+import com.wildstangs.simulation.digitalinputs.DigitalInputEnum;
+import com.wildstangs.simulation.digitalinputs.DigitalInputSimulation;
 
 
 /**
@@ -25,7 +25,7 @@ public class DigitalInput
 {
 
     private int mChannel;
-    private WsDigitalInputSimulation input = null;
+    private DigitalInputSimulation input = null;
 
     /**
      * Create an instance of a DigitalInput.
@@ -36,7 +36,7 @@ public class DigitalInput
     private void initDigitalInput(int moduleNumber, int channel)
     {
         mChannel = channel;
-        input = WsDigitalInputContainer.getInstance().inputs[WsDigitalInputEnum.getEnumFromChannel(channel).toValue()];
+        input = DigitalInputContainer.getInstance().inputs[DigitalInputEnum.getEnumFromChannel(channel).toValue()];
     }
 
     /**

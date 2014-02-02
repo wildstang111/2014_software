@@ -7,7 +7,7 @@ package com.wildstangs.simulation.digitalinputs;
  * digital inputs and outputs as required. This class is only for devices like
  * switches etc. that aren't implemented anywhere else.
  */
-public class WsDigitalInputSimulation {
+public class DigitalInputSimulation {
 
     private int mChannel;
     boolean inputState = false;
@@ -27,7 +27,7 @@ public class WsDigitalInputSimulation {
      *
      * @param channel the port for the digital input
      */
-    public WsDigitalInputSimulation(int channel) {
+    public DigitalInputSimulation(int channel) {
         initDigitalInput(1, channel);
     }
 
@@ -39,7 +39,7 @@ public class WsDigitalInputSimulation {
      * input
      * @param channel the port for the digital input
      */
-    public WsDigitalInputSimulation(int moduleNumber, int channel) {
+    public DigitalInputSimulation(int moduleNumber, int channel) {
         initDigitalInput(moduleNumber, channel);
     }
 

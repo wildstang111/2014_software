@@ -4,8 +4,8 @@
  */
 package com.wildstangs.simulation.accumulator;
 
-import com.wildstangs.simulation.digitalinputs.WsDigitalInputContainer;
-import com.wildstangs.outputmanager.base.WsOutputManager;
+import com.wildstangs.simulation.digitalinputs.DigitalInputContainer;
+import com.wildstangs.outputmanager.base.OutputManager;
 
 /**
  *
@@ -20,16 +20,16 @@ public class AccumulatorLimitSwitch {
     public void update(){
         
         //Get the solenoid value 
-        Boolean solState = ((Boolean)WsOutputManager.getInstance().getOutput(WsOutputManager.UNKNOWN_INDEX).get(null)); 
+        Boolean solState = ((Boolean)OutputManager.getInstance().getOutput(OutputManager.UNKNOWN_INDEX).get(null)); 
         
         //Forward is up
         if (false== solState){
             //Set the limit switches based on that value
-            WsDigitalInputContainer.getInstance().inputs[UP_LIMIT_SWITCH_CHANNEL].set(true);
+            DigitalInputContainer.getInstance().inputs[UP_LIMIT_SWITCH_CHANNEL].set(true);
             
         } else { 
             //Set the limit switches based on that value
-            WsDigitalInputContainer.getInstance().inputs[UP_LIMIT_SWITCH_CHANNEL].set(false);
+            DigitalInputContainer.getInstance().inputs[UP_LIMIT_SWITCH_CHANNEL].set(false);
             
         }
         

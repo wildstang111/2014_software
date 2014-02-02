@@ -11,19 +11,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * @author Rick
  */
-public class WsSolenoidContainer
+public class SolenoidContainer
 {
 
-    private static WsSolenoidContainer object;
+    private static SolenoidContainer object;
     private static final int MODULES = 2;
     private static final int CHANNELS = 8;
     private Solenoid solenoids[][] = new Solenoid[MODULES][CHANNELS];
 
-    public static WsSolenoidContainer getInstance()
+    public static SolenoidContainer getInstance()
     {
         if (object == null)
         {
-            object = new WsSolenoidContainer();
+            object = new SolenoidContainer();
         }
         return object;
     }
