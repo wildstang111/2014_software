@@ -42,8 +42,8 @@ public class WsJoystickAxisEnum implements IInputEnum {
     public static final WsJoystickAxisEnum DRIVER_DPAD_Y = new WsJoystickAxisEnum(true, DPAD_Y, "DRIVER_DPAD_Y");
 
     // Manipulator Enums
-    public static final WsJoystickAxisEnum MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT = new WsJoystickAxisEnum(false, LEFT_JOYSTICK_Y, "MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT");
-    public static final WsJoystickAxisEnum MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT = new WsJoystickAxisEnum(false, RIGHT_JOYSTICK_Y, "MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT");
+    public static final WsJoystickAxisEnum MANIPULATOR_FRONT_ARM_CONTROL = new WsJoystickAxisEnum(false, LEFT_JOYSTICK_Y, "MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT");
+    public static final WsJoystickAxisEnum MANIPULATOR_BACK_ARM_CONTROL = new WsJoystickAxisEnum(false, RIGHT_JOYSTICK_Y, "MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT");
     public static final WsJoystickAxisEnum MANIPULATOR_DPAD_Y = new WsJoystickAxisEnum(false, DPAD_Y, "MANIPULATOR_DPAD_Y");
     public static final WsJoystickAxisEnum MANIPULATOR_DPAD_X = new WsJoystickAxisEnum(false, DPAD_X, "MANIPULATOR_DPAD_X");
 
@@ -74,8 +74,8 @@ public class WsJoystickAxisEnum implements IInputEnum {
         driverAxes[1] = DRIVER_HEADING;
         driverAxes[2] = DRIVER_DPAD_Y;
         
-        manipulatorAxes[0] = MANIPULATOR_ENTER_FLYWHEEL_ADJUSTMENT;
-        manipulatorAxes[1] = MANIPULATOR_EXIT_FLYWHEEL_ADJUSTMENT;
+        manipulatorAxes[0] = MANIPULATOR_FRONT_ARM_CONTROL;
+        manipulatorAxes[1] = MANIPULATOR_BACK_ARM_CONTROL;
         manipulatorAxes[2] = MANIPULATOR_DPAD_Y;
         manipulatorAxes[3] = MANIPULATOR_DPAD_X;
     }
