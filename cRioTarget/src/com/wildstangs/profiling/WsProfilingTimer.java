@@ -1,7 +1,6 @@
 package com.wildstangs.profiling;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WsProfilingTimer {
 
@@ -23,7 +22,6 @@ public class WsProfilingTimer {
         double spentTime = 0;
         endingTime = Timer.getFPGATimestamp();
         spentTime = endingTime - startingTime;
-//        SmartDashboard.putNumber(name, spentTime);
         return spentTime;
     }
 }

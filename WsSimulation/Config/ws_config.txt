@@ -289,10 +289,9 @@ com.wildstangs.autonomous.programs.test.WsAutonomousProgramDriveHeading.angle=-3
 
 //2012 Robot Selection
 com.wildstangs.outputfacade.base.WsOutputFacade.2012_Robot=false
-
-com.wildstangs.inputfacade.inputs.WsAnalogueInput.startState=0.0
-com.wildstangs.inputfacade.inputs.WsDigitalInput.startState=false
-com.wildstangs.inputfacade.inputs.driverstation.WsDSAnalogInput.startState=0.0
-com.wildstangs.inputfacade.inputs.driverstation.WsDSDigitalInput.startState=false
-
-
+com.wildstangs.inputmanager.inputs.WsDigitalInput.startState=false
+com.wildstangs.inputmanager.inputs.driverstation.WsDSAnalogInput.startState=0.0
+com.wildstangs.inputmanager.inputs.driverstation.WsDSDigitalInput.startState=false
+com.wildstangs.inputmanager.inputs.driverstation.WsDSAnalogInput.startState=0.0
+com.wildstangs.subsystems.WsDriveBase.quick_turn_cap=10.0
+com.wildstangs.subsystems.WsDriveBase.quick_turn_antiturbo=10.0

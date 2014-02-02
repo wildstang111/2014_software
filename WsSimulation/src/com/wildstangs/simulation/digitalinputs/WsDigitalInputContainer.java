@@ -2,10 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.wildstangs.simulation.digitalInputs;
+package com.wildstangs.simulation.digitalinputs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JFrame;
@@ -15,25 +16,22 @@ import javax.swing.JLabel;
  *
  * @author coder65535
  */
-public class WsDigitalInputContainer implements KeyListener
-{
+public class WsDigitalInputContainer implements KeyListener {
 
     public WsDigitalInputSimulation[] inputs;
     JFrame frame;
     private static WsDigitalInputContainer instance = null;
 
-    private WsDigitalInputContainer()
-    {
+    private WsDigitalInputContainer() {
         inputs = new WsDigitalInputSimulation[16];
-        for (int i = 0; i < 16; i++)
-        {
-            int channel; 
-            if (i == 0 ){
-                channel = 10; 
-            } else if (i >= 10){
-                channel = i + 1 ;  
+        for (int i = 0; i < 16; i++) {
+            int channel;
+            if (i == 0) {
+                channel = 10;
+            } else if (i >= 10) {
+                channel = i + 1;
             } else {
-                channel = i ; 
+                channel = i;
             }
             inputs[i] = new WsDigitalInputSimulation(channel);
         }
@@ -46,7 +44,7 @@ public class WsDigitalInputContainer implements KeyListener
         frame.setPreferredSize(new Dimension(300, 100));
         frame.setLayout(new BorderLayout());
         frame.addKeyListener(this);
-        frame.setLocation(0, 320);
+        frame.setLocation(new Point(0, 650));
         frame.add(label, BorderLayout.NORTH);
         frame.add(label1, BorderLayout.CENTER);
         frame.add(label2, BorderLayout.AFTER_LAST_LINE);
@@ -55,57 +53,51 @@ public class WsDigitalInputContainer implements KeyListener
         frame.setVisible(true);
     }
 
-    public static WsDigitalInputContainer getInstance()
-    {
-        if (instance == null)
-        {
+    public static WsDigitalInputContainer getInstance() {
+        if (instance == null) {
             instance = new WsDigitalInputContainer();
         }
         return instance;
     }
 
-    public void keyPressed(KeyEvent e)
-    {
+    public void keyPressed(KeyEvent e) {
     }
 
-    public void keyReleased(KeyEvent e)
-    {
+    public void keyReleased(KeyEvent e) {
     }
 
-    public void keyTyped(KeyEvent e)
-    {
+    public void keyTyped(KeyEvent e) {
         int key = (int) e.getKeyChar() - 48;
         //Handle if it is not a digit
-        if (!(0 <= key && key < 10))
-        {
-            switch (e.getKeyChar()){
+        if (!(0 <= key && key < 10)) {
+            switch (e.getKeyChar()) {
                 case 'Q':
                 case 'q':
-                    key = 10; 
-                    break; 
+                    key = 10;
+                    break;
                 case 'W':
                 case 'w':
-                    key = 11; 
-                    break; 
+                    key = 11;
+                    break;
                 case 'E':
                 case 'e':
-                    key = 12; 
-                    break; 
+                    key = 12;
+                    break;
                 case 'R':
                 case 'r':
-                    key = 13; 
-                    break; 
+                    key = 13;
+                    break;
                 case 'T':
                 case 't':
-                    key = 14; 
-                    break; 
+                    key = 14;
+                    break;
                 case 'Y':
                 case 'y':
-                    key = 15; 
-                    break; 
-                    
+                    key = 15;
+                    break;
+
             }
-        } 
+        }
         if (key <= 15) {
             if (inputs[key] != null) {
                 inputs[key].flip();
