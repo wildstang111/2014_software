@@ -147,4 +147,9 @@ public class Arm
     {
         return lowBound;
     }
+    
+    public boolean isArmPidActive()
+    {
+        return pid.isEnabled();
+    }
 }

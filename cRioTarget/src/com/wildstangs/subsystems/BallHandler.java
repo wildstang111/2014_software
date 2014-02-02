@@ -119,4 +119,9 @@ public class BallHandler extends WsSubsystem implements IObserver {
             this.backArm.setToAngle(backArmPreset);
         }
     }
+    
+    public boolean areArmsUsingPidControl()
+    {
+        return (frontArm.isArmPidActive() && backArm.isArmPidActive());
+    }
 }

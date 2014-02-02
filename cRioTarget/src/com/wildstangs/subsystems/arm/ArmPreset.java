@@ -31,10 +31,17 @@ public class ArmPreset {
     public int getwantedAngleMeasureBack(){
         return wantedAngleMeasureBack;
     }
-    
+
     public void notifyConfigChange()
     {
         this.wantedAngleMeasureBack = this.wantedAngleMeasureBack_config.getValue();
         this.wantedAngleMeasureFront = this.wantedAngleMeasureFront_config.getValue();
     }
+    
+    public String toString()
+    {
+        return "Wanted Front Arm Angle: " + this.wantedAngleMeasureFront + ", Wanted Back Arm Angle: " + this.wantedAngleMeasureBack;
+    }
+
+    
 }
