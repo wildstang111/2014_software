@@ -22,7 +22,7 @@ public class AutonomousStepStopDriveUsingMotionProfile extends AutonomousStep {
     }
 
     public void update() {
-        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).stopStraightMoveWithMotionProfile();
+        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).stopStraightMoveWithMotionProfile();
         finished = true;
     }
 

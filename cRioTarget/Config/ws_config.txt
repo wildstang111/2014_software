@@ -109,3 +109,16 @@ com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.maxOut
 com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.minOutput=0.0
 com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.maxInput=0.0
 com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.minInput=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.p=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.i=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.d=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.errorIncrement=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.errorEpsilon=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.staticEpsilon=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.maxIntegral=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.integralErrorThresh=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.differentiatorBandLimit=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.maxOutput=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minOutput=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.maxInput=0.0
+com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minInput=0.0

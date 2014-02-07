@@ -7,13 +7,13 @@
 package ${package};
 
 </#if>
-import com.wildstangs.autonomous.WsAutonomousStep;
+import com.wildstangs.autonomous.AutonomousStep;
 
 /**
  *
  * @author ${user}
  */
-public class ${name} extends WsAutonomousStep 
+public class ${name} extends AutonomousStep 
 {
     
     public ${name}()

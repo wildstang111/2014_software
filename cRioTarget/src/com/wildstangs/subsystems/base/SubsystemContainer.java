@@ -69,20 +69,20 @@ public class SubsystemContainer {
         }
     }
     //Subsystem keys - must add a new key for each subsystem.
-    public static final String WS_DRIVE_BASE = "WsDriveBase";
+    public static final String DRIVE_BASE = "DriveBase";
     public static final String WS_COMPRESSOR = "WsCompressor";
-    public static final String WS_LED = "WsLED";
-    public static final String WS_LIGHT_CANNON = "WsLightCannon";
+    public static final String LED = "LED";
+    public static final String LIGHT_CANNON = "LightCannon";
     public static final String BALL_HANDLER = "BallHandler";
     public static final String CATAPULT = "Catapult";
     public static final String LANDING_GEAR = "LandingGear";
     public static final String HOT_GOAL_DETECTOR = "HotGoalsDetector";
     public static final String WINGS = "Wings";
     
-    public static final int WS_DRIVE_BASE_INDEX = 0;
+    public static final int DRIVE_BASE_INDEX = 0;
     public static final int WS_COMPRESSOR_INDEX = 1;
-    public static final int WS_LED_INDEX = 2;
-    public static final int WS_LIGHT_CANNON_INDEX = 3;
+    public static final int LED_INDEX = 2;
+    public static final int LIGHT_CANNON_INDEX = 3;
     public static final int BALL_HANDLER_INDEX = 4;
     public static final int CATAPULT_INDEX = 5;
     public static final int LANDING_GEAR_INDEX = 6;
@@ -96,10 +96,10 @@ public class SubsystemContainer {
      * instantiated as well as placed in the subsystem container.
      */
     protected SubsystemContainer() {
-        subsystem.addToIndex(WS_DRIVE_BASE_INDEX, new DriveBase(WS_DRIVE_BASE));
+        subsystem.addToIndex(DRIVE_BASE_INDEX, new DriveBase(DRIVE_BASE));
         subsystem.addToIndex(WS_COMPRESSOR_INDEX, new WsCompressor(WS_COMPRESSOR, 1, 1, 1, 1));
-        subsystem.addToIndex(WS_LED_INDEX, new LED(WS_LED));
-        subsystem.addToIndex(WS_LIGHT_CANNON_INDEX, new LightCannon(WS_LIGHT_CANNON));
+        subsystem.addToIndex(LED_INDEX, new LED(LED));
+        subsystem.addToIndex(LIGHT_CANNON_INDEX, new LightCannon(LIGHT_CANNON));
         subsystem.addToIndex(BALL_HANDLER_INDEX, new BallHandler(BALL_HANDLER));
         subsystem.addToIndex(CATAPULT_INDEX, new Catapult(CATAPULT));
         subsystem.addToIndex(LANDING_GEAR_INDEX, new LandingGear(LANDING_GEAR));

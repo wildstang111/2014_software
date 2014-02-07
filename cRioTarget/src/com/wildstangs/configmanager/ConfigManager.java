@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.networktables2.util.List;
  */
 public class ConfigManager {
 
-    static String myClassName = "WsConfigFacade";
+    static String myClassName = "ConfigManager";
     private static ConfigManager instance = null;
     private static String configFileName = "/ws_config.txt";
     private static String updateFileName = "/reloadConfigFile.cmd";

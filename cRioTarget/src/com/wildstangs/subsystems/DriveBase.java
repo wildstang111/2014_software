@@ -163,7 +163,7 @@ public class DriveBase extends Subsystem implements IObserver {
         continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
         driveSpeedPidInput = new DriveBaseSpeedPidInput();
         driveSpeedPidOutput = new DriveBaseSpeedPidOutput();
-        driveSpeedPid = new SpeedPidController(driveSpeedPidInput, driveSpeedPidOutput, "WsDriveBaseSpeedPid");
+        driveSpeedPid = new SpeedPidController(driveSpeedPidInput, driveSpeedPidOutput, "DriveBaseSpeedPid");
         init();
     }
 
