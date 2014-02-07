@@ -6,6 +6,7 @@ import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.*;
 import com.wildstangs.logviewer.LogViewer;
 import com.wildstangs.profiling.ProfilingTimer;
+import com.wildstangs.simulation.sensorsimulation.base.SensorSimulationContainer;
 import edu.wpi.first.wpilibj.DriverStation;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -191,9 +192,11 @@ public class Simulation implements ActionListener, ChangeListener {
             // Start the appropriate mode
             if (isTeleop) {
                 FrameworkAbstraction.teleopInit();
+               SensorSimulationContainer.getInstance().init();
                 startTeleopThread();
             } else {
                 FrameworkAbstraction.autonomousInit();
+               SensorSimulationContainer.getInstance().init();
                 startAutonThread();
             }
         } else if (source == disable) {
@@ -228,6 +231,7 @@ public class Simulation implements ActionListener, ChangeListener {
                     InputManager.getInstance().updateSensorData();
                     FrameworkAbstraction.autonomousPeriodic();
                     SolenoidContainer.getInstance().update();
+                    SensorSimulationContainer.getInstance().update();
 
                     double spentTime = durationTimer.endTimingSection();
                     int spentMS = (int) (spentTime * 1000);
@@ -254,6 +258,7 @@ public class Simulation implements ActionListener, ChangeListener {
                     InputManager.getInstance().updateSensorData();
                     FrameworkAbstraction.teleopPeriodic();
                     SolenoidContainer.getInstance().update();
+                    SensorSimulationContainer.getInstance().update();
 
                     double spentTime = durationTimer.endTimingSection();
                     int spentMS = (int) (spentTime * 1000);
