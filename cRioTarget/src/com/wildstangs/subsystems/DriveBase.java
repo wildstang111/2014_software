@@ -163,7 +163,7 @@ public class DriveBase extends Subsystem implements IObserver {
         continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
         driveSpeedPidInput = new DriveBaseSpeedPidInput();
         driveSpeedPidOutput = new DriveBaseSpeedPidOutput();
-        driveSpeedPid = new SpeedPidController(driveSpeedPidInput, driveSpeedPidOutput, "WsDriveBaseSpeedPid");
+        driveSpeedPid = new SpeedPidController(driveSpeedPidInput, driveSpeedPidOutput, "DriveBaseSpeedPid");
         init();
     }
 
@@ -702,5 +702,10 @@ public class DriveBase extends Subsystem implements IObserver {
         } else {
             return (STOPPING_DISTANCE_AT_MAX_SPEED_LOWGEAR - ((3.0f / 15.0f) * (40 - Math.abs(distance))));
         }
+    }
+
+    public void setShifter(DoubleSolenoid.Value state)
+    {
+        this.shifterFlag = state;
     }
 }

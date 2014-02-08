@@ -71,7 +71,7 @@ public class PidController implements IPidController {
         minOutput = -1.0;
         maxInput = 1000.0;
         minInput = -1.0;
-        currentState = PidStateType.WS_PID_INITIALIZE_STATE;
+        currentState = PidStateType.PID_INITIALIZE_STATE;
         minOnTargetTime = 0.2;
         allowStaticEpsilon = false;
         stabilizationTimer = new WsTimer();
@@ -202,14 +202,14 @@ public class PidController implements IPidController {
         // Adjust our metrics depending on where the process variable is as compared
         //  to the set point.
         //
-        if (currentState == PidStateType.WS_PID_DISABLED_STATE) {
+        if (currentState == PidStateType.PID_DISABLED_STATE) {
 //            System.out.println(this.controllerName + " is DISABLED");
             // PID controller is disabled, nothing to do here...
 
             // reset everything now.
             this.reset();
             return;
-        } else if (currentState == PidStateType.WS_PID_INITIALIZE_STATE) {
+        } else if (currentState == PidStateType.PID_INITIALIZE_STATE) {
 //            System.out.println(this.controllerName + " is INITIALIZE");
             // Don't look at the D-term when we're just starting up
             previousError = currentError;
@@ -222,22 +222,22 @@ public class PidController implements IPidController {
                 // Error is negative and outside the epsilon band.
                 // Negative errors mean we are above our setpoint
                 //
-                new_state = PidStateType.WS_PID_ABOVE_TARGET_STATE;
+                new_state = PidStateType.PID_ABOVE_TARGET_STATE;
             } else if (currentError >= errorEpsilon) {
                 //
                 // Positive Errors mean we are below our setpoint
                 //
-                new_state = PidStateType.WS_PID_BELOW_TARGET_STATE;
+                new_state = PidStateType.PID_BELOW_TARGET_STATE;
             } else if ((currentError >= (-1 * errorEpsilon))
                     && (currentError <= errorEpsilon)) {
-                new_state = PidStateType.WS_PID_ON_TARGET_STATE;
+                new_state = PidStateType.PID_ON_TARGET_STATE;
                 stabilizationTimer.reset();
                 stabilizationTimer.start();
             } else {
                 // You had better hope this does not happen
             }
 
-        } else if (currentState == PidStateType.WS_PID_BELOW_TARGET_STATE) {
+        } else if (currentState == PidStateType.PID_BELOW_TARGET_STATE) {
 //            System.out.println(this.controllerName + " is BELOW_TARGET");
             //
             // In this case, we were above and we switched to below
@@ -262,21 +262,21 @@ public class PidController implements IPidController {
             // Error is inside the epsilon band.
             if ((currentError >= (-1 * errorEpsilon))
                     && (currentError <= errorEpsilon)) {
-                new_state = PidStateType.WS_PID_ON_TARGET_STATE;
+                new_state = PidStateType.PID_ON_TARGET_STATE;
                 stabilizationTimer.reset();
                 stabilizationTimer.start();
             } // Error is negative and outside the epsilon band.
             else if (currentError <= -errorEpsilon) {
-                new_state = PidStateType.WS_PID_ABOVE_TARGET_STATE;
+                new_state = PidStateType.PID_ABOVE_TARGET_STATE;
 
                 //Reset the error sum
                 errorSum = 0.0;
             } else {
                 //Stay here.
-                new_state = PidStateType.WS_PID_BELOW_TARGET_STATE;
+                new_state = PidStateType.PID_BELOW_TARGET_STATE;
             }
 
-        } else if (currentState == PidStateType.WS_PID_ON_TARGET_STATE) {
+        } else if (currentState == PidStateType.PID_ON_TARGET_STATE) {
 //            System.out.println(this.controllerName + " is ON TARGET");
             errorSum = 0.0;
             allowStaticEpsilon = true;
@@ -284,22 +284,22 @@ public class PidController implements IPidController {
             //Find the next state
             // Error is positive and outside the epsilon band.
             if (currentError >= errorEpsilon) {
-                new_state = PidStateType.WS_PID_BELOW_TARGET_STATE;
+                new_state = PidStateType.PID_BELOW_TARGET_STATE;
                 stabilizationTimer.stop();
                 stabilizationTimer.reset();
             } else if (currentError <= -errorEpsilon) {
-                new_state = PidStateType.WS_PID_ABOVE_TARGET_STATE;
+                new_state = PidStateType.PID_ABOVE_TARGET_STATE;
                 stabilizationTimer.stop();
                 stabilizationTimer.reset();
             } else if (true == (stabilizationTimer.get() > minOnTargetTime)) {
-                new_state = PidStateType.WS_PID_STABILIZED_STATE;
+                new_state = PidStateType.PID_STABILIZED_STATE;
                 stabilizationTimer.stop();
                 stabilizationTimer.reset();
             } else {
                 // Stay right here, we are on target, but not long enough yet...
-                new_state = PidStateType.WS_PID_ON_TARGET_STATE;
+                new_state = PidStateType.PID_ON_TARGET_STATE;
             }
-        } else if (currentState == PidStateType.WS_PID_STABILIZED_STATE) {
+        } else if (currentState == PidStateType.PID_STABILIZED_STATE) {
 //            System.out.println(this.controllerName + " is STABILIZED");
             errorSum = 0.0;
             allowStaticEpsilon = true;
@@ -307,14 +307,14 @@ public class PidController implements IPidController {
             // Find the next state
             // Error is positive and outside the epsilon band.
             if (currentError >= errorEpsilon) {
-                new_state = PidStateType.WS_PID_BELOW_TARGET_STATE;
+                new_state = PidStateType.PID_BELOW_TARGET_STATE;
             } else if (currentError <= -errorEpsilon) {
-                new_state = PidStateType.WS_PID_ABOVE_TARGET_STATE;
+                new_state = PidStateType.PID_ABOVE_TARGET_STATE;
             } else {
-                new_state = PidStateType.WS_PID_STABILIZED_STATE;
+                new_state = PidStateType.PID_STABILIZED_STATE;
             }
 
-        } else if (currentState == PidStateType.WS_PID_ABOVE_TARGET_STATE) {
+        } else if (currentState == PidStateType.PID_ABOVE_TARGET_STATE) {
 //            System.out.println(this.controllerName + " is ABOVE TARGET");
             //
             // In this case, we were below and we just switched to above
@@ -340,23 +340,23 @@ public class PidController implements IPidController {
             // Error is inside the epsilon band.
             if ((currentError >= (-1 * errorEpsilon))
                     && (currentError <= errorEpsilon)) {
-                new_state = PidStateType.WS_PID_ON_TARGET_STATE;
+                new_state = PidStateType.PID_ON_TARGET_STATE;
                 stabilizationTimer.reset();
                 stabilizationTimer.start();
             } // Error is positive and outside the epsilon band.
             else if (currentError >= errorEpsilon) {
-                new_state = PidStateType.WS_PID_BELOW_TARGET_STATE;
+                new_state = PidStateType.PID_BELOW_TARGET_STATE;
                 //Reset the error sum
 
                 errorSum = 0.0;
             } else {
-                new_state = PidStateType.WS_PID_ABOVE_TARGET_STATE;
+                new_state = PidStateType.PID_ABOVE_TARGET_STATE;
             }
 
         } else {
             // Invalid state
 
-            new_state = PidStateType.WS_PID_DISABLED_STATE;
+            new_state = PidStateType.PID_DISABLED_STATE;
 
         }
 
@@ -389,29 +389,29 @@ public class PidController implements IPidController {
     }
 
     public boolean isOnTarget() {
-        boolean on_target = ((PidStateType.WS_PID_ON_TARGET_STATE == currentState)
-                || (PidStateType.WS_PID_STABILIZED_STATE == currentState));
+        boolean on_target = ((PidStateType.PID_ON_TARGET_STATE == currentState)
+                || (PidStateType.PID_STABILIZED_STATE == currentState));
         return on_target;
     }
 
     public boolean isStabilized() {
-        boolean stabilized = (PidStateType.WS_PID_STABILIZED_STATE == currentState);
+        boolean stabilized = (PidStateType.PID_STABILIZED_STATE == currentState);
         return stabilized;
     }
 
     public boolean isEnabled() {
-        return (PidStateType.WS_PID_DISABLED_STATE != currentState);
+        return (PidStateType.PID_DISABLED_STATE != currentState);
     }
 
     public void enable() {
-        if (currentState == PidStateType.WS_PID_DISABLED_STATE) {
-            currentState = PidStateType.WS_PID_INITIALIZE_STATE;
+        if (currentState == PidStateType.PID_DISABLED_STATE) {
+            currentState = PidStateType.PID_INITIALIZE_STATE;
         }
     }
 
     public void disable() {
         this.reset();
-        currentState = PidStateType.WS_PID_DISABLED_STATE;
+        currentState = PidStateType.PID_DISABLED_STATE;
     }
 
     public void reset() {
