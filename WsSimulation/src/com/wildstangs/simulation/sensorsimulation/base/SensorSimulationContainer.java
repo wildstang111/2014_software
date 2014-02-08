@@ -3,6 +3,7 @@ package com.wildstangs.simulation.sensorsimulation.base;
 import com.wildstangs.list.WsList;
 import com.wildstangs.simulation.gyro.GyroSimulation;
 import com.wildstangs.simulation.encoders.DriveBaseEncoders;
+import com.wildstangs.simulation.sensorsimulation.ArmPot;
 import com.wildstangs.simulation.sensorsimulation.BallDetectSwitch;
 import com.wildstangs.simulation.sensorsimulation.CatapultDownSwitch;
 import com.wildstangs.simulation.sensorsimulation.LatchPositionSwitch;
