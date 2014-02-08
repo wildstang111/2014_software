@@ -46,6 +46,12 @@ public class Catapult extends Subsystem implements IObserver {
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_4);
         // Limit switch to detect when the catapult is down
         registerForSensorNotification(InputManager.CATAPULT_DOWN_SWITCH_INDEX);
+        // Limit switch to detect the position of the latch
+        registerForSensorNotification(InputManager.LATCH_POSITION_SWITCH_INDEX);
+        // Limit switch to detect if the ball is in the catapult
+        registerForSensorNotification(InputManager.BALL_DETECT_SWITCH_INDEX);
+        // Limit switch that shows if there is tension on the catapult
+        registerForSensorNotification(InputManager.TENSION_LIMIT_SWITCH_INDEX);
     }
 
     public void init() {
