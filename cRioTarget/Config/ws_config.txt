@@ -70,6 +70,17 @@ com.wildstangs.autonomous.programs.AutonomousProgramSleeper.ForceStopAtStep=0
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.unknown.distance=-72.0
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.unknown.heading=0.0
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.ForceStopAtStep=0
+com.wildstangs.subsystems.arm.ArmPreset.yPreset.WantedBackArmAngle=180
+com.wildstangs.subsystems.arm.ArmPreset.yPreset.WantedFrontArmAngle=180
+com.wildstangs.subsystems.arm.ArmPreset.mPreset.WantedBackArmAngle=30
+com.wildstangs.subsystems.arm.ArmPreset.mPreset.WantedFrontArmAngle=30
+com.wildstangs.subsystems.arm.ArmPreset.cPreset.WantedBackArmAngle=270
+com.wildstangs.subsystems.arm.ArmPreset.cPreset.WantedFrontArmAngle=150
+com.wildstangs.subsystems.arm.ArmPreset.aPreset.WantedBackArmAngle=200
+com.wildstangs.subsystems.arm.ArmPreset.aPreset.WantedFrontArmAngle=200
+com.wildstangs.autonomous.programs.AutonomousProgramYMCA.ForceStopAtStep=0
+com.wildstangs.subsystems.arm.ArmPreset.DefaultPosition.WantedBackArmAngle=0
+com.wildstangs.subsystems.arm.ArmPreset.DefaultPosition.WantedFrontArmAngle=0
 
 
 
