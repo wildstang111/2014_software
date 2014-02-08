@@ -23,7 +23,7 @@ public class AutonomousStepDelay extends AutonomousStep /* This step delays test
     public AutonomousStepDelay(int msDelay) {
         this.msDelay = msDelay;
         if (msDelay < 0) {
-            Logger.getLogger().debug(this.getClass().getName(), "WsAutonomousStepDelay", "Delay must be greater than 0");
+            Logger.getLogger().debug(this.getClass().getName(), "AutonomousStepDelay", "Delay must be greater than 0");
         }
     }
 

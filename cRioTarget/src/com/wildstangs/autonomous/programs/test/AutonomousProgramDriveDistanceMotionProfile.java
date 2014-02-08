@@ -34,10 +34,10 @@ public class AutonomousProgramDriveDistanceMotionProfile extends AutonomousProgr
         addStep(new AutonomousStepWaitForDriveMotionProfile()); 
         addStep(new AutonomousStepStopDriveUsingMotionProfile());
 
-//        programSteps[3] = new WsAutonomousStepEnableDriveDistancePid();
-//        programSteps[4] = new WsAutonomousStepSetDriveDistancePidSetpoint(distance.getValue());
-//        programSteps[5] = new WsAutonomousStepWaitForDriveDistancePid();
-//        programSteps[6] = new WsAutonomousStepStartDriveUsingMotionProfile(distance.getValue(), 0.0);
+//        programSteps[3] = new AutonomousStepEnableDriveDistancePid();
+//        programSteps[4] = new AutonomousStepSetDriveDistancePidSetpoint(distance.getValue());
+//        programSteps[5] = new AutonomousStepWaitForDriveDistancePid();
+//        programSteps[6] = new AutonomousStepStartDriveUsingMotionProfile(distance.getValue(), 0.0);
 //        programSteps[7] = new AutonomousStepWaitForDriveMotionProfile(); 
 //        programSteps[8] = new AutonomousStepStopDriveUsingMotionProfile();
     }

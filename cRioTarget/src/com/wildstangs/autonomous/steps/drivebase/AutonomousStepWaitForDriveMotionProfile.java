@@ -22,8 +22,8 @@ public class AutonomousStepWaitForDriveMotionProfile extends AutonomousStep {
     }
 
     public void update() {
-        double distanceRemaining = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getDistanceRemaining();
-        double velocity = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getVelocity();
+        double distanceRemaining = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getDistanceRemaining();
+        double velocity = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getVelocity();
         if ((distanceRemaining < 0.01) &&
             (distanceRemaining > -0.01))  {
             finished = true;

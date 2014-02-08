@@ -62,7 +62,7 @@ public class FileLogger {
     
     
     private static class FileManager implements Runnable {
-        //Designed to only have one single threaded controller. (WsLED)
+        //Designed to only have one single threaded controller. (LED)
         //Offload to a thread avoid blocking main thread with LED sends.
         FileConnection fc; 
         DataOutputStream logFile;

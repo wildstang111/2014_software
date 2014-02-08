@@ -20,7 +20,7 @@ import javax.microedition.io.Connector;
  */
 public final class ConfigManagerImpl {
 
-    static String myClassName = "WsConfigFacadeImpl";
+    static String myClassName = "ConfigManagerimpl";
 
     private ConfigManagerImpl() {
     }

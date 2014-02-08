@@ -25,7 +25,7 @@ public class AutonomousStepStartDriveUsingMotionProfileAndHeading extends Autono
     }
 
     public void initialize() {
-        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).startMoveWithHeadingAndMotionProfile(distance, goal_velocity, heading);
+        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).startMoveWithHeadingAndMotionProfile(distance, goal_velocity, heading);
         finished = true;
     }
 

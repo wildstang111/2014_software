@@ -17,7 +17,7 @@ public class DriveBaseHeadingPidInput implements IPidInput {
 
     public double pidRead() {
         double gyro_angle;
-        gyro_angle = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getGyroAngle();
+        gyro_angle = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getGyroAngle();
         SmartDashboard.putNumber("Gyro angle: ", gyro_angle);
         return gyro_angle;
     }

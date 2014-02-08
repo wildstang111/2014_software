@@ -7,7 +7,7 @@
 package ${package};
 
 </#if>
-import com.wildstangs.autonomous.WsAutonomousProgram;
+import com.wildstangs.autonomous.AutonomousProgram;
 
 /**
  *
@@ -17,7 +17,7 @@ import com.wildstangs.autonomous.WsAutonomousProgram;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-public class ${name} extends WsAutonomousProgram
+public class ${name} extends AutonomousProgram
 {
     public ${name}()
     {
@@ -25,7 +25,7 @@ public class ${name} extends WsAutonomousProgram
     }
     public void defineSteps()
     {
-        programSteps[0] = new WsAutonomousStep
+        addStep(new AutonomousStep);
     }
     
     public String toString()

@@ -133,8 +133,8 @@ public class DriveBaseEncoders {
         }
         
         
-        int left_encoder = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getLeftEncoder().get(); 
-        int right_encoder = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getRightEncoder().get(); 
+        int left_encoder = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getLeftEncoder().get(); 
+        int right_encoder = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getRightEncoder().get(); 
         //Compensate for variable period
         int left_encoder_velocity_increment = 0 ; 
         int right_encoder_velocity_increment = 0; 
@@ -154,29 +154,29 @@ public class DriveBaseEncoders {
         }
         previousTime = currTime; 
         
-        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getLeftEncoder().set(left_encoder);
-        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getRightEncoder().set(right_encoder);
+        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getLeftEncoder().set(left_encoder);
+        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getRightEncoder().set(right_encoder);
 
         if (Math.abs(actual_left_drive_speed) > 0.01){
 //            Logger.getLogger().debug(this.getClass().getName(), "KinematicsSimulation", "lDS: " + actual_left_drive_speed + " %: " + percentagePower + " rDS: " + actual_right_drive_speed + " dle: " + left_encoder_velocity_increment + " dre: " + right_encoder_velocity_increment);
-//            DriveBase db = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX));
+//            DriveBase db = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX));
 //            Logger.getLogger().debug(this.getClass().getName(), "SpeedPid", "value: " + db.getPidSpeedValue() + " error: " + db.getSpeedError() + " posError: " + db.getDeltaPosError() + " \n ");
         }
 
         SmartDashboard.putNumber("Actual Left Speed", actual_left_drive_speed); 
         SmartDashboard.putNumber("Actual Right Speed", actual_right_drive_speed); 
         if (motionProfileGraphs){
-            SmartDashboard.putNumber("Speed PID Error", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getSpeedError());
-            SmartDashboard.putNumber("Speed PID Value", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getPidSpeedValue());
-            SmartDashboard.putNumber("Distance Error", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getDeltaPosError());
+            SmartDashboard.putNumber("Speed PID Error", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getSpeedError());
+            SmartDashboard.putNumber("Speed PID Value", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getPidSpeedValue());
+            SmartDashboard.putNumber("Distance Error", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getDeltaPosError());
         }
         if (kinematicGraphs){
-            SmartDashboard.putNumber("Measured Velocity", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getVelocity());
-            SmartDashboard.putNumber("Measured Acceleration", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getAcceleration());
+            SmartDashboard.putNumber("Measured Velocity", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getVelocity());
+            SmartDashboard.putNumber("Measured Acceleration", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getAcceleration());
         }
         
-        SmartDashboard.putNumber("Left Distance", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getLeftDistance()); 
-        SmartDashboard.putNumber("Right Distance", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getRightDistance());
+        SmartDashboard.putNumber("Left Distance", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getLeftDistance()); 
+        SmartDashboard.putNumber("Right Distance", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getRightDistance());
         
         
     }

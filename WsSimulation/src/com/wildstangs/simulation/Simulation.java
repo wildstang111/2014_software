@@ -37,7 +37,7 @@ public class Simulation implements ActionListener, ChangeListener {
 
     private static Simulation instance;
 
-    static String c = "WsSimulation";
+    static String c = "Simulation";
 
     static boolean autonomousRun = false;
 

@@ -7,12 +7,12 @@
 package ${package};
 
 </#if>
-import com.wildstangs.autonomous.steps.WsAutonomousStepGroup;
+import com.wildstangs.autonomous.steps.AutonomousStepGroup;
 /**
  *
  * @author ${user}
  */
-public class ${name} extends WsAutonomousStepGroup
+public class ${name} extends AutonomousStepGroup
 {
     
     public ${name}()
@@ -21,7 +21,7 @@ public class ${name} extends WsAutonomousStepGroup
     }
     public void defineSteps()
     {
-        steps[0] = new WsAutonomousStep
+        addStep(new AutonomousStep);
     }
     public String toString()
     {

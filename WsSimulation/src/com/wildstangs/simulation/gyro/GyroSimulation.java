@@ -22,7 +22,7 @@ public class GyroSimulation {
         left_drive_speed = ((Double) OutputManager.getInstance().getOutput(OutputManager.LEFT_DRIVE_SPEED_INDEX).get((IOutputEnum) null));
         right_drive_speed = ((Double) OutputManager.getInstance().getOutput(OutputManager.RIGHT_DRIVE_SPEED_INDEX).get((IOutputEnum) null));
         
-        Gyro gyro = ((DriveBase) (SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX))).getGyro();
+        Gyro gyro = ((DriveBase) (SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX))).getGyro();
         double angle = gyro.getAngle();
         //Handle brakes
         if ((left_drive_speed > 0.1) && (right_drive_speed < 0.1)) {
