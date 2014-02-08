@@ -12,26 +12,26 @@ import com.wildstangs.simulation.sensorsimulation.base.ISensorSimulation;
  *
  * @author Jason
  */
-public class TensionLimitSwitch implements ISensorSimulation {
+public class LatchPositionSwitch implements ISensorSimulation {
 
     @Override
     public void init() {
     }
-     private static int tensionLimitSwitch = 6;
+     private static int latchPositionSwitch = 8;
     
     public void update(){
         
         //Get the solenoid value 
-        Boolean solState = ((Boolean)OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX).get(null)); 
+        Boolean solState = ((Boolean)OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX).get(null)); 
         
         //Forward is up
         if (false== solState){
             //Set the limit switches based on that value
-            DigitalInputContainer.getInstance().inputs[tensionLimitSwitch].set(false);
+            DigitalInputContainer.getInstance().inputs[latchPositionSwitch].set(false);
             
         } else { 
             //Set the limit switches based on that value
-            DigitalInputContainer.getInstance().inputs[tensionLimitSwitch].set(true);
+            DigitalInputContainer.getInstance().inputs[latchPositionSwitch].set(true);
             
         }
     }   

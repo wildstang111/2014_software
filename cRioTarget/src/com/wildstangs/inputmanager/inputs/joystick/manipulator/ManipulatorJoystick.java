@@ -28,10 +28,10 @@ public class ManipulatorJoystick implements IInput {
 
         axes = new DoubleSubject[numberOfAxes];
         for (int i = 0; i < axes.length; i++) {
-            if (JoystickAxisEnum.getEnumFromIndex(true, i) != null) {
-                axes[i] = new DoubleSubject(JoystickAxisEnum.getEnumFromIndex(true, i));
+            if (JoystickAxisEnum.getEnumFromIndex(false, i) != null) {
+                axes[i] = new DoubleSubject(JoystickAxisEnum.getEnumFromIndex(false, i));
             } else {
-                axes[i] = new DoubleSubject("DriverSubject" + 1);
+                axes[i] = new DoubleSubject("ManipulatorSubject" + 1);
             }
         }
 
@@ -43,7 +43,7 @@ public class ManipulatorJoystick implements IInput {
 
     public Subject getSubject(ISubjectEnum subjectEnum) {
         if (subjectEnum instanceof JoystickAxisEnum && ((JoystickAxisEnum) subjectEnum).isDriver() == false) {
-            return axes[((JoystickAxisEnum) subjectEnum).toValue() - 1];
+            return axes[((JoystickAxisEnum) subjectEnum).toValue()];
         } else if (subjectEnum instanceof JoystickButtonEnum && ((JoystickButtonEnum) subjectEnum).isDriver() == false) {
             return buttons[((JoystickButtonEnum) subjectEnum).toValue()];
         } else {

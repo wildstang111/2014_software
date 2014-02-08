@@ -43,7 +43,7 @@ public class DriverJoystick implements IInput {
 
     public Subject getSubject(ISubjectEnum subjectEnum) {
         if (subjectEnum instanceof JoystickAxisEnum && ((JoystickAxisEnum) subjectEnum).isDriver() == true) {
-            return axes[((JoystickAxisEnum) subjectEnum).toValue() - 1];
+            return axes[((JoystickAxisEnum) subjectEnum).toValue()];
         } else if (subjectEnum instanceof JoystickButtonEnum && ((JoystickButtonEnum) subjectEnum).isDriver() == true) {
             return buttons[((JoystickButtonEnum) subjectEnum).toValue()];
         } else {

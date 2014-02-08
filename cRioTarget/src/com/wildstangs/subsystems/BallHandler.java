@@ -20,10 +20,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class BallHandler extends Subsystem implements IObserver {
 
+    public static final ArmPreset DEFAULT_POSITION = new ArmPreset(0, 0, "DefaultPosition");
+    
     protected Arm frontArm, backArm;
     protected boolean frontForwardButton = false, frontReverseButton = false;
     protected boolean backForwardButton = false, backReverseButton = false;
     protected double frontArmJoystickValue = 0.0, backArmJoystickValue = 0.0;
+    protected double lastValueFront = 0.0, lastValueBack = 0.0;
 
     public BallHandler(String name) {
         super(name);
@@ -64,7 +67,7 @@ public class BallHandler extends Subsystem implements IObserver {
         } else if (backReverseButton) {
             backArm.setRoller(Relay.Value.kReverse);
         }
-
+        
         frontArm.setVictor(frontArmJoystickValue);
         backArm.setVictor(backArmJoystickValue);
 
@@ -75,7 +78,13 @@ public class BallHandler extends Subsystem implements IObserver {
         Relay.Value backValue = backArm.getRollerValue();
         String frontString = frontValue == Relay.Value.kForward ? "Forward" : (frontValue == Relay.Value.kReverse ? "Reverse" : "Off");
         String backString = backValue == Relay.Value.kForward ? "Forward" : (backValue == Relay.Value.kReverse ? "Reverse" : "Off");
-
+        
+        double voltageChangeFront = frontArm.getPotVoltage() - lastValueFront;
+        double voltageChangeBack = backArm.getPotVoltage() - lastValueBack;
+        
+        lastValueFront = frontArm.getPotVoltage();
+        lastValueBack = backArm.getPotVoltage();
+        
         SmartDashboard.putNumber("Current Front Arm Angle", frontArm.getCurrentAngle());
         SmartDashboard.putNumber("Wanted Front Arm Angle", frontArm.getWantedAngle());
         SmartDashboard.putNumber("Current Back Arm Angle", backArm.getCurrentAngle());
@@ -84,7 +93,8 @@ public class BallHandler extends Subsystem implements IObserver {
         SmartDashboard.putString("Back Arm Roller", backString);
         SmartDashboard.putNumber("Front Arm Victor", frontArm.getVictorSpeed());
         SmartDashboard.putNumber("Back Arm Victor", backArm.getVictorSpeed());
-        
+        SmartDashboard.putNumber("Front Arm Joystick", frontArmJoystickValue);
+        SmartDashboard.putNumber("Back Arm Joystick", backArmJoystickValue);
     }
 
     public void notifyConfigChange() {
@@ -94,6 +104,7 @@ public class BallHandler extends Subsystem implements IObserver {
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
+        
         if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_5) {
             this.frontForwardButton = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_6) {

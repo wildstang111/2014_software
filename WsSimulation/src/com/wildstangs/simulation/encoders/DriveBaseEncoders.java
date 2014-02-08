@@ -3,13 +3,14 @@ package com.wildstangs.simulation.encoders;
 
 import com.wildstangs.outputmanager.base.IOutputEnum;
 import com.wildstangs.outputmanager.base.OutputManager;
+import com.wildstangs.simulation.sensorsimulation.base.ISensorSimulation;
 import com.wildstangs.subsystems.DriveBase;
 import com.wildstangs.subsystems.base.SubsystemContainer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class DriveBaseEncoders {
+public class DriveBaseEncoders implements ISensorSimulation{
     private double desired_left_drive_speed = 0.0;
     private double desired_right_drive_speed = 0.0;
     private double actual_left_drive_speed = 0.0;
@@ -21,8 +22,8 @@ public class DriveBaseEncoders {
     //Set low gear top speed to 8.5 ft/ second = 102 inches / second = 2.04 inches/ 20 ms 
     private static final double MAX_SPEED_INCHES_LOWGEAR = 2.04; 
     private static final double MAX_SPEED_INCHES = MAX_SPEED_INCHES_LOWGEAR; 
-    private static final double WHEEL_DIAMETER = 6.0; 
-    private static final double GEAR_RATIO = 7.5; 
+    private static final double WHEEL_DIAMETER = 4.25; 
+    private static final double GEAR_RATIO = 5.8333; 
     private static final double ENCODER_TICKS_PER_INCH = ((360.0*GEAR_RATIO)/(WHEEL_DIAMETER*Math.PI)); 
     
     //Following are inches per 20 ms
@@ -32,9 +33,6 @@ public class DriveBaseEncoders {
 
     private static final boolean doModelWithCappedAcceleration = true; 
         
-        static boolean motionProfileGraphs = false;
-        static boolean kinematicGraphs = false; 
-        
     public DriveBaseEncoders() {
         
         desired_left_drive_speed = 0.0;
@@ -43,6 +41,13 @@ public class DriveBaseEncoders {
         actual_right_drive_speed = 0.0;
         
         //Create graphs for 
+    }
+    @Override
+    public void init() {
+        desired_left_drive_speed = 0.0;
+        desired_right_drive_speed = 0.0;
+        actual_left_drive_speed = 0.0;
+        actual_right_drive_speed = 0.0;
     }
     public void update (){ 
         desired_left_drive_speed = ((Double) OutputManager.getInstance().getOutput(OutputManager.LEFT_DRIVE_SPEED_INDEX).get((IOutputEnum) null));
@@ -165,20 +170,17 @@ public class DriveBaseEncoders {
 
         SmartDashboard.putNumber("Actual Left Speed", actual_left_drive_speed); 
         SmartDashboard.putNumber("Actual Right Speed", actual_right_drive_speed); 
-        if (motionProfileGraphs){
-            SmartDashboard.putNumber("Speed PID Error", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getSpeedError());
-            SmartDashboard.putNumber("Speed PID Value", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getPidSpeedValue());
-            SmartDashboard.putNumber("Distance Error", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getDeltaPosError());
-        }
-        if (kinematicGraphs){
-            SmartDashboard.putNumber("Measured Velocity", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getVelocity());
-            SmartDashboard.putNumber("Measured Acceleration", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getAcceleration());
-        }
+        SmartDashboard.putNumber("Speed PID Error", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getSpeedError());
+        SmartDashboard.putNumber("Speed PID Value", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getPidSpeedValue());
+        SmartDashboard.putNumber("Distance Error", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getDeltaPosError());
+        SmartDashboard.putNumber("Measured Velocity", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getVelocity());
+        SmartDashboard.putNumber("Measured Acceleration", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getAcceleration());
         
         SmartDashboard.putNumber("Left Distance", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getLeftDistance()); 
         SmartDashboard.putNumber("Right Distance", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getRightDistance());
         
     }
+
     
     
 
