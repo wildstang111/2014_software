@@ -83,8 +83,8 @@ public class HardwareJoystick implements IHardwareJoystick, IJoystick {
     static final byte kDefaultXAxis = 1;
     static final byte kDefaultYAxis = 2;
     static final byte kDefaultZAxis = 3;
-    static final byte kDefaultTwistAxis = 3;
-    static final byte kDefaultThrottleAxis = 4;
+    static final byte kDefaultTwistAxis = 4;
+    static final byte kDefaultThrottleAxis = 5;
     static final int kDefaultTriggerButton = 1;
     static final int kDefaultTopButton = 2;
 
@@ -220,7 +220,7 @@ public class HardwareJoystick implements IHardwareJoystick, IJoystick {
      * @return The value of the axis.
      */
     public double getRawAxis(int axisEnum) {
-        switch (axisEnum) {
+        switch (axisEnum - 1) {
             case JoystickAxisEnum.LEFT_JOYSTICK_Y:
                 return leftJoystickY;
             case JoystickAxisEnum.LEFT_JOYSTICK_X:
