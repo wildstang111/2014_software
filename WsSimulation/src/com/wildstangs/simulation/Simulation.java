@@ -16,6 +16,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -33,7 +35,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author ChadS
  */
-public class Simulation implements ActionListener, ChangeListener {
+public class Simulation implements ActionListener, ChangeListener, SequentialTaskExecutor.SequentialTaskExecutorCompletionListener {
 
     private static Simulation instance;
 
@@ -51,6 +53,7 @@ public class Simulation implements ActionListener, ChangeListener {
     private JFrame modeSwitcher;
     private JRadioButton teleoperatedButton;
     private JRadioButton autonomousButton;
+    private JRadioButton practiceButton;
     private JButton enable;
     private JButton disable;
     private JSlider autonProgram;
@@ -59,22 +62,35 @@ public class Simulation implements ActionListener, ChangeListener {
 
     // Store what state we're in
     private boolean isEnabled = false;
-    private boolean isTeleop = true;
 
-    // Threads for running teleop/autonomous
-    Thread teleopThread;
-    Thread autonThread;
-    Thread disabledThread;
+    private enum SimulationState {
+
+        AUTON, TELEOP, PRACTICE
+    }
+    private SimulationState state;
+
+    // Timers/TimerTasks for executing our functions periodically
+    Timer timer;
+    AutonPeriodicTask autonTask;
+    TeleopPeriodicTask teleopTask;
+    DisabledPeriodicTask disabledTask;
+    SequentialTaskExecutor practiceModeExecutor;
 
     static ProfilingTimer durationTimer = new ProfilingTimer("Periodic method duration", 50);
     static ProfilingTimer periodTimer = new ProfilingTimer("Periodic method period", 50);
 
     public Simulation() {
+        timer = new Timer();
+
+        state = SimulationState.TELEOP;
+
         modeSwitcher = new JFrame("WildStang Simulation");
         teleoperatedButton = new JRadioButton("Teleoperated");
         teleoperatedButton.addActionListener(this);
         autonomousButton = new JRadioButton("Autonomous");
         autonomousButton.addActionListener(this);
+        practiceButton = new JRadioButton("Practice");
+        practiceButton.addActionListener(this);
         enable = new JButton("Enable");
         enable.addActionListener(this);
         disable = new JButton("Disable");
@@ -84,17 +100,19 @@ public class Simulation implements ActionListener, ChangeListener {
         autonProgram.addChangeListener(this);
         autonPosition = new JSlider(0, 500, 0);
         autonPosition.addChangeListener(this);
-        autonLockIn = new JToggleButton("Lock-in switch");
+        autonLockIn = new JToggleButton("Autonomous not locked in");
         autonLockIn.addActionListener(this);
 
         ButtonGroup modeGroup = new ButtonGroup();
         modeGroup.add(teleoperatedButton);
         modeGroup.add(autonomousButton);
+        modeGroup.add(practiceButton);
 
         JPanel modeButtons = new JPanel();
         modeButtons.setLayout(new GridLayout(0, 1));
         modeButtons.add(teleoperatedButton);
         modeButtons.add(autonomousButton);
+        modeButtons.add(practiceButton);
         teleoperatedButton.setSelected(true);
 
         GridBagConstraints c = new GridBagConstraints();
@@ -168,36 +186,54 @@ public class Simulation implements ActionListener, ChangeListener {
 
         logger.always(c, "sim_startup", "Simulation init done.");
 
-        getInstance().startDisabledThread();
+        getInstance().startDisabled();
+        
+        DriverStation.getInstance().setDigitalIn(1, true);
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
         Object source = ae.getSource();
         if (source == autonomousButton) {
-            isTeleop = false;
+            state = SimulationState.AUTON;
             System.out.println("Autonomous");
         } else if (source == teleoperatedButton) {
-            isTeleop = true;
+            state = SimulationState.TELEOP;
             System.out.println("Teleop");
+        } else if (source == practiceButton) {
+            state = SimulationState.PRACTICE;
+            System.out.println("Practice");
         } else if (source == enable) {
             System.out.println("Enable");
             // Disable the enable button
             enable.setEnabled(false);
             disable.setEnabled(true);
 
+            // Disable the mode-switching buttons
+            teleoperatedButton.setEnabled(false);
+            autonomousButton.setEnabled(false);
+            practiceButton.setEnabled(false);
+
+            // Stop the disabledPeriodic task
+            disabledTask.cancel();
+
             // Set the enabled flag
             isEnabled = true;
 
-            // Start the appropriate mode
-            if (isTeleop) {
-                FrameworkAbstraction.teleopInit();
-               SensorSimulationContainer.getInstance().init();
-                startTeleopThread();
-            } else {
-                FrameworkAbstraction.autonomousInit();
-               SensorSimulationContainer.getInstance().init();
-                startAutonThread();
+            switch (state) {
+                case AUTON:
+                    FrameworkAbstraction.autonomousInit();
+                    SensorSimulationContainer.getInstance().init();
+                    startAuton();
+                    break;
+                case TELEOP:
+                    FrameworkAbstraction.teleopInit();
+                    SensorSimulationContainer.getInstance().init();
+                    startTeleop();
+                    break;
+                case PRACTICE:
+                    startPracticeMode();
+                    break;
             }
         } else if (source == disable) {
             System.out.println("Disable");
@@ -205,13 +241,31 @@ public class Simulation implements ActionListener, ChangeListener {
             enable.setEnabled(true);
             disable.setEnabled(false);
 
-            // Setting isEnabled to false should stop our threads
+            // Enable the mode-switching buttons
+            teleoperatedButton.setEnabled(true);
+            autonomousButton.setEnabled(true);
+            practiceButton.setEnabled(true);
+
+            // Stop the execution of all our tasks
+            switch (state) {
+                case AUTON:
+                    autonTask.cancel();
+                    break;
+                case TELEOP:
+                    teleopTask.cancel();
+                    break;
+                case PRACTICE:
+                    practiceModeExecutor.cancelExecution();
+                    break;
+            }
+
             isEnabled = false;
             FrameworkAbstraction.disabledInit();
-            startDisabledThread();
+            startDisabled();
         } else if (source == autonLockIn) {
+            System.out.println("Simulated lockin switch: " + autonLockIn.isSelected());
             DriverStation.getInstance().setDigitalIn(1, !autonLockIn.isSelected());
-            if(autonLockIn.isSelected()) {
+            if (autonLockIn.isSelected()) {
                 autonLockIn.setText("Autonomous locked in");
             } else {
                 autonLockIn.setText("Autonomous not locked in");
@@ -219,82 +273,50 @@ public class Simulation implements ActionListener, ChangeListener {
         }
     }
 
-    private void startAutonThread() {
-        autonThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isEnabled) {
-                    periodTimer.endTimingSection();
-                    periodTimer.startTimingSection();
-                    durationTimer.startTimingSection();
+    @Override
+    public void executionCompleted(SequentialTaskExecutor executor) {
+        if (executor == practiceModeExecutor) {
+            System.out.println("Disable");
+            // Disable the disable button
+            enable.setEnabled(true);
+            disable.setEnabled(false);
 
-                    InputManager.getInstance().updateSensorData();
-                    FrameworkAbstraction.autonomousPeriodic();
-                    SolenoidContainer.getInstance().update();
-                    SensorSimulationContainer.getInstance().update();
+            // Enable the mode-switching buttons
+            teleoperatedButton.setEnabled(true);
+            autonomousButton.setEnabled(true);
+            practiceButton.setEnabled(true);
 
-                    double spentTime = durationTimer.endTimingSection();
-                    int spentMS = (int) (spentTime * 1000);
-                    int timeToSleep = ((20 - spentMS) > 0 ? (20 - spentMS) : 0);
-                    try {
-                        Thread.sleep(timeToSleep);
-                    } catch (InterruptedException e) {
-                    }
-                }
-            }
-        });
-        autonThread.start();
+            isEnabled = false;
+            FrameworkAbstraction.disabledInit();
+            startDisabled();
+        }
     }
 
-    private void startTeleopThread() {
-        teleopThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isEnabled) {
-                    periodTimer.endTimingSection();
-                    periodTimer.startTimingSection();
-                    durationTimer.startTimingSection();
-
-                    InputManager.getInstance().updateSensorData();
-                    FrameworkAbstraction.teleopPeriodic();
-                    SolenoidContainer.getInstance().update();
-                    SensorSimulationContainer.getInstance().update();
-
-                    double spentTime = durationTimer.endTimingSection();
-                    int spentMS = (int) (spentTime * 1000);
-                    int timeToSleep = ((20 - spentMS) > 0 ? (20 - spentMS) : 0);
-                    try {
-                        Thread.sleep(timeToSleep);
-                    } catch (InterruptedException e) {
-                    }
-                }
-            }
-        });
-        teleopThread.start();
+    private void startAuton() {
+        autonTask = new AutonPeriodicTask();
+        timer.scheduleAtFixedRate(autonTask, 0, 20);
     }
 
-    private void startDisabledThread() {
-        disabledThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isEnabled == false) {
-                    periodTimer.endTimingSection();
-                    periodTimer.startTimingSection();
-                    durationTimer.startTimingSection();
+    private void startTeleop() {
+        teleopTask = new TeleopPeriodicTask();
+        timer.scheduleAtFixedRate(teleopTask, 0, 20);
+    }
 
-                    FrameworkAbstraction.disabledPeriodic();
+    private void startDisabled() {
+        disabledTask = new DisabledPeriodicTask();
+        timer.scheduleAtFixedRate(disabledTask, 0, 20);
+    }
 
-                    double spentTime = durationTimer.endTimingSection();
-                    int spentMS = (int) (spentTime * 1000);
-                    int timeToSleep = ((20 - spentMS) > 0 ? (20 - spentMS) : 0);
-                    try {
-                        Thread.sleep(timeToSleep);
-                    } catch (InterruptedException e) {
-                    }
-                }
-            }
-        });
-        disabledThread.start();
+    private void startPracticeMode() {
+        practiceModeExecutor = new SequentialTaskExecutor();
+        practiceModeExecutor.addTask(new AutonInitTask());
+        practiceModeExecutor.addTask(new AutonPeriodicTask(), 10 * 1000, 20);
+        practiceModeExecutor.addTask(new DisabledInitTask());
+        practiceModeExecutor.addTask(new DisabledPeriodicTask(), 1 * 1000, 20);
+        practiceModeExecutor.addTask(new TeleopInitTask());
+        practiceModeExecutor.addTask(new TeleopPeriodicTask(), 140 * 1000, 20);
+        practiceModeExecutor.setCompletionListener(this);
+        practiceModeExecutor.executeScheduledTasks();
     }
 
     @Override
@@ -304,6 +326,72 @@ public class Simulation implements ActionListener, ChangeListener {
             DriverStation.getInstance().setAnalogIn(1, ((double) autonProgram.getValue()) / 100);
         } else if (source == autonPosition) {
             DriverStation.getInstance().setAnalogIn(2, ((double) autonPosition.getValue()) / 100);
+        }
+    }
+
+    private class TeleopPeriodicTask extends TimerTask {
+
+        @Override
+        public void run() {
+            periodTimer.endTimingSection();
+            periodTimer.startTimingSection();
+            durationTimer.startTimingSection();
+
+            InputManager.getInstance().updateSensorData();
+            FrameworkAbstraction.teleopPeriodic();
+            SolenoidContainer.getInstance().update();
+            SensorSimulationContainer.getInstance().update();
+        }
+    }
+
+    private class AutonPeriodicTask extends TimerTask {
+
+        @Override
+        public void run() {
+            periodTimer.endTimingSection();
+            periodTimer.startTimingSection();
+            durationTimer.startTimingSection();
+
+            InputManager.getInstance().updateSensorData();
+            FrameworkAbstraction.autonomousPeriodic();
+            SolenoidContainer.getInstance().update();
+            SensorSimulationContainer.getInstance().update();
+        }
+    }
+
+    private class DisabledPeriodicTask extends TimerTask {
+
+        @Override
+        public void run() {
+            periodTimer.endTimingSection();
+            periodTimer.startTimingSection();
+            durationTimer.startTimingSection();
+
+            FrameworkAbstraction.disabledPeriodic();
+        }
+    }
+
+    private class DisabledInitTask extends TimerTask {
+
+        @Override
+        public void run() {
+            FrameworkAbstraction.disabledInit();
+        }
+    }
+
+    private class AutonInitTask extends TimerTask {
+
+        @Override
+        public void run() {
+            FrameworkAbstraction.autonomousInit();
+        }
+    }
+
+    private class TeleopInitTask extends TimerTask {
+
+        @Override
+        public void run() {
+            FrameworkAbstraction.teleopInit();
         }
     }
 }
