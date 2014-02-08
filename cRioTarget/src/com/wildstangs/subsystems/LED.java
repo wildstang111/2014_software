@@ -17,19 +17,51 @@ import edu.wpi.first.wpilibj.I2C;
 public class LED extends Subsystem implements IObserver {
 
     MessageHandler messageSender;
-    //button states.
-    boolean kickerButtonPressed = false;
-    boolean climbButtonPressed = false;
-    boolean intakeChanged = false;
-    boolean intakeButtonPreviousState = false;
     // Sent states
     boolean autoDataSent = false;
     boolean disableDataSent = false;
-    boolean kickSent = false;
-    boolean climbSent = false;
-    boolean intakeSent = false;
-    //Send message control
     boolean sendData = false;
+
+    public static class LedCmd {
+
+        byte[] dataBytes = new byte[5];
+
+        public LedCmd(int command, int payloadByteOne, int payloadByteTwo) {
+
+            dataBytes[0] = (byte) command;
+            dataBytes[1] = (byte) payloadByteOne;
+            dataBytes[2] = (byte) payloadByteTwo;
+            dataBytes[3] = 0;
+            dataBytes[4] = 0;
+        }
+
+        byte[] getBytes() {
+            return dataBytes;
+        }
+    }
+    /*
+     * ---------------------------------------------------------
+     * | Function      | Cmd  | PL 1 | PL 2 |
+     * --------------------------------------------------------- 
+     * | Shoot         | 0x05 | 0x13 | 0x14 |
+     * | Climb         | 0x06 | 0x11 | 0x12 |
+     * | Autonomous    | 0x02 | 0x11 | 0x12 |
+     * | Red Alliance  | 0x04 | 0x52 | 0x01 | 
+     * | Blue Alliance | 0x04 | 0x47 | 0x01 |
+     * ---------------------------------------------------------
+     *
+     * Send sequence once, no spamming the Arduino.
+     */
+    
+    //Reused commands from year to year
+    LedCmd autoCmd = new LedCmd(0x02, 0x11, 0x12);
+    LedCmd redCmd = new LedCmd(0x04, 0x52, 0x01);
+    LedCmd blueCmd = new LedCmd(0x04, 0x47, 0x01);
+    
+    // New commands each year
+    LedCmd shootCmd = new LedCmd(0x05, 0x13, 0x14);
+    LedCmd climbCmd = new LedCmd(0x06, 0x11, 0x12);
+    LedCmd intakeCmd = new LedCmd(0x07, 0x11, 0x12);
 
     public LED(String name) {
         super(name);
@@ -47,90 +79,28 @@ public class LED extends Subsystem implements IObserver {
     }
 
     public void init() {
-        autoDataSent = false;
-        disableDataSent = false;
-        intakeButtonPreviousState = false;
-        sendData = false;
+        //Nothing to do anymore, I'm bored.
     }
 
     public void update() {
-        byte[] dataBytes = new byte[5];
-        byte commandByte = 0x00;
-        byte payloadByteOne = 0x00;
-        byte payloadByteTwo = 0x00;
-
         // Get all inputs relevant to the LEDs
         boolean isRobotEnabled = DriverStation.getInstance().isEnabled();
         boolean isRobotTeleop = DriverStation.getInstance().isOperatorControl();
         boolean isRobotAuton = DriverStation.getInstance().isAutonomous();
         DriverStation.Alliance alliance = DriverStation.getInstance().getAlliance();
-        int station_location = DriverStation.getInstance().getLocation();
 
-        /**
-         * --------------------------------------------------------- | Function
-         * | Cmd | PL 1 | PL 2 |
-         * --------------------------------------------------------- | Shoot |
-         * 0x05 | 0x13 | 0x14 | | Climb | 0x06 | 0x11 | 0x12 | | Intake on |
-         * 0x07 | 0x11 | 0x12 (same as off) | | Intake off | 0x07 | 0x11 |
-         * 0x12(same as on) | | Red Alliance | 0x04 | 0x52 | station id(0x01 -
-         * 0x03) | | Blue Alliance | 0x04 | 0x47 | station id(0x01 - 0x03) |
-         * ---------------------------------------------------------
-         *
-         * Send sequence once, no spamming the Arduino.
-         */
+
         if (isRobotEnabled) {
             if (isRobotTeleop) {
-                //--------------------------------------------------------------
-                // Handle TeleOp signalling here
-                //--------------------------------------------------------------
-
-                if (kickerButtonPressed) {
-                    commandByte = 0x05;
-                    payloadByteOne = 0x13;
-                    payloadByteTwo = 0x14;
-                    if (!kickSent) {
-                        sendData = true;
-                        kickSent = true;
-                    }
-                } else if (climbButtonPressed) {
-                    commandByte = 0x06;
-                    payloadByteOne = 0x11;
-                    payloadByteTwo = 0x12;
-                    if (!climbSent) {
-                        sendData = true;
-                        climbSent = true;
-                    }
-                } else if (intakeChanged) {
-                    commandByte = 0x07;
-                    payloadByteOne = 0x11;
-                    payloadByteTwo = 0x12;
-                    if (!intakeSent) {
-                        sendData = true;
-                        intakeSent = true;
-                        intakeChanged = false;
-                    }
-                } else {
-                    kickSent = false;
-                    climbSent = false;
-                    intakeSent = false;
-                    //Make sure we don't send anything on this run through.
-                    sendData = false;
-                    intakeChanged = false;
-                }
-
+                //Do nothing,  handled in acceptNotification
             } else if (isRobotAuton) {
                 //--------------------------------------------------------------
                 //  Handle Autonomous signalling here
                 //--------------------------------------------------------------
                 //One send and one send only. 
                 //Don't take time in auto sending LED cmds.
-                commandByte = 0x02;
-                payloadByteOne = 0x11;
-                payloadByteTwo = 0x12;
-
                 if (!autoDataSent) {
-                    sendData = true;
-                    autoDataSent = true;
+                    autoDataSent = sendData(autoCmd);
                 }
             }
         } else {
@@ -139,71 +109,59 @@ public class LED extends Subsystem implements IObserver {
             //------------------------------------------------------------------
             switch (alliance.value) {
                 case DriverStation.Alliance.kRed_val: {
-                    commandByte = 0x04;
-                    payloadByteOne = 0x52;
-                    payloadByteTwo = ((byte) station_location);
+                    if (!disableDataSent) {
+                        disableDataSent = sendData(redCmd);
+                    }
                 }
                 break;
 
                 case DriverStation.Alliance.kBlue_val: {
-                    commandByte = 0x04;
-                    payloadByteOne = 0x47;
-                    payloadByteTwo = ((byte) station_location);
+                    if (!disableDataSent) {
+                        disableDataSent = sendData(blueCmd);
+                    }
                 }
                 break;
-
                 default: {
                     disableDataSent = false;
                 }
                 break;
             }
 
-            if ((station_location < 1)
-                    || (station_location > 3)) {
-                disableDataSent = false;
-            }
 
-            if (!disableDataSent) {
-                sendData = true;
-                disableDataSent = true;
-            }
         }
-        if (sendData) {
-            dataBytes[0] = commandByte;
-            dataBytes[1] = payloadByteOne;
-            dataBytes[2] = payloadByteTwo;
-            dataBytes[3] = 0;
-            dataBytes[4] = 0;
-            synchronized (messageSender) {
-                messageSender.setSendData(dataBytes, dataBytes.length);
-                messageSender.notify();
-            }
-            sendData = false;
-        }
+
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
         boolean buttonState = ((BooleanSubject) subjectThatCaused).getValue();
-
-        if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_6) {
-            kickerButtonPressed = buttonState;
-        }
-        if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_5) {
-            if (intakeButtonPreviousState == false) {
-                if ((intakeButtonPreviousState = buttonState) == true) {
-                    intakeChanged = true;
+        if (DriverStation.getInstance().isOperatorControl()) {
+            if (buttonState) {
+                if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_6) {
+                    if (buttonState) {
+                        sendData(shootCmd);
+                    }
                 }
-            } else if (intakeButtonPreviousState != buttonState) {
-                intakeButtonPreviousState = buttonState;
-                intakeChanged = true;
+                if (subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_2) {
+                    if (buttonState) {
+                        sendData(climbCmd);
+                    }
+                }
             } else {
-                intakeChanged = false;
+                //send cmds on buttone release
             }
         }
-        if (subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_2) {
-            climbButtonPressed = buttonState;
+
+    }
+
+    private boolean sendData(LedCmd ledCmd) {
+        byte[] dataBytes = ledCmd.getBytes();
+
+        synchronized (messageSender) {
+            messageSender.setSendData(dataBytes, dataBytes.length);
+            messageSender.notify();
         }
 
+        return true;
     }
 
     private static class MessageHandler implements Runnable {
