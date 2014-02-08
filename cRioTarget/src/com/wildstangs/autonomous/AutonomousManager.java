@@ -1,6 +1,7 @@
 package com.wildstangs.autonomous;
 
 import com.wildstangs.autonomous.programs.AutonomousProgramSleeper;
+import com.wildstangs.autonomous.programs.AutonomousProgramYMCA;
 import com.wildstangs.autonomous.programs.test.*;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
@@ -151,6 +152,7 @@ public class AutonomousManager implements IObserver {
         addProgram(new AutonomousProgramDriveDistanceMotionProfile());
         addProgram(new AutonomousProgramDrivePatterns());
         addProgram(new AutonomousProgramTestParallel());
+        addProgram(new AutonomousProgramYMCA());
     }
     
     private void addProgram(AutonomousProgram program) {

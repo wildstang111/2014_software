@@ -6,7 +6,7 @@ package com.wildstangs.subsystems.arm;
 
 import com.wildstangs.config.DoubleConfigFileParameter;
 import com.wildstangs.config.IntegerConfigFileParameter;
-import com.wildstangs.outputmanager.base.IOutputEnum;
+import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.pid.controller.base.PidController;
 import com.wildstangs.pid.inputs.ArmPotPidInput;
@@ -70,9 +70,7 @@ public class Arm
     
     public void setVictor(double speed)
     {
-        if(pid.isEnabled()) return;
-        
-        speed *= .25;
+//        if(pid.isEnabled()) return;
         
         if(speed < -1.0) speed = -1.0;
         else if(speed > 1.0) speed = 1.0;
@@ -151,5 +149,10 @@ public class Arm
     public boolean isArmPidActive()
     {
         return pid.isEnabled();
+    }
+
+    public double getPotVoltage()
+    {
+        return ((Double) InputManager.getInstance().getSensorInput(this.POT_INDEX).get()).doubleValue();
     }
 }

@@ -7,6 +7,9 @@
 
 package edu.wpi.first.wpilibj;
 
+import com.wildstangs.simulation.analoginput.AnalogInputContainer;
+import com.wildstangs.simulation.analoginput.AnalogInputSimulation;
+
 /**
  * Class to read a digital input.
  * This class will read digital inputs and return the current value on the channel. Other devices
@@ -17,7 +20,7 @@ package edu.wpi.first.wpilibj;
 public class AnalogChannel {
 
     private int mChannel;
-    boolean inputState = false;
+    protected AnalogInputSimulation input = null;
 
     /**
      * Create an instance of a DigitalInput.
@@ -26,6 +29,7 @@ public class AnalogChannel {
      */
     private void initDigitalInput(int moduleNumber, int channel) {
         mChannel = channel;
+        this.input = AnalogInputContainer.getInstance().getInput(channel);
     }
 
     /**
@@ -55,7 +59,7 @@ public class AnalogChannel {
      * @return the stats of the digital input
      */
     public double getVoltage() {
-        return 0.0;
+        return input.getVoltage();
     }
 
     /**
