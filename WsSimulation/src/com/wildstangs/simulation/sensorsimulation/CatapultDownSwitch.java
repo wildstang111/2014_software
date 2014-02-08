@@ -12,12 +12,12 @@ import com.wildstangs.simulation.sensorsimulation.base.ISensorSimulation;
  *
  * @author Jason
  */
-public class TensionLimitSwitch implements ISensorSimulation {
+public class CatapultDownSwitch implements ISensorSimulation {
 
     @Override
     public void init() {
     }
-     private static int tensionLimitSwitch = 6;
+     private static int catapultDownSwitch = 9;
     
     public void update(){
         
@@ -27,11 +27,11 @@ public class TensionLimitSwitch implements ISensorSimulation {
         //Forward is up
         if (false== solState){
             //Set the limit switches based on that value
-            DigitalInputContainer.getInstance().inputs[tensionLimitSwitch].set(false);
+            DigitalInputContainer.getInstance().inputs[catapultDownSwitch].set(true);
             
         } else { 
             //Set the limit switches based on that value
-            DigitalInputContainer.getInstance().inputs[tensionLimitSwitch].set(true);
+            DigitalInputContainer.getInstance().inputs[catapultDownSwitch].set(false);
             
         }
     }   
