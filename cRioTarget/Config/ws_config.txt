@@ -26,64 +26,14 @@ com.wildstangs.subsystems.arm.Arm.TopVoltageValue-Back=5.1
 com.wildstangs.subsystems.arm.Arm.BottomVoltageValue-Back=0.0
 
 //Drive Base
-com.wildstangs.subsystems.WsDriveBase.wheel_diameter=4.0
-com.wildstangs.subsystems.WsDriveBase.ticks_per_rotation=360.0
-com.wildstangs.subsystems.WsDriveBase.throttle_low_gear_accel_factor=0.25
-com.wildstangs.subsystems.WsDriveBase.heading_low_gear_accel_factor=0.5
-com.wildstangs.subsystems.WsDriveBase.throttle_high_gear_accel_factor=0.125
-com.wildstangs.subsystems.WsDriveBase.heading_high_gear_accel_factor=0.25
-com.wildstangs.subsystems.WsDriveBase.max_high_gear_percent=0.8
-com.wildstangs.subsystems.WsDriveBase.encoder_gear_ratio=7.5
-com.wildstangs.subsystems.WsDriveBase.slow_turn_forward_speed=0.16
-com.wildstangs.subsystems.WsDriveBase.slow_turn_backward_speed=-0.19
-com.wildstangs.subsystems.WsDriveBase.feed_forward_velocity_constant=1.0
-com.wildstangs.subsystems.WsDriveBase.feed_forward_acceleration_constant=1.8E-4
-com.wildstangs.subsystems.WsDriveBase.max_acceleration_drive_profile=600.0
-com.wildstangs.subsystems.WsDriveBase.max_speed_inches_lowgear=90.0
-com.wildstangs.subsystems.WsDriveBase.deadband=0.05
-com.wildstangs.subsystems.WsDriveBase.deceleration_velocity_threshold=48.0
-com.wildstangs.subsystems.WsDriveBase.deceleration_motor_speed=0.3
-com.wildstangs.subsystems.WsDriveBase.stopping_distance_at_max_speed_lowgear=10.0
-com.wildstangs.subsystems.WsDriveBase.quick_turn_cap=10.0
-com.wildstangs.subsystems.WsDriveBase.quick_turn_antiturbo=10.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.p=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.i=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.d=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.errorIncrement=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.errorEpsilon=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.staticEpsilon=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.maxIntegral=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.integralErrorThresh=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.differentiatorBandLimit=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.maxOutput=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.minOutput=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.maxInput=0.0
-com.wildstangs.pid.controller.base.WsSpeedPidController.WsDriveBaseSpeedPid.minInput=0.0
-
-
-//********************************//
-//                                //
-//          Autonomous            //
-//                                //
-//********************************//
-
-
-
-
-//********************************//
-//                                //
-//        New Parameters          //
-//                                //
-//********************************//
-
-com.wildstangs.subsystems.DriveBase.wheel_diameter=6.0
+com.wildstangs.subsystems.DriveBase.wheel_diameter=4.25
 com.wildstangs.subsystems.DriveBase.ticks_per_rotation=360.0
 com.wildstangs.subsystems.DriveBase.throttle_low_gear_accel_factor=0.25
 com.wildstangs.subsystems.DriveBase.heading_low_gear_accel_factor=0.5
 com.wildstangs.subsystems.DriveBase.throttle_high_gear_accel_factor=0.125
 com.wildstangs.subsystems.DriveBase.heading_high_gear_accel_factor=0.25
 com.wildstangs.subsystems.DriveBase.max_high_gear_percent=0.8
-com.wildstangs.subsystems.DriveBase.encoder_gear_ratio=7.5
+com.wildstangs.subsystems.DriveBase.encoder_gear_ratio=5.8333
 com.wildstangs.subsystems.DriveBase.slow_turn_forward_speed=0.16
 com.wildstangs.subsystems.DriveBase.slow_turn_backward_speed=-0.19
 com.wildstangs.subsystems.DriveBase.feed_forward_velocity_constant=1.0
@@ -96,19 +46,6 @@ com.wildstangs.subsystems.DriveBase.deceleration_motor_speed=0.3
 com.wildstangs.subsystems.DriveBase.stopping_distance_at_max_speed_lowgear=10.0
 com.wildstangs.subsystems.DriveBase.quick_turn_cap=10.0
 com.wildstangs.subsystems.DriveBase.quick_turn_antiturbo=10.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.p=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.i=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.d=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.errorIncrement=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.errorEpsilon=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.staticEpsilon=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.maxIntegral=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.integralErrorThresh=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.differentiatorBandLimit=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.maxOutput=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.minOutput=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.maxInput=0.0
-com.wildstangs.pid.controller.base.SpeedPidController.WsDriveBaseSpeedPid.minInput=0.0
 com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.p=0.0
 com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.i=0.0
 com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.d=0.0
@@ -122,3 +59,23 @@ com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.maxOutpu
 com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minOutput=0.0
 com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.maxInput=0.0
 com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minInput=0.0
+
+
+//********************************//
+//                                //
+//          Autonomous            //
+//                                //
+//********************************//
+com.wildstangs.autonomous.programs.AutonomousProgramSleeper.ForceStopAtStep=0
+com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.unknown.distance=-72.0
+com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.unknown.heading=0.0
+com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.ForceStopAtStep=0
+
+
+
+
+//********************************//
+//                                //
+//        New Parameters          //
+//                                //
+//********************************//
