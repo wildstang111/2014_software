@@ -44,6 +44,8 @@ public class Catapult extends Subsystem implements IObserver {
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_2);
         // Fire the catapault
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_4);
+        // Override all the things required to shoot
+        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_10);
         // Limit switch to detect when the catapult is down
         registerForSensorNotification(InputManager.CATAPULT_DOWN_SWITCH_INDEX);
         // Limit switch to detect the position of the latch
