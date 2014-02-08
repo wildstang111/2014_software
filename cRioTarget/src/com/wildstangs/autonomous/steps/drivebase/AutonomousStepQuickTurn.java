@@ -25,9 +25,9 @@ public class AutonomousStepQuickTurn extends AutonomousStep {
 
     public void initialize() {
 
-        angle = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getGyroAngle() + value;
-        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).setThrottleValue(0);
-        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).overrideHeadingValue(value < 0 ? 0.6 : -0.6);
+        angle = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getGyroAngle() + value;
+        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).setThrottleValue(0);
+        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).overrideHeadingValue(value < 0 ? 0.6 : -0.6);
 
         InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).set(JoystickAxisEnum.DRIVER_THROTTLE, new Double(0.0));
         InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).set(JoystickAxisEnum.DRIVER_HEADING, new Double(value < 0 ? 0.6 : -0.6));
@@ -37,19 +37,19 @@ public class AutonomousStepQuickTurn extends AutonomousStep {
     public void update() {
         if (shouldFinish) {
             finished = true;
-            ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).overrideHeadingValue(0.0);
+            ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).overrideHeadingValue(0.0);
             return;
         }
-        double gyroAngle = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).getGyroAngle();
+        double gyroAngle = ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getGyroAngle();
         if (value < 0) {
             if (angle > gyroAngle) {
-                ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).overrideHeadingValue(0.0);
+                ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).overrideHeadingValue(0.0);
                 InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).set(JoystickAxisEnum.DRIVER_HEADING, new Double(0.0));
                 shouldFinish = true;
             }
         } else {
             if (angle < gyroAngle) {
-                ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).overrideHeadingValue(0.0);
+                ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).overrideHeadingValue(0.0);
                 InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).set(JoystickAxisEnum.DRIVER_HEADING, new Double(0.0));
                 shouldFinish = true;
             }

@@ -1,6 +1,8 @@
 package com.wildstangs.simulation.sensorsimulation.base;
 
 import com.wildstangs.list.WsList;
+import com.wildstangs.simulation.gyro.GyroSimulation;
+import com.wildstangs.simulation.encoders.DriveBaseEncoders;
 import com.wildstangs.simulation.sensorsimulation.ArmPot;
 import com.wildstangs.simulation.sensorsimulation.TensionLimitSwitch;
 /**
@@ -42,5 +44,7 @@ public class SensorSimulationContainer {
       sensorSimulation.add(new TensionLimitSwitch());
       sensorSimulation.add(new ArmPot(true));
       sensorSimulation.add(new ArmPot(false));
+      sensorSimulation.add(new GyroSimulation());
+      sensorSimulation.add(new DriveBaseEncoders());
     }
 }
