@@ -3,6 +3,9 @@ package com.wildstangs.simulation.sensorsimulation.base;
 import com.wildstangs.list.WsList;
 import com.wildstangs.simulation.gyro.GyroSimulation;
 import com.wildstangs.simulation.encoders.DriveBaseEncoders;
+import com.wildstangs.simulation.sensorsimulation.BallDetectSwitch;
+import com.wildstangs.simulation.sensorsimulation.CatapultDownSwitch;
+import com.wildstangs.simulation.sensorsimulation.LatchPositionSwitch;
 import com.wildstangs.simulation.sensorsimulation.TensionLimitSwitch;
 /**
  *
@@ -43,5 +46,8 @@ public class SensorSimulationContainer {
       sensorSimulation.add(new TensionLimitSwitch());
       sensorSimulation.add(new GyroSimulation());
       sensorSimulation.add(new DriveBaseEncoders());
+      sensorSimulation.add(new CatapultDownSwitch());
+      sensorSimulation.add(new LatchPositionSwitch());
+      sensorSimulation.add(new BallDetectSwitch());
     }
 }
