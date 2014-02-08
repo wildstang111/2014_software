@@ -24,7 +24,7 @@ public class AutonomousStepSetShifter extends AutonomousStep
     
     public void initialize()
     {
-        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.WS_DRIVE_BASE_INDEX)).setShifter(state);
+        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).setShifter(state);
         this.finished = true;
     }
 
