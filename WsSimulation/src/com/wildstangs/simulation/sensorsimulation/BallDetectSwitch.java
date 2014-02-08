@@ -12,27 +12,27 @@ import com.wildstangs.simulation.sensorsimulation.base.ISensorSimulation;
  *
  * @author Jason
  */
-public class TensionLimitSwitch implements ISensorSimulation {
+public class BallDetectSwitch implements ISensorSimulation {
 
     @Override
     public void init() {
     }
-     private static int tensionLimitSwitch = 6;
+     private static int ballDetectSwitch = 7;
     
     public void update(){
         
         //Get the solenoid value 
-        Boolean solState = ((Boolean)OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX).get(null)); 
+        //Boolean solState = ((Boolean)OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX).get(null)); 
         
         //Forward is up
-        if (false== solState){
+        //if (false== solState){
             //Set the limit switches based on that value
-            DigitalInputContainer.getInstance().inputs[tensionLimitSwitch].set(false);
+            //DigitalInputContainer.getInstance().inputs[ballDetectSwitch].set(true);
             
-        } else { 
+        //} else { 
             //Set the limit switches based on that value
-            DigitalInputContainer.getInstance().inputs[tensionLimitSwitch].set(true);
+         //   DigitalInputContainer.getInstance().inputs[ballDetectSwitch].set(false);
             
-        }
+        //}
     }   
 }

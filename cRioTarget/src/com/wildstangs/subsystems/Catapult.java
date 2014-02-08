@@ -35,6 +35,8 @@ public class Catapult extends Subsystem implements IObserver {
 
         public static final CatapultState DOWN = new CatapultState(0);
         public static final CatapultState UP = new CatapultState(1);
+        public static final CatapultState FIRING = new CatapultState(2);
+        public static final CatapultState WAITING_FOR_DOWN = new CatapultState(3);
     }
 
     public Catapult(String name) {
@@ -68,23 +70,48 @@ public class Catapult extends Subsystem implements IObserver {
     }
 
     public void update() {
-        if (armCatapultFlag == true && fireCatapultFlag == false) {
-            catapultState = CatapultState.DOWN;
-        } else if (armCatapultFlag == false && fireCatapultFlag == true && isTension && isBallIn && isLatched) {
-            catapultState = CatapultState.UP;
-        } else if (!armCatapultFlag && fireCatapultFlag && overrideFlag) {
-            catapultState = CatapultState.UP;
+        if(catapultState == CatapultState.DOWN) {
+            if(armCatapultFlag == true && fireCatapultFlag == false && (isBallIn || overrideFlag)){
+                catapultState = CatapultState.UP;
+            }
+        } else if(catapultState == CatapultState.UP){
+            if(armCatapultFlag == false && fireCatapultFlag == true && ((isTension && isBallIn && isLatched) || overrideFlag)){
+                catapultState = CatapultState.FIRING;
+            }
+        } else if(catapultState == CatapultState.FIRING){
+            if(isBallIn == false && overrideFlag == false){
+                catapultState = CatapultState.WAITING_FOR_DOWN;
+            }
+        } else {
+            if(isCatapultDown == true || overrideFlag == true){
+                catapultState = CatapultState.DOWN;
+            }
         }
         
         if(catapultState == CatapultState.DOWN) {
             (OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(false));
+            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(true));
             SmartDashboard.putString("Catapult state", "down");
-        } else {
+        } else if(catapultState == CatapultState.UP){
             (OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(true));
+            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(true));
             SmartDashboard.putString("Catapult state", "up");
+        } else if(catapultState == CatapultState.FIRING){
+            (OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(true));
+            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(false));
+            SmartDashboard.putString("Catapult state", "Firing");
+        } else {
+            (OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(false));
+            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(false));
+            SmartDashboard.putString("Catapult state", "Waiting for catapult down");
+            
         }
+        SmartDashboard.putBoolean("Ball detect switch",isBallIn);
+        SmartDashboard.putBoolean("Latch switch",isLatched);
+        SmartDashboard.putBoolean("catapult down limit switch",isCatapultDown);
+        SmartDashboard.putBoolean("Tension switch",isTension);
+        
     }
-
     public void notifyConfigChange() {
 
     }
