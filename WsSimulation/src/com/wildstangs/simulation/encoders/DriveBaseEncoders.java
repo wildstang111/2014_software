@@ -178,7 +178,6 @@ public class DriveBaseEncoders {
         SmartDashboard.putNumber("Left Distance", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getLeftDistance()); 
         SmartDashboard.putNumber("Right Distance", ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).getRightDistance());
         
-        
     }
     
     
