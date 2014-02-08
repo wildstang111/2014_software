@@ -25,7 +25,7 @@ public class DriverJoystick implements IInput {
 
     public DriverJoystick() {
         driverJoystick = (Joystick) new Joystick(1);
-
+        
         axes = new DoubleSubject[numberOfAxes];
         for (int i = 0; i < axes.length; i++) {
             if (JoystickAxisEnum.getEnumFromIndex(true, i) != null) {
@@ -54,7 +54,7 @@ public class DriverJoystick implements IInput {
 
     public void set(IInputEnum key, Object value) {
         if (key instanceof JoystickAxisEnum && ((JoystickAxisEnum) key).isDriver() == true) {
-            axes[((JoystickAxisEnum) key).toValue() - 1].setValue(value);
+            axes[((JoystickAxisEnum) key).toValue()].setValue(value);
         } else if (key instanceof JoystickButtonEnum && ((JoystickButtonEnum) key).isDriver() == true) {
             buttons[((JoystickButtonEnum) key).toValue()].setValue(value);
         } else {
