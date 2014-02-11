@@ -54,4 +54,8 @@ public class Ears extends Subsystem implements IObserver{
                     }
             }
     }
+    public void setEarState (boolean currentEarState) {
+        this.currentEarState = currentEarState;
+    }
+            
 }
