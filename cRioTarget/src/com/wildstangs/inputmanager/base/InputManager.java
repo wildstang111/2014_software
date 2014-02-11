@@ -17,8 +17,7 @@ import com.wildstangs.subjects.base.Subject;
  *
  * @author Nathan
  */
-public class InputManager
-{
+public class InputManager {
 
     private static InputManager instance = null;
     private static WsList oiInputs = new WsList(10);
@@ -29,30 +28,24 @@ public class InputManager
      *
      * @return The instance of InputManager
      */
-    public static InputManager getInstance()
-    {
-        if (instance == null)
-        {
+    public static InputManager getInstance() {
+        if (instance == null) {
             instance = new InputManager();
         }
         return instance;
     }
 
-    public void init()
-    {
+    public void init() {
     }
 
     /**
      * Method to trigger updates of all the sensor data input containers
      */
-    public void updateSensorData()
-    {
+    public void updateSensorData() {
         IInput sIn;
-        for (int i = 0; i < sensorInputs.size(); i++)
-        {
+        for (int i = 0; i < sensorInputs.size(); i++) {
             sIn = (IInput) sensorInputs.get(i);
-            if (sIn == null)
-            {
+            if (sIn == null) {
                 continue;
             }
             sIn.pullData();
@@ -63,14 +56,11 @@ public class InputManager
     /**
      * Method to trigger updates of all the oi data input containers.
      */
-    public void updateOiData()
-    {
+    public void updateOiData() {
         IInput oiIn;
-        for (int i = 0; i < oiInputs.size(); i++)
-        {
+        for (int i = 0; i < oiInputs.size(); i++) {
             oiIn = (IInput) oiInputs.get(i);
-            if (oiIn == null)
-            {
+            if (oiIn == null) {
                 continue;
             }
             oiIn.pullData();
@@ -78,18 +68,14 @@ public class InputManager
         }
     }
 
-    public void updateOiDataAutonomous()
-    {
+    public void updateOiDataAutonomous() {
         IInput oiIn;
-        for (int i = 0; i < oiInputs.size(); i++)
-        {
+        for (int i = 0; i < oiInputs.size(); i++) {
             oiIn = (IInput) oiInputs.get(i);
-            if (oiIn == null)
-            {
+            if (oiIn == null) {
                 continue;
             }
-            if (!(oiIn instanceof DriverJoystick || oiIn instanceof ManipulatorJoystick))
-            {
+            if (!(oiIn instanceof DriverJoystick || oiIn instanceof ManipulatorJoystick)) {
                 oiIn.pullData();
             }
             oiIn.update();
@@ -101,21 +87,16 @@ public class InputManager
      *
      * Used by the ConfigFacade when the config is re-read.
      */
-    public void notifyConfigChange()
-    {
-        for (int i = 0; i < sensorInputs.size(); i++)
-        {
+    public void notifyConfigChange() {
+        for (int i = 0; i < sensorInputs.size(); i++) {
             IInput sIn = (IInput) sensorInputs.get(i);
-            if (sIn != null)
-            {
+            if (sIn != null) {
                 sIn.notifyConfigChange();
             }
         }
-        for (int i = 0; i < oiInputs.size(); i++)
-        {
+        for (int i = 0; i < oiInputs.size(); i++) {
             IInput oiIn = (IInput) oiInputs.get(i);
-            if (oiIn != null)
-            {
+            if (oiIn != null) {
                 oiIn.notifyConfigChange();
             }
         }
@@ -127,10 +108,8 @@ public class InputManager
      * @param key The key that represents the OI input container
      * @return A WsInputInterface.
      */
-    public IInput getOiInput(int index)
-    {
-        if (index >= 0 && index < oiInputs.size())
-        {
+    public IInput getOiInput(int index) {
+        if (index >= 0 && index < oiInputs.size()) {
             return (IInput) oiInputs.get(index);
         }
         return (IInput) oiInputs.get(UNKNOWN_INDEX);
@@ -142,24 +121,18 @@ public class InputManager
      * @param key The key that represents the sensor input container
      * @return A WsInputInterface.
      */
-    public IInput getSensorInput(int index)
-    {
-        if (index >= 0 || index < sensorInputs.size())
-        {
+    public IInput getSensorInput(int index) {
+        if (index >= 0 || index < sensorInputs.size()) {
             return (IInput) sensorInputs.get(index);
         }
         return (IInput) sensorInputs.get(UNKNOWN_INDEX);
     }
 
-    final public void attachJoystickButton(IInputEnum button, IObserver observer)
-    {
-        if (button instanceof JoystickButtonEnum)
-        {
+    final public void attachJoystickButton(IInputEnum button, IObserver observer) {
+        if (button instanceof JoystickButtonEnum) {
             Subject subject = InputManager.getInstance().getOiInput(((JoystickButtonEnum) button).isDriver() ? InputManager.DRIVER_JOYSTICK_INDEX : InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(button);
             subject.attach(observer);
-        }
-        else
-        {
+        } else {
             Logger.getLogger().debug(this.getClass().getName(), "attachJoystickButton", "Oops! Check that the inputs implement the required interfaces.");
         }
     }
@@ -184,14 +157,14 @@ public class InputManager
     public static final int BALL_DETECT_SWITCH_INDEX = 13;
     public static final int LATCH_POSITION_SWITCH_INDEX = 14;
     public static final int CATAPULT_DOWN_SWITCH_INDEX = 15;
+
     /**
      * Constructor for the InputManager.
      *
      * Each new data element to be added to the facade must be added here and
      * have keys added above.
      */
-    protected InputManager()
-    {
+    protected InputManager() {
         //Add the facade data elements
         sensorInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         sensorInputs.addToIndex(PRESSURE_TRANSDUCER_INDEX, new WsAnalogInput(4));
@@ -212,6 +185,6 @@ public class InputManager
         oiInputs.addToIndex(AUTO_PROGRAM_SELECTOR_INDEX, new WsDSAnalogInput(1));
         oiInputs.addToIndex(LOCK_IN_SWITCH_INDEX, new WsDSDigitalInput(1));
         oiInputs.addToIndex(START_POSITION_SELECTOR_INDEX, new WsDSAnalogInput(2));
-        
+
     }
 }

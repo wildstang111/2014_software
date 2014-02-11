@@ -13,31 +13,26 @@ import com.wildstangs.subsystems.base.SubsystemContainer;
  *
  * @author Joey
  */
-public class AutonomousStepSetArmPresets extends AutonomousStep
-{
+public class AutonomousStepSetArmPresets extends AutonomousStep {
+
     protected ArmPreset preset;
 
-    public AutonomousStepSetArmPresets(ArmPreset preset)
-    {
+    public AutonomousStepSetArmPresets(ArmPreset preset) {
         this.preset = preset;
     }
-    
-    public void initialize()
-    {
+
+    public void initialize() {
         ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).setArmPreset(preset);
     }
 
-    public void update()
-    {
-        if(!((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).areArmsUsingPidControl())
-        {
+    public void update() {
+        if (!((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).areArmsUsingPidControl()) {
             finished = true;
         }
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "Moving Arms to preset: " + preset.toString();
     }
-    
+
 }
