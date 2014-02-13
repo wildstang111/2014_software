@@ -126,10 +126,7 @@ public class LED extends Subsystem implements IObserver {
                 }
                 break;
             }
-
-
         }
-
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
