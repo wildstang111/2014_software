@@ -8,6 +8,7 @@ import com.wildstangs.subsystems.LandingGear;
 import com.wildstangs.subsystems.Wings;
 import com.wildstangs.subsystems.WsCompressor;
 import com.wildstangs.subsystems.DriveBase;
+import com.wildstangs.subsystems.Ears;
 import com.wildstangs.subsystems.LED;
 import com.wildstangs.subsystems.LightCannon;
 
@@ -88,6 +89,7 @@ public class SubsystemContainer {
     public static final int LANDING_GEAR_INDEX = 6;
     public static final int HOT_GOAL_DETECTOR_INDEX = 7;
     public static final int WINGS_INDEX = 8;
+    public static final int EAR_INDEX = 9;
     
     /**
      * Constructor for the subsystem container.
@@ -105,5 +107,6 @@ public class SubsystemContainer {
         subsystem.addToIndex(LANDING_GEAR_INDEX, new LandingGear(LANDING_GEAR));
         subsystem.addToIndex(HOT_GOAL_DETECTOR_INDEX, new HotGoalDetector(HOT_GOAL_DETECTOR));
         subsystem.addToIndex(WINGS_INDEX, new Wings(WINGS));
+        subsystem.addToIndex(EAR_INDEX, new Ears("EARS"));
     }
 }
