@@ -80,6 +80,9 @@ public class LED extends Subsystem implements IObserver {
 
     public void init() {
         //Nothing to do anymore, I'm bored.
+        autoDataSent = false;
+        disableDataSent = false;
+        sendData = false;
     }
 
     public void update() {

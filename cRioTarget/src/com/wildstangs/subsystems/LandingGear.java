@@ -22,6 +22,7 @@ public class LandingGear extends Subsystem implements IObserver{
     }
 
     public void init() {
+        landingGearState = false;
     }
 
     public void update() {
