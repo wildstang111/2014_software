@@ -56,6 +56,8 @@ public class BallHandler extends Subsystem implements IObserver {
         backArmJoystickValue = 0.0;
         lastValueFront = 0.0;
         lastValueBack = 0.0;
+        frontArm.init();
+        backArm.init();
     }
 
     public void update() {
