@@ -25,6 +25,7 @@ public class Ears extends Subsystem implements IObserver{
     }
 
     public void init() {
+        currentEarState = false;
     }
     
     public void update() {

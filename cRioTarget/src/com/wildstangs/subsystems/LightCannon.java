@@ -23,7 +23,9 @@ public class LightCannon extends Subsystem implements IObserver {
 
         registerForJoystickButtonNotification(JoystickAxisEnum.MANIPULATOR_DPAD_Y);
     }
-
+    public void init(){
+        relayState = Relay.Value.kOff;
+    }
     public void acceptNotification(Subject subjectThatCaused) {
         double value = ((DoubleSubject) subjectThatCaused).getValue();
         if (value > 0.5 || value < -0.5) {

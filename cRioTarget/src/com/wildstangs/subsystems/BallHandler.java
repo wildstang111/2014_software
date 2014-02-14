@@ -47,6 +47,14 @@ public class BallHandler extends Subsystem implements IObserver {
     }
 
     public void init() {
+        frontForwardButton = false;
+        frontReverseButton = false;
+        backForwardButton = false;
+        backReverseButton = false;
+        frontArmJoystickValue = 0.0;
+        backArmJoystickValue = 0.0;
+        lastValueFront = 0.0;
+        lastValueBack = 0.0;
     }
 
     public void update() {
