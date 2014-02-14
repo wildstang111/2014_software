@@ -84,10 +84,10 @@ public class OutputManager {
     public static final int CATAPAULT_SOLENOID_INDEX = 7;
     public static final int EARS_SOLENOID_INDEX = 8;
     public static final int FRONT_ARM_VICTOR_INDEX = 9;
-    public static final int BACK_ARM_VICTOR_INDEX = 12;
-    public static final int FRONT_ARM_SPIKE_INDEX = 13;
-    public static final int BACK_ARM_SPIKE_INDEX = 14;
-    public static final int LATCH_SOLENOID_INDEX = 15;
+    public static final int BACK_ARM_VICTOR_INDEX = 10;
+    public static final int FRONT_ARM_SPIKE_INDEX = 11;
+    public static final int BACK_ARM_SPIKE_INDEX = 12;
+    public static final int LATCH_SOLENOID_INDEX = 13;
     /**
      * Constructor for OutputManager.
      *
