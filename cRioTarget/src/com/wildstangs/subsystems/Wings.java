@@ -28,6 +28,7 @@ public class Wings extends Subsystem implements IObserver
 
     public void init()
     {
+        currentState = false;
     }
 
     public void update()
