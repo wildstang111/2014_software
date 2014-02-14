@@ -86,8 +86,8 @@ public class OutputManager {
     public static final int WINGS_SOLENOID_LEFT_INDEX = 9;
     public static final int FRONT_ARM_VICTOR_INDEX = 10;
     public static final int BACK_ARM_VICTOR_INDEX = 11;
-    public static final int FRONT_ARM_SPIKE_INDEX = 12;
-    public static final int BACK_ARM_SPIKE_INDEX = 13;
+    public static final int FRONT_ARM_ROLLER_VICTOR_INDEX = 12;
+    public static final int BACK_ARM_ROLLER_VICTOR_INDEX = 13;
     public static final int LATCH_SOLENOID_INDEX = 14;
     /**
      * Constructor for OutputManager.
@@ -110,8 +110,8 @@ public class OutputManager {
         outputs.addToIndex(EARS_SOLENOID_INDEX, new WsDoubleSolenoid("Ears Double Solenoid", 2, 1, 2));
         outputs.addToIndex(FRONT_ARM_VICTOR_INDEX, new WsVictor("Front Arm Victor", 5));       
         outputs.addToIndex(BACK_ARM_VICTOR_INDEX, new WsVictor("Back Arm Victor", 6));
-        outputs.addToIndex(FRONT_ARM_SPIKE_INDEX, new WsRelay(1, 2, Relay.Direction.kBoth));
-        outputs.addToIndex(BACK_ARM_SPIKE_INDEX, new WsRelay(1, 7, Relay.Direction.kBoth));
+        outputs.addToIndex(FRONT_ARM_ROLLER_VICTOR_INDEX, new WsVictor("Front Arm Roller Victor",7));
+        outputs.addToIndex(BACK_ARM_ROLLER_VICTOR_INDEX, new WsVictor("Back Arm Roller Victor", 8));
         outputs.addToIndex(LATCH_SOLENOID_INDEX, new WsSolenoid("Latch Solenoid", 1, 8));
     }
 }
