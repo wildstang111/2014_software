@@ -6,7 +6,7 @@
 
 package com.wildstangs.autonomous.steps.arms;
 
-import com.wildstangs.autonomous.WsAutonomousStep;
+import com.wildstangs.autonomous.steps.AutonomousStep;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.ISubjectEnum;
@@ -15,7 +15,7 @@ import com.wildstangs.subjects.base.ISubjectEnum;
  *
  * @author Nathan
  */
-public class AutonomousStepWaitUntilBallInRobot extends WsAutonomousStep{
+public class AutonomousStepWaitUntilBallInRobot extends AutonomousStep{
 
     public void initialize() {
         // Do nothing
