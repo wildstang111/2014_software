@@ -40,8 +40,7 @@ public class Wings extends Subsystem implements IObserver
         else {
             wingsValue = DoubleSolenoid.Value.kForward_val;
         }
-        (OutputManager.getInstance().getOutput(OutputManager.WINGS_SOLENOID_RIGHT_INDEX)).set(new Integer(wingsValue));
-        (OutputManager.getInstance().getOutput(OutputManager.WINGS_SOLENOID_LEFT_INDEX)).set(new Integer(wingsValue));
+        (OutputManager.getInstance().getOutput(OutputManager.WINGS_SOLENOID_INDEX)).set(new Integer(wingsValue));
         SmartDashboard.putBoolean("Wing State", currentState);
     }
 

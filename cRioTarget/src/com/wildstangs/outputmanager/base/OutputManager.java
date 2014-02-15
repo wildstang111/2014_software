@@ -79,11 +79,10 @@ public class OutputManager {
     public static final int LEFT_DRIVE_SPEED_INDEX = 2;
     public static final int SHIFTER_INDEX = 3;
     public static final int LIGHT_CANNON_RELAY_INDEX = 4;
-    public static final int WINGS_SOLENOID_RIGHT_INDEX = 5;
+    public static final int WINGS_SOLENOID_INDEX = 5;
     public static final int LANDING_GEAR_SOLENOID_INDEX = 6;
     public static final int CATAPAULT_SOLENOID_INDEX = 7;
     public static final int EARS_SOLENOID_INDEX = 8;
-    public static final int WINGS_SOLENOID_LEFT_INDEX = 9;
     public static final int FRONT_ARM_VICTOR_INDEX = 10;
     public static final int BACK_ARM_VICTOR_INDEX = 11;
     public static final int FRONT_ARM_ROLLER_VICTOR_INDEX = 12;
@@ -103,8 +102,7 @@ public class OutputManager {
         outputs.addToIndex(LEFT_DRIVE_SPEED_INDEX, new WsDriveSpeed("Left Drive Speed", 1, 2));
         outputs.addToIndex(SHIFTER_INDEX, new WsDoubleSolenoid("Shifter", 1, 1, 2));
         outputs.addToIndex(LIGHT_CANNON_RELAY_INDEX, new WsRelay(1, 5, Relay.Direction.kForward));
-        outputs.addToIndex(WINGS_SOLENOID_RIGHT_INDEX, new WsDoubleSolenoid("Wings Solenoid1", 1, 5, 6));
-        outputs.addToIndex(WINGS_SOLENOID_LEFT_INDEX, new WsDoubleSolenoid("Wings Solenoid2", 1, 3, 4));
+        outputs.addToIndex(WINGS_SOLENOID_INDEX, new WsDoubleSolenoid("Wings Solenoid1", 1, 5, 6));
         outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsSolenoid("Landing Gear Solenoid", 2, 3));
         outputs.addToIndex(CATAPAULT_SOLENOID_INDEX, new WsSolenoid("Arm Catapult Solenoid", 1, 7));
         outputs.addToIndex(EARS_SOLENOID_INDEX, new WsDoubleSolenoid("Ears Double Solenoid", 2, 1, 2));
