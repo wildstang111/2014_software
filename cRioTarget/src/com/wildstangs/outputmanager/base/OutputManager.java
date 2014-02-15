@@ -103,7 +103,7 @@ public class OutputManager {
         outputs.addToIndex(SHIFTER_INDEX, new WsDoubleSolenoid("Shifter", 1, 1, 2));
         outputs.addToIndex(LIGHT_CANNON_RELAY_INDEX, new WsRelay(1, 5, Relay.Direction.kForward));
         outputs.addToIndex(WINGS_SOLENOID_INDEX, new WsDoubleSolenoid("Wings Solenoid1", 1, 3, 4));
-        outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsSolenoid("Landing Gear Solenoid", 7, 8));
+        outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsDoubleSolenoid("Landing Gear Solenoid", 1, 7, 8));
         outputs.addToIndex(CATAPAULT_SOLENOID_INDEX, new WsSolenoid("Arm Catapult Solenoid", 1, 5));
     //    outputs.addToIndex(EARS_SOLENOID_INDEX, new WsDoubleSolenoid("Ears Double Solenoid", 2, 1, 2));
         outputs.addToIndex(FRONT_ARM_VICTOR_INDEX, new WsVictor("Front Arm Victor", 5));       
