@@ -154,6 +154,7 @@ public class Arm
     public void notifyConfigChange()
     {
         pidInput.setVoltageValues(TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
+        pid.notifyConfigChange();
         rollerForwardSpeed = ROLLER_FORWARD_SPEED_CONFIG.getValue();
         rollerReverseSpeed = ROLLER_REVERSE_SPEED_CONFIG.getValue();
     }
