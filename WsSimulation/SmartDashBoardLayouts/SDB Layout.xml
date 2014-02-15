@@ -1,0 +1,177 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="Right Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="649" y="-3"/>
+	</widget>
+	<widget field="Left Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="654" y="17"/>
+	</widget>
+	<widget field="Measured Acceleration" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="618" y="644"/>
+	</widget>
+	<widget field="Measured Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="619" y="624"/>
+	</widget>
+	<widget field="Distance Error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="623" y="607"/>
+	</widget>
+	<widget field="Speed PID Value" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="621" y="586"/>
+	</widget>
+	<widget field="Speed PID Error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="627" y="560"/>
+	</widget>
+	<widget field="Actual Right Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="628" y="542"/>
+	</widget>
+	<widget field="Actual Left Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="631" y="519"/>
+	</widget>
+	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="628" y="501"/>
+	</widget>
+	<widget field="1 - 6" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1040" y="220"/>
+	</widget>
+	<widget field="1 - 5" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1041" y="196"/>
+		<height>24</height>
+	</widget>
+	<widget field="Wing State" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="343" y="31"/>
+	</widget>
+	<widget field="LandingGearState" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="322" y="266"/>
+	</widget>
+	<widget field="Tension switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1042" y="177"/>
+	</widget>
+	<widget field="catapult down limit switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1035" y="156"/>
+	</widget>
+	<widget field="Latch switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1035" y="134"/>
+	</widget>
+	<widget field="Ball detect switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1033" y="111"/>
+	</widget>
+	<widget field="Catapult state" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1033" y="90"/>
+	</widget>
+	<widget field="Back Arm Joystick" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="11" y="297"/>
+	</widget>
+	<widget field="Front Arm Joystick" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1" y="390"/>
+	</widget>
+	<widget field="Back Arm Victor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="9" y="366"/>
+	</widget>
+	<widget field="Front Arm Victor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="346"/>
+	</widget>
+	<widget field="Back Arm Roller" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="4" y="321"/>
+	</widget>
+	<widget field="Front Arm Roller" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="17" y="270"/>
+	</widget>
+	<widget field="Wanted Back Arm Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="4" y="245"/>
+	</widget>
+	<widget field="Current Back Arm Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="6" y="219"/>
+	</widget>
+	<widget field="Wanted Front Arm Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="192"/>
+	</widget>
+	<widget field="Current Front Arm Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1" y="167"/>
+	</widget>
+	<widget field="LED Data:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1033" y="442"/>
+	</widget>
+	<widget field="PSI" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="629" y="477"/>
+	</widget>
+	<widget field="Pressure Transducer Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="628" y="458"/>
+	</widget>
+	<widget field="Gyro angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="629" y="439"/>
+	</widget>
+	<widget field="Left Distance: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="631" y="418"/>
+	</widget>
+	<widget field="Right Distance: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="632" y="396"/>
+	</widget>
+	<widget field="Right encoder count: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="634" y="376"/>
+	</widget>
+	<widget field="Left encoder count: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="636" y="357"/>
+	</widget>
+	<widget field="Quickturn" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="637" y="335"/>
+	</widget>
+	<widget field="Anti-Turbo Flag" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="634" y="314"/>
+	</widget>
+	<widget field="Shifter State" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="639" y="292"/>
+	</widget>
+	<widget field="Heading Value" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="635" y="270"/>
+	</widget>
+	<widget field="Throttle Value" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="645" y="250"/>
+	</widget>
+	<widget field="RightDriveSpeed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="634" y="229"/>
+	</widget>
+	<widget field="LeftDriveSpeed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="640" y="208"/>
+	</widget>
+	<widget field="Heading Joystick Value" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="641" y="180"/>
+		<height>26</height>
+	</widget>
+	<widget field="Accel: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="666" y="158"/>
+	</widget>
+	<widget field="Velocity: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="652" y="137"/>
+	</widget>
+	<widget field="Right Drive Speedvalue: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="648" y="60"/>
+		<height>21</height>
+	</widget>
+	<widget field="DoubleSolenoid: Forward: 1 Reverse: 2 State" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="647" y="118"/>
+	</widget>
+	<widget field="Current Autonomous Program" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="61"/>
+	</widget>
+	<widget field="DoubleSolenoid: Forward: 7 Reverse: 8 State" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="647" y="102"/>
+	</widget>
+	<widget field="DoubleSolenoid: Forward: 3 Reverse: 4 State" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="647" y="81"/>
+	</widget>
+	<widget field="Left Drive Speedvalue: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="654" y="38"/>
+	</widget>
+	<widget field="Current Start Position" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="42"/>
+	</widget>
+	<widget field="Running Autonomous Program" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="21"/>
+	</widget>
+	<widget field="Locked Autonomous Program" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="0"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>
