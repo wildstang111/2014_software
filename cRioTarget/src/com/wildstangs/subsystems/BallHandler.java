@@ -10,6 +10,7 @@ import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.arm.Arm;
 import com.wildstangs.subsystems.arm.ArmPreset;
+import com.wildstangs.subsystems.arm.ArmRollerEnum;
 import com.wildstangs.subsystems.base.Subsystem;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,8 +32,8 @@ public class BallHandler extends Subsystem implements IObserver {
     public BallHandler(String name) {
         super(name);
 
-        this.frontArm = new Arm(OutputManager.FRONT_ARM_VICTOR_INDEX, OutputManager.FRONT_ARM_SPIKE_INDEX, InputManager.FRONT_ARM_POT_INDEX, true);
-        this.backArm = new Arm(OutputManager.BACK_ARM_VICTOR_INDEX, OutputManager.BACK_ARM_SPIKE_INDEX, InputManager.BACK_ARM_POT_INDEX, false);
+        this.frontArm = new Arm(OutputManager.FRONT_ARM_VICTOR_INDEX, OutputManager.FRONT_ARM_ROLLER_VICTOR_INDEX, InputManager.FRONT_ARM_POT_INDEX, true);
+        this.backArm = new Arm(OutputManager.BACK_ARM_VICTOR_INDEX, OutputManager.BACK_ARM_ROLLER_VICTOR_INDEX, InputManager.BACK_ARM_POT_INDEX, false);
 
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_5);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_6);
@@ -55,25 +56,27 @@ public class BallHandler extends Subsystem implements IObserver {
         backArmJoystickValue = 0.0;
         lastValueFront = 0.0;
         lastValueBack = 0.0;
+        frontArm.init();
+        backArm.init();
     }
 
     public void update() {
         //Both pressed or both are not pressed
         if (frontForwardButton == frontReverseButton) {
-            frontArm.setRoller(Relay.Value.kOff);
+            frontArm.setRoller(ArmRollerEnum.OFF);
         } else if (frontForwardButton) {
-            frontArm.setRoller(Relay.Value.kForward);
+            frontArm.setRoller(ArmRollerEnum.FORWARD);
         } else if (frontReverseButton) {
-            frontArm.setRoller(Relay.Value.kReverse);
+            frontArm.setRoller(ArmRollerEnum.REVERSE);
         }
 
         //Both pressed or both are not pressed
         if (backForwardButton == backReverseButton) {
-            backArm.setRoller(Relay.Value.kOff);
+            backArm.setRoller(ArmRollerEnum.OFF);
         } else if (backForwardButton) {
-            backArm.setRoller(Relay.Value.kForward);
+            backArm.setRoller(ArmRollerEnum.FORWARD);
         } else if (backReverseButton) {
-            backArm.setRoller(Relay.Value.kReverse);
+            backArm.setRoller(ArmRollerEnum.REVERSE);
         }
         
         frontArm.setVictor(frontArmJoystickValue);
@@ -82,10 +85,10 @@ public class BallHandler extends Subsystem implements IObserver {
         frontArm.update();
         backArm.update();
 
-        Relay.Value frontValue = frontArm.getRollerValue();
-        Relay.Value backValue = backArm.getRollerValue();
-        String frontString = frontValue == Relay.Value.kForward ? "Forward" : (frontValue == Relay.Value.kReverse ? "Reverse" : "Off");
-        String backString = backValue == Relay.Value.kForward ? "Forward" : (backValue == Relay.Value.kReverse ? "Reverse" : "Off");
+        ArmRollerEnum frontValue = frontArm.getRollerValue();
+        ArmRollerEnum backValue = backArm.getRollerValue();
+        String frontString = frontValue == ArmRollerEnum.FORWARD ? "Forward" : (frontValue == ArmRollerEnum.REVERSE ? "Reverse" : "Off");
+        String backString = backValue == ArmRollerEnum.FORWARD ? "Forward" : (backValue == ArmRollerEnum.REVERSE ? "Reverse" : "Off");
         
         double voltageChangeFront = frontArm.getPotVoltage() - lastValueFront;
         double voltageChangeBack = backArm.getPotVoltage() - lastValueBack;
