@@ -24,6 +24,37 @@ com.wildstangs.subsystems.arm.Arm.TopVoltageValue-Front=5.1
 com.wildstangs.subsystems.arm.Arm.BottomVoltageValue-Front=0.0
 com.wildstangs.subsystems.arm.Arm.TopVoltageValue-Back=5.1
 com.wildstangs.subsystems.arm.Arm.BottomVoltageValue-Back=0.0
+com.wildstangs.subsystems.arm.Arm.RollerForwardSpeed-Front=0.5
+com.wildstangs.subsystems.arm.Arm.RollerReverseSpeed-Front=-0.5
+com.wildstangs.subsystems.arm.Arm.RollerForwardSpeed-Back=0.5
+com.wildstangs.subsystems.arm.Arm.RollerReverseSpeed-Back=-0.5
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.p=1.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.i=0.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.d=0.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.errorIncrement=1.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.errorEpsilon=1.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.staticEpsilon=0.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.maxIntegral=1.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.integralErrorThresh=-1.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.differentiatorBandLimit=1.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.maxOutput=1.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.minOutput=-1.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.maxInput=1000.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.minInput=-1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.p=1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.i=0.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.d=0.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.errorIncrement=1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.errorEpsilon=1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.staticEpsilon=0.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.maxIntegral=1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.integralErrorThresh=-1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.differentiatorBandLimit=1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.maxOutput=1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.minOutput=-1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.maxInput=1000.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.minInput=-1.0
+
 
 //Drive Base
 com.wildstangs.subsystems.DriveBase.wheel_diameter=4.25
@@ -83,10 +114,36 @@ com.wildstangs.subsystems.arm.ArmPreset.DefaultPosition.WantedBackArmAngle=0
 com.wildstangs.subsystems.arm.ArmPreset.DefaultPosition.WantedFrontArmAngle=0
 
 
-
+//********************************//
+//                                //
+//             Presets            //
+//                                //
+//********************************//
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly45.WantedBackArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly45.WantedFrontArmAngle=45
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly135.WantedBackArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly135.WantedFrontArmAngle=135
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly-15.WantedBackArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly-15.WantedFrontArmAngle=-15
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly45.WantedBackArmAngle=45
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly45.WantedFrontArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly90.WantedBackArmAngle=90
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly90.WantedFrontArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly135.WantedBackArmAngle=135
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly135.WantedFrontArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly-15.WantedBackArmAngle=-15
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly-15.WantedFrontArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly0.WantedBackArmAngle=0
+com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly0.WantedFrontArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly90.WantedBackArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly90.WantedFrontArmAngle=90
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly0.WantedBackArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly0.WantedFrontArmAngle=0
 
 //********************************//
 //                                //
 //        New Parameters          //
 //                                //
 //********************************//
+
+
