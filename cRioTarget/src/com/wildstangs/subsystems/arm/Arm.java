@@ -11,6 +11,7 @@ import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.pid.controller.base.PidController;
 import com.wildstangs.pid.inputs.ArmPotPidInput;
 import com.wildstangs.pid.outputs.ArmVictorPidOutput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  * @author Joey
@@ -54,6 +55,7 @@ public class Arm
         this.pidInput = new ArmPotPidInput(potIndex, TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
         this.pid = new PidController(this.pidInput, new ArmVictorPidOutput(victorAngleIndex), front ? "FrontArmPid" : "BackArmPid");
         this.pid.disable();
+        this.pid.setErrorEpsilon(2.0);
     }
     
     public void setToAngle(int angle)
@@ -145,6 +147,8 @@ public class Arm
         else if(rollerValue == ArmRollerEnum.REVERSE){
             OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(rollerReverseSpeed));
         }  
+        
+        SmartDashboard.putString(this.pid.getName(), this.pid.getState().toString());
     }
     
     public void notifyConfigChange()

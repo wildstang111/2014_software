@@ -5,6 +5,7 @@
 package com.wildstangs.subsystems.arm;
 
 import com.wildstangs.config.IntegerConfigFileParameter;
+import com.wildstangs.subsystems.BallHandler;
 
 /**
  *
@@ -12,6 +13,7 @@ import com.wildstangs.config.IntegerConfigFileParameter;
  */
 public class ArmPreset {
     
+    public static int IGNORE_VALUE = 1000;
     protected IntegerConfigFileParameter wantedAngleMeasureFront_config, wantedAngleMeasureBack_config;
     protected int wantedAngleMeasureFront, wantedAngleMeasureBack;
     
@@ -22,6 +24,7 @@ public class ArmPreset {
         
         this.wantedAngleMeasureBack = wantedAngleMeasureBack_config.getValue();
         this.wantedAngleMeasureFront = wantedAngleMeasureFront_config.getValue();
+        BallHandler.presets.add(this);
     }
     
     public int getwantedAngleMeasureFront(){

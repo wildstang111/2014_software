@@ -3,6 +3,7 @@ package com.wildstangs.subsystems;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickAxisEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.list.WsList;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.DoubleSubject;
@@ -12,7 +13,6 @@ import com.wildstangs.subsystems.arm.Arm;
 import com.wildstangs.subsystems.arm.ArmPreset;
 import com.wildstangs.subsystems.arm.ArmRollerEnum;
 import com.wildstangs.subsystems.base.Subsystem;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -21,7 +21,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class BallHandler extends Subsystem implements IObserver {
 
+    public static WsList presets = new WsList(10);
     public static final ArmPreset DEFAULT_POSITION = new ArmPreset(0, 0, "DefaultPosition");
+    public static final ArmPreset FRONT_ARM_ONLY_90 = new ArmPreset(90, ArmPreset.IGNORE_VALUE, "FrontArmOnly90");
+    public static final ArmPreset FRONT_ARM_ONLY_45 = new ArmPreset(45, ArmPreset.IGNORE_VALUE, "FrontArmOnly45");
+    public static final ArmPreset FRONT_ARM_ONLY_135 = new ArmPreset(135, ArmPreset.IGNORE_VALUE, "FrontArmOnly135");
+    public static final ArmPreset FRONT_ARM_ONLY_NEG15 = new ArmPreset(-15, ArmPreset.IGNORE_VALUE, "FrontArmOnly-15");
+    public static final ArmPreset FRONT_ARM_ONLY_0 = new ArmPreset(0, ArmPreset.IGNORE_VALUE, "FrontArmOnly0");
+    public static final ArmPreset BACK_ARM_ONLY_45 = new ArmPreset(ArmPreset.IGNORE_VALUE, 45, "BackArmOnly45"); 
+    public static final ArmPreset BACK_ARM_ONLY_90 = new ArmPreset(ArmPreset.IGNORE_VALUE, 90, "BackArmOnly90"); 
+    public static final ArmPreset BACK_ARM_ONLY_135 = new ArmPreset(ArmPreset.IGNORE_VALUE, 135, "BackArmOnly135"); 
+    public static final ArmPreset BACK_ARM_ONLY_NEG15 = new ArmPreset(ArmPreset.IGNORE_VALUE, -15, "BackArmOnly-15"); 
+    public static final ArmPreset BACK_ARM_ONLY_0 = new ArmPreset(ArmPreset.IGNORE_VALUE, 0, "BackArmOnly0"); 
     
     protected Arm frontArm, backArm;
     protected boolean frontForwardButton = false, frontReverseButton = false;
@@ -39,6 +50,8 @@ public class BallHandler extends Subsystem implements IObserver {
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_6);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_7);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_8);
+        registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_1);
+        registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_2);
         
         Subject subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL);
         subject.attach(this);
@@ -112,6 +125,11 @@ public class BallHandler extends Subsystem implements IObserver {
         frontArm.notifyConfigChange();
         backArm.notifyConfigChange();
         Arm.notifyConfigChangeStatic();
+           for (int i = 0; i < presets.size(); i++) {
+            ArmPreset preset = (ArmPreset) presets.get(i);
+            if(preset != null) preset.notifyConfigChange();
+        }
+           
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
@@ -128,6 +146,14 @@ public class BallHandler extends Subsystem implements IObserver {
             this.frontArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
             this.backArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
+        } else if (subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1){
+            if (((BooleanSubject) subjectThatCaused).getValue()){
+                setArmPreset(FRONT_ARM_ONLY_90);
+            }
+        } else if (subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_2){
+            if (((BooleanSubject) subjectThatCaused).getValue()){
+                setArmPreset(FRONT_ARM_ONLY_0);
+            }
         }
     }
 

@@ -512,4 +512,12 @@ public class PidController implements IPidController {
         minInput = minInput_config.getValue();
 //        System.out.println("PidController " + p);
     }
+    
+    public String getName(){
+        return controllerName; 
+    }
+    
+    public String toString(){
+        return getName() + " " + getState();
+    }
 }
