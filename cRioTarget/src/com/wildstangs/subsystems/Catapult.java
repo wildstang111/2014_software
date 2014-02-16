@@ -2,12 +2,12 @@ package com.wildstangs.subsystems;
 
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
-import com.wildstangs.outputmanager.base.IOutputEnum;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.base.Subsystem;
+import com.wildstangs.timer.WsTimer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -24,6 +24,7 @@ public class Catapult extends Subsystem implements IObserver {
     private boolean isTension;
     private boolean isBallIn;
     private boolean isLatched;
+    private WsTimer stateChangeTimer;
     private CatapultState catapultState;
 
     public static class CatapultState {
@@ -59,6 +60,8 @@ public class Catapult extends Subsystem implements IObserver {
         registerForSensorNotification(InputManager.BALL_DETECT_SWITCH_INDEX);
         // Limit switch that shows if there is tension on the catapult
         registerForSensorNotification(InputManager.TENSION_LIMIT_SWITCH_INDEX);
+        
+        stateChangeTimer = new WsTimer();
     }
 
     public void init() {
@@ -75,21 +78,24 @@ public class Catapult extends Subsystem implements IObserver {
 
     public void update() {
         if(catapultState == CatapultState.DOWN) {
-            if(armCatapultFlag == true && fireCatapultFlag == false && (isBallIn || overrideFlag)){
+            if(armCatapultFlag == true && fireCatapultFlag == false && ((isLatched && isCatapultDown) || overrideFlag)){
                 catapultState = CatapultState.UP;
             }
         } else if(catapultState == CatapultState.UP){
-            if(armCatapultFlag == false && fireCatapultFlag == true && ((isTension && isBallIn && isLatched) || overrideFlag)){
+            if(armCatapultFlag == false && fireCatapultFlag == true && ((isTension && isLatched) || overrideFlag)){
                 catapultState = CatapultState.FIRING;
+                stateChangeTimer.stop();
+                stateChangeTimer.reset();
+                stateChangeTimer.start();
             }
-            
-            if(disarmCatapultFlag)
+            else if(disarmCatapultFlag)
             {
                 catapultState = CatapultState.DOWN;
             }
         } else if(catapultState == CatapultState.FIRING){
-            if(isBallIn == false || overrideFlag == true){
+            if(stateChangeTimer.hasPeriodPassed(3.0) || overrideFlag == true){
                 catapultState = CatapultState.WAITING_FOR_DOWN;
+                stateChangeTimer.stop();
             }
         } else { //catapult == CatipultState.WAITING_FOR_DOWN
             if(isCatapultDown == true || overrideFlag == true){

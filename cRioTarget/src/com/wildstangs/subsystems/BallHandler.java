@@ -3,6 +3,7 @@ package com.wildstangs.subsystems;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickAxisEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.list.WsList;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
@@ -57,24 +58,6 @@ public class BallHandler extends Subsystem implements IObserver {
         subject.attach(this);
 
         subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_DPAD_X);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_DPAD_Y);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_HEADING);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_LEFT_JOYSTICK_X);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_RIGHT_JOYSTICK_Y);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_THROTTLE);
         subject.attach(this);
     }
 
@@ -151,9 +134,6 @@ public class BallHandler extends Subsystem implements IObserver {
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
-        
-        System.out.println(subjectThatCaused.getType());
-        
         if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_5) {
             this.frontForwardButton = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_6) {

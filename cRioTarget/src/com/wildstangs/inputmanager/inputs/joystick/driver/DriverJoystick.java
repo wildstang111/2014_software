@@ -5,11 +5,14 @@ import com.wildstangs.inputmanager.base.IInputEnum;
 import com.wildstangs.inputmanager.inputs.joystick.IHardwareJoystick;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickAxisEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.DoubleSubject;
 import com.wildstangs.subjects.base.ISubjectEnum;
 import com.wildstangs.subjects.base.Subject;
+import com.wildstangs.types.DataElement;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -17,11 +20,15 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class DriverJoystick implements IInput {
 
-    final static int numberOfAxes = 6;
-    DoubleSubject[] axes;
-    final static int numberOfButtons = 12;
-    BooleanSubject[] buttons;
-    Joystick driverJoystick = null;
+    protected final static int numberOfAxes = 6;
+    protected DoubleSubject[] axes;
+    protected final static int numberOfButtons = 12;
+    protected BooleanSubject[] buttons;
+    protected final static int numberOfDPadButtons = 4;
+    protected BooleanSubject[] dPadButtons;
+    protected final static int neededCyclesForChange = 8;
+    protected DataElement[] dPadCyclesInState;
+    protected Joystick driverJoystick = null;
 
     public DriverJoystick() {
         driverJoystick = (Joystick) new Joystick(1);
@@ -39,6 +46,14 @@ public class DriverJoystick implements IInput {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new BooleanSubject(JoystickButtonEnum.getEnumFromIndex(true, i));
         }
+        
+        dPadButtons = new BooleanSubject[numberOfDPadButtons];
+        dPadCyclesInState = new DataElement[numberOfDPadButtons];
+        for(int i = 0; i < dPadButtons.length; i++)
+        {
+            dPadButtons[i] = new BooleanSubject(JoystickDPadButtonEnum.getEnumFromIndex(true, i));
+            dPadCyclesInState[i] = new DataElement(dPadButtons[i].getValueAsObject(), new Integer(0));
+        }
     }
 
     public Subject getSubject(ISubjectEnum subjectEnum) {
@@ -46,7 +61,12 @@ public class DriverJoystick implements IInput {
             return axes[((JoystickAxisEnum) subjectEnum).toValue()];
         } else if (subjectEnum instanceof JoystickButtonEnum && ((JoystickButtonEnum) subjectEnum).isDriver() == true) {
             return buttons[((JoystickButtonEnum) subjectEnum).toValue()];
-        } else {
+        }
+        else if(subjectEnum instanceof JoystickDPadButtonEnum && ((JoystickDPadButtonEnum) subjectEnum).isDriver())
+        {
+            return dPadButtons[((JoystickDPadButtonEnum) subjectEnum).toValue()];
+        } 
+        else {
             System.out.println("Subject not supported or incorrect.");
             return null;
         }
@@ -57,7 +77,12 @@ public class DriverJoystick implements IInput {
             axes[((JoystickAxisEnum) key).toValue()].setValue(value);
         } else if (key instanceof JoystickButtonEnum && ((JoystickButtonEnum) key).isDriver() == true) {
             buttons[((JoystickButtonEnum) key).toValue()].setValue(value);
-        } else {
+        }
+        else if(key instanceof JoystickDPadButtonEnum && ((JoystickDPadButtonEnum) key).isDriver())
+        {
+             dPadButtons[((JoystickDPadButtonEnum) key).toValue()].setValue(value);
+        }
+        else {
             System.out.println("key not supported or incorrect.");
         }
     }
@@ -67,7 +92,12 @@ public class DriverJoystick implements IInput {
             return axes[((JoystickAxisEnum) key).toValue()].getValueAsObject();
         } else if (key instanceof JoystickButtonEnum && ((JoystickButtonEnum) key).isDriver() == true) {
             return buttons[((JoystickButtonEnum) key).toValue()].getValueAsObject();
-        } else {
+        }
+        else if(key instanceof JoystickDPadButtonEnum && ((JoystickDPadButtonEnum) key).isDriver())
+        {
+            return dPadButtons[((JoystickDPadButtonEnum) key).toValue()].getValueAsObject();
+        }
+        else {
             return new Double(-100);
         }
     }
@@ -78,6 +108,10 @@ public class DriverJoystick implements IInput {
         }
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].updateValue();
+        }
+        for(int i = 0; i < dPadButtons.length; i++)
+        {
+            dPadButtons[i].updateValue();
         }
     }
 
@@ -95,6 +129,194 @@ public class DriverJoystick implements IInput {
         }
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setValue(driverJoystick.getRawButton(i + 1));
+        }
+        
+        //DPad Button Logic
+        if(axes[JoystickAxisEnum.DPAD_X].getValue() > 0)
+        {
+            if(dPadButtons[JoystickDPadButtonEnum.DPAD_LEFT].getValue())
+            {
+                Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].getKey();
+                if(key.booleanValue())
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].setKey(new Boolean(false));
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].setValue(new Integer(0));
+                }
+                else
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].getValue()).intValue() + 1));
+                }
+            }
+            
+            if(!dPadButtons[JoystickDPadButtonEnum.DPAD_RIGHT].getValue())
+            {
+                Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].getKey();
+                if(!key.booleanValue())
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].setKey(new Boolean(true));
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].setValue(new Integer(0));
+                }
+                else
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].getValue()).intValue() + 1));
+                }
+            }
+        }
+        else if(axes[JoystickAxisEnum.DPAD_X].getValue() < 0)
+        {
+            if(!dPadButtons[JoystickDPadButtonEnum.DPAD_LEFT].getValue())
+            {
+                Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].getKey();
+                if(!key.booleanValue())
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].setKey(new Boolean(true));
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].setValue(new Integer(0));
+                }
+                else
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].getValue()).intValue() + 1));
+                }
+            }
+            
+            if(dPadButtons[JoystickDPadButtonEnum.DPAD_RIGHT].getValue())
+            {
+                Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].getKey();
+                if(key.booleanValue())
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].setKey(new Boolean(false));
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].setValue(new Integer(0));
+                }
+                else
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].getValue()).intValue() + 1));
+                }
+            }
+        }
+        else
+        {
+            Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].getKey();
+            if(key.booleanValue())
+            {
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].setKey(new Boolean(false));
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].setValue(new Integer(0));
+            }
+            else
+            {
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].getValue()).intValue() + 1));
+            }
+            
+            key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].getKey();
+            if(key.booleanValue())
+            {
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].setKey(new Boolean(false));
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].setValue(new Integer(0));
+            }
+            else
+            {
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].getValue()).intValue() + 1));
+            }
+        }
+
+        if(axes[JoystickAxisEnum.DPAD_Y].getValue() > 0)
+        {
+            if(dPadButtons[JoystickDPadButtonEnum.DPAD_DOWN].getValue())
+            {
+                Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].getKey();
+                if(key.booleanValue())
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].setKey(new Boolean(false));
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].setValue(new Integer(0));
+                }
+                else
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].getValue()).intValue() + 1));
+                }
+            }
+            
+            if(!dPadButtons[JoystickDPadButtonEnum.DPAD_UP].getValue())
+            {
+                Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].getKey();
+                if(!key.booleanValue())
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].setKey(new Boolean(true));
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].setValue(new Integer(0));
+                }
+                else
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].getValue()).intValue() + 1));
+                }
+            }
+        }
+        else if(axes[JoystickAxisEnum.DPAD_Y].getValue() < 0)
+        {
+            if(!dPadButtons[JoystickDPadButtonEnum.DPAD_DOWN].getValue())
+            {
+                Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].getKey();
+                if(!key.booleanValue())
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].setKey(new Boolean(true));
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].setValue(new Integer(0));
+                }
+                else
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].getValue()).intValue() + 1));
+                }
+            }
+            
+            if(dPadButtons[JoystickDPadButtonEnum.DPAD_UP].getValue())
+            {
+                Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].getKey();
+                if(key.booleanValue())
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].setKey(new Boolean(false));
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].setValue(new Integer(0));
+                }
+                else
+                {
+                    dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].getValue()).intValue() + 1));
+                }
+            }
+        }
+        else
+        {
+            Boolean key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].getKey();
+            if(key.booleanValue())
+            {
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].setKey(new Boolean(false));
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].setValue(new Integer(0));
+            }
+            else
+            {
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].getValue()).intValue() + 1));
+            }
+            
+            key = (Boolean) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].getKey();
+            if(key.booleanValue())
+            {
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].setKey(new Boolean(false));
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].setValue(new Integer(0));
+            }
+            else
+            {
+                dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].setValue(new Integer(((Integer)dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].getValue()).intValue() + 1));
+            }
+        }
+        
+        if (((Integer) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].getValue()).intValue() >= neededCyclesForChange)
+        {
+            dPadButtons[JoystickDPadButtonEnum.DPAD_LEFT].setValue(dPadCyclesInState[JoystickDPadButtonEnum.DPAD_LEFT].getKey());
+        }
+        if (((Integer) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].getValue()).intValue() >= neededCyclesForChange)
+        {
+            dPadButtons[JoystickDPadButtonEnum.DPAD_RIGHT].setValue(dPadCyclesInState[JoystickDPadButtonEnum.DPAD_RIGHT].getKey());
+        }
+        if (((Integer) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].getValue()).intValue() >= neededCyclesForChange)
+        {
+            dPadButtons[JoystickDPadButtonEnum.DPAD_UP].setValue(dPadCyclesInState[JoystickDPadButtonEnum.DPAD_UP].getKey());
+        }
+        if (((Integer) dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].getValue()).intValue() >= neededCyclesForChange)
+        {
+            dPadButtons[JoystickDPadButtonEnum.DPAD_DOWN].setValue(dPadCyclesInState[JoystickDPadButtonEnum.DPAD_DOWN].getKey());
         }
     }
     
