@@ -82,7 +82,8 @@ public class Catapult extends Subsystem implements IObserver {
             if(armCatapultFlag == false && fireCatapultFlag == true && ((isTension && isBallIn && isLatched) || overrideFlag)){
                 catapultState = CatapultState.FIRING;
             }
-            else if(disarmCatapultFlag)
+            
+            if(disarmCatapultFlag)
             {
                 catapultState = CatapultState.DOWN;
             }
@@ -155,6 +156,10 @@ public class Catapult extends Subsystem implements IObserver {
             isBallIn = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.equals(InputManager.getInstance().getSensorInput(InputManager.TENSION_LIMIT_SWITCH_INDEX).getSubject())) {
             isTension = ((BooleanSubject) subjectThatCaused).getValue();
+        } 
+        else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_3)
+        {
+            disarmCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
         }
     }
 }

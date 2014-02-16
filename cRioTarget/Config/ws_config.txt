@@ -20,6 +20,7 @@ com.wildstangs.subsystems.WsCompressor.MaxPSI=115.0
 //Ball Handler
 com.wildstangs.subsystems.arm.Arm.DisablePIDCompletely=true
 com.wildstangs.subsystems.arm.Arm.DisablePIDInInit=true
+com.wildstangs.subsystems.arm.Arm.ArmVictorSpeedDilution=0.5
 com.wildstangs.subsystems.arm.Arm.HighAngle=359
 com.wildstangs.subsystems.arm.Arm.LowAngle=0
 com.wildstangs.subsystems.arm.Arm.TopVoltageValue-Front=5.1
