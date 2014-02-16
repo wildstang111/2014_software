@@ -147,3 +147,7 @@ com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly0.WantedFrontArmAngle=0
 //********************************//
 
 
+
+com.wildstangs.subsystems.arm.Arm.DisablePIDCompletely=false
+com.wildstangs.subsystems.arm.Arm.DisablePIDInInit=false
+com.wildstangs.subsystems.arm.Arm.ArmVictorSpeedDilution=0.5
