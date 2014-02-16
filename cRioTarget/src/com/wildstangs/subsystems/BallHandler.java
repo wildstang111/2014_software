@@ -58,6 +58,24 @@ public class BallHandler extends Subsystem implements IObserver {
 
         subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL);
         subject.attach(this);
+
+        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_DPAD_X);
+        subject.attach(this);
+
+        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_DPAD_Y);
+        subject.attach(this);
+
+        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_HEADING);
+        subject.attach(this);
+
+        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_LEFT_JOYSTICK_X);
+        subject.attach(this);
+
+        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_RIGHT_JOYSTICK_Y);
+        subject.attach(this);
+
+        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_THROTTLE);
+        subject.attach(this);
     }
 
     public void init() {
@@ -133,6 +151,8 @@ public class BallHandler extends Subsystem implements IObserver {
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
+        
+        System.out.println(subjectThatCaused.getType());
         
         if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_5) {
             this.frontForwardButton = ((BooleanSubject) subjectThatCaused).getValue();

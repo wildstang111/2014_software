@@ -79,10 +79,10 @@ public class Catapult extends Subsystem implements IObserver {
                 catapultState = CatapultState.FIRING;
             }
         } else if(catapultState == CatapultState.FIRING){
-            if(isBallIn == false && overrideFlag == false){
+            if(isBallIn == false || overrideFlag == true){
                 catapultState = CatapultState.WAITING_FOR_DOWN;
             }
-        } else {
+        } else { //catapult == CatipultState.WAITING_FOR_DOWN
             if(isCatapultDown == true || overrideFlag == true){
                 catapultState = CatapultState.DOWN;
             }
@@ -90,19 +90,19 @@ public class Catapult extends Subsystem implements IObserver {
         
         if(catapultState == CatapultState.DOWN) {
             (OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(false));
-            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(true));
+            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(false));
             SmartDashboard.putString("Catapult state", "down");
         } else if(catapultState == CatapultState.UP){
             (OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(true));
-            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(true));
+            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(false));
             SmartDashboard.putString("Catapult state", "up");
         } else if(catapultState == CatapultState.FIRING){
             (OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(true));
-            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(false));
+            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(true));
             SmartDashboard.putString("Catapult state", "Firing");
-        } else {
+        } else { //catapult == CatipultState.WAITING_FOR_DOWN
             (OutputManager.getInstance().getOutput(OutputManager.CATAPAULT_SOLENOID_INDEX)).set(new Boolean(false));
-            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(false));
+            (OutputManager.getInstance().getOutput(OutputManager.LATCH_SOLENOID_INDEX)).set(new Boolean(true));
             SmartDashboard.putString("Catapult state", "Waiting for catapult down");
             
         }

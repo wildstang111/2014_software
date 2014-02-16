@@ -64,7 +64,7 @@ public class DriverJoystick implements IInput {
 
     public Object get(IInputEnum key) {
         if (key instanceof JoystickAxisEnum && ((JoystickAxisEnum) key).isDriver() == true) {
-            return axes[((JoystickAxisEnum) key).toValue() - 1].getValueAsObject();
+            return axes[((JoystickAxisEnum) key).toValue()].getValueAsObject();
         } else if (key instanceof JoystickButtonEnum && ((JoystickButtonEnum) key).isDriver() == true) {
             return buttons[((JoystickButtonEnum) key).toValue()].getValueAsObject();
         } else {
