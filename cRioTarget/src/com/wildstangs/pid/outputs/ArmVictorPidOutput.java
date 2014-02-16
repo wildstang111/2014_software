@@ -4,9 +4,9 @@
  */
 package com.wildstangs.pid.outputs;
 
-import com.wildstangs.outputmanager.base.IOutputEnum;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.pid.outputs.base.IPidOutput;
+import com.wildstangs.subsystems.arm.Arm;
 
 /**
  *
@@ -14,15 +14,15 @@ import com.wildstangs.pid.outputs.base.IPidOutput;
  */
 public class ArmVictorPidOutput implements IPidOutput
 {
-    protected int victorIndex;
-    public ArmVictorPidOutput(int victorIndex)
+    protected Arm arm;
+    public ArmVictorPidOutput(Arm arm)
     {
-        this.victorIndex = victorIndex;
+        this.arm = arm;
     }
     
     public void pidWrite(double output)
     {
-        OutputManager.getInstance().getOutput(victorIndex).set(new Double(output));
+        arm.setVictor(output);
     }
     
 }

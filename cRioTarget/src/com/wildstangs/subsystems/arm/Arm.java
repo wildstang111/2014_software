@@ -4,6 +4,7 @@
  */
 package com.wildstangs.subsystems.arm;
 
+import com.wildstangs.config.BooleanConfigFileParameter;
 import com.wildstangs.config.DoubleConfigFileParameter;
 import com.wildstangs.config.IntegerConfigFileParameter;
 import com.wildstangs.inputmanager.base.InputManager;
@@ -20,7 +21,12 @@ public class Arm
 {
     protected static final IntegerConfigFileParameter HIGH_BOUND_CONFIG = new IntegerConfigFileParameter(Arm.class.getName(), "HighAngle", 359);
     protected static final IntegerConfigFileParameter LOW_BOUND_CONFIG = new IntegerConfigFileParameter(Arm.class.getName(), "LowAngle", 0);
+    protected static final BooleanConfigFileParameter DISABLE_PID_COMPLETELY_CONFIG = new BooleanConfigFileParameter(Arm.class.getName(), "DisablePIDCompletely", false);
+    protected static final BooleanConfigFileParameter DISABLE_PID_INIT_CONFIG = new BooleanConfigFileParameter(Arm.class.getName(), "DisablePIDInInit", false);
+    protected static final DoubleConfigFileParameter ARM_VICTOR_SPEED_DILUTION_CONFIG = new DoubleConfigFileParameter(Arm.class.getName(), "ArmVictorSpeedDilution", 0.5);
     protected static int highBound = HIGH_BOUND_CONFIG.getValue(), lowBound = LOW_BOUND_CONFIG.getValue();
+    protected static boolean disablePidCompletely = DISABLE_PID_COMPLETELY_CONFIG.getValue(), diablePidInit = DISABLE_PID_INIT_CONFIG.getValue();
+    protected static double armVictorSpeedDilution = ARM_VICTOR_SPEED_DILUTION_CONFIG.getValue();
     
     protected final DoubleConfigFileParameter TOP_VOLTAGE_VALUE_CONFIG, BOTTOM_VOLTAGE_VALUE_CONFIG, ROLLER_FORWARD_SPEED_CONFIG, ROLLER_REVERSE_SPEED_CONFIG;
     protected final int VICTOR_ANGLE_INDEX, ARM_ROLLER_VICTOR_INDEX, POT_INDEX;
@@ -53,13 +59,17 @@ public class Arm
         
         this.front = front;
         this.pidInput = new ArmPotPidInput(potIndex, TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
-        this.pid = new PidController(this.pidInput, new ArmVictorPidOutput(victorAngleIndex), front ? "FrontArmPid" : "BackArmPid");
+        this.pid = new PidController(this.pidInput, new ArmVictorPidOutput(this), front ? "FrontArmPid" : "BackArmPid");
         this.pid.disable();
         this.pid.setErrorEpsilon(2.0);
     }
     
     public void setToAngle(int angle)
     {
+        if(disablePidCompletely) 
+        {
+            return;
+        }
         if(angle < lowBound) angle = lowBound;
         else if(angle > highBound) angle = highBound;
         
@@ -80,7 +90,7 @@ public class Arm
     
     public void setVictor(double speed)
     {
-//        if(pid.isEnabled()) return;
+        speed *= armVictorSpeedDilution;
         
         if(speed < -1.0) speed = -1.0;
         else if(speed > 1.0) speed = 1.0;
@@ -114,16 +124,30 @@ public class Arm
         return this.rollerValue;
     }
     
-    public void init(){
-    rollerValue = ArmRollerEnum.OFF;
-    OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(0.0));
-    setToAngle(0);
-} 
+    public void init()
+    {
+        rollerValue = ArmRollerEnum.OFF;
+        OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(0.0));
+        if(!diablePidInit && !disablePidCompletely)
+        {
+            setToAngle(0);
+        }
+    } 
     
     public void update()
     {
-        if(pid.isEnabled()) pid.calcPid();
-        if(pid.isOnTarget()) pid.disable();
+        if(pid.isEnabled()) 
+        {
+            if(disablePidCompletely)
+            {
+                pid.disable();
+            }
+            pid.calcPid();
+        }
+        if(pid.isOnTarget()) 
+        {
+            pid.disable();
+        }
         
         double victorSpeed = this.getVictorSpeed();
         double currentAngle = this.getCurrentAngle();
@@ -163,6 +187,9 @@ public class Arm
     {
         highBound = HIGH_BOUND_CONFIG.getValue();
         lowBound = LOW_BOUND_CONFIG.getValue();
+        disablePidCompletely = DISABLE_PID_COMPLETELY_CONFIG.getValue();
+        diablePidInit = DISABLE_PID_INIT_CONFIG.getValue();
+        armVictorSpeedDilution = ARM_VICTOR_SPEED_DILUTION_CONFIG.getValue();
     }
     
     public static int getHighBound()

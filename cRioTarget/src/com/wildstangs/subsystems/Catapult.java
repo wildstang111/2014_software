@@ -18,6 +18,7 @@ public class Catapult extends Subsystem implements IObserver {
 
     private boolean armCatapultFlag;
     private boolean fireCatapultFlag;
+    private boolean disarmCatapultFlag;
     private boolean overrideFlag;
     private boolean isCatapultDown;
     private boolean isTension;
@@ -44,6 +45,8 @@ public class Catapult extends Subsystem implements IObserver {
 
         // Arm the catapault
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_2);
+        // Disarm the catapult
+        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_3);
         // Fire the catapault
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_4);
         // Override all the things required to shoot
@@ -61,6 +64,7 @@ public class Catapult extends Subsystem implements IObserver {
     public void init() {
         overrideFlag = false;
         armCatapultFlag = false;
+        disarmCatapultFlag = false;
         fireCatapultFlag = false;
         isCatapultDown = false;
         isTension = false;
@@ -77,6 +81,10 @@ public class Catapult extends Subsystem implements IObserver {
         } else if(catapultState == CatapultState.UP){
             if(armCatapultFlag == false && fireCatapultFlag == true && ((isTension && isBallIn && isLatched) || overrideFlag)){
                 catapultState = CatapultState.FIRING;
+            }
+            else if(disarmCatapultFlag)
+            {
+                catapultState = CatapultState.DOWN;
             }
         } else if(catapultState == CatapultState.FIRING){
             if(isBallIn == false || overrideFlag == true){

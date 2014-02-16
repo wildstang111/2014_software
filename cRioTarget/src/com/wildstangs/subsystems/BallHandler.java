@@ -109,8 +109,8 @@ public class BallHandler extends Subsystem implements IObserver {
         } else if (backReverseButton) {
             backArm.setRoller(ArmRollerEnum.REVERSE);
         }
-        
-        frontArm.setVictor(frontArmJoystickValue);
+        //Need to reverse one of these to keep them consistant
+        frontArm.setVictor(frontArmJoystickValue * -1);
         backArm.setVictor(backArmJoystickValue);
 
         frontArm.update();
