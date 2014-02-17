@@ -58,10 +58,9 @@ public class Arm
         
         
         this.front = front;
-        this.pidInput = new ArmPotPidInput(potIndex, TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
-        this.pid = new PidController(this.pidInput, new ArmVictorPidOutput(this), front ? "FrontArmPid" : "BackArmPid");
+        this.pidInput = new ArmPotPidInput(potIndex, TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue(), highBound, lowBound);
+        this.pid = new PidController(this.pidInput, new ArmVictorPidOutput(victorAngleIndex), front ? "FrontArmPid" : "BackArmPid");
         this.pid.disable();
-        this.pid.setErrorEpsilon(2.0);
     }
     
     public void setToAngle(int angle)
@@ -177,10 +176,11 @@ public class Arm
     
     public void notifyConfigChange()
     {
-        pidInput.setVoltageValues(TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
-        pid.notifyConfigChange();
         rollerForwardSpeed = ROLLER_FORWARD_SPEED_CONFIG.getValue();
         rollerReverseSpeed = ROLLER_REVERSE_SPEED_CONFIG.getValue();
+        pidInput.setAngleBounds(lowBound, highBound);
+        pidInput.setVoltageValues(TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
+        pid.notifyConfigChange();
     }
     
     public static void notifyConfigChangeStatic()

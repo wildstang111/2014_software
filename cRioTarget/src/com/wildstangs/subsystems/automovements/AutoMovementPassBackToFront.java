@@ -5,6 +5,8 @@
 package com.wildstangs.subsystems.automovements;
 
 import com.wildstangs.autonomous.steps.arms.AutonomousStepSetArmPresets;
+import com.wildstangs.autonomous.steps.control.AutonomousStepDelay;
+import com.wildstangs.config.IntegerConfigFileParameter;
 import com.wildstangs.subsystems.arm.ArmPreset;
 import com.wildstangs.subsystems.base.AutoMovement;
 
@@ -13,14 +15,16 @@ import com.wildstangs.subsystems.base.AutoMovement;
  * @author Alex
  */
 public class AutoMovementPassBackToFront extends AutoMovement{
-    protected ArmPreset startPositionForBackPasser = new ArmPreset(90, 20, "AutoMovementPassBackArm.StartPosition");
-    protected ArmPreset endPositionForBackPasser = new ArmPreset(90, -20, "AutoMovementPassBackArm.EndPosition");
+    protected IntegerConfigFileParameter delayTime = new IntegerConfigFileParameter(this.getClass().getName(), "DelayTime", 500);
+    protected ArmPreset startPositionForBackPasser = new ArmPreset(90, 20, "AutoMovementPassBackToFront.StartPosition");
+    protected ArmPreset endPositionForBackPasser = new ArmPreset(90, -20, "AutoMovementPassBackToFront.EndPosition");
     public void abort() {
     }
 
     protected void defineSteps() {
-    addStep(new AutonomousStepSetArmPresets(startPositionForBackPasser));
-    addStep(new AutonomousStepSetArmPresets(endPositionForBackPasser));
+        addStep(new AutonomousStepSetArmPresets(startPositionForBackPasser));
+        addStep(new AutonomousStepDelay(delayTime.getValue()));
+        addStep(new AutonomousStepSetArmPresets(endPositionForBackPasser));
     }
 
     public String toString() {

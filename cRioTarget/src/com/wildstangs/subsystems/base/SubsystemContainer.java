@@ -1,6 +1,7 @@
 package com.wildstangs.subsystems.base;
 
 import com.wildstangs.list.WsList;
+import com.wildstangs.subsystems.AutoMovementControl;
 import com.wildstangs.subsystems.BallHandler;
 import com.wildstangs.subsystems.Catapult;
 import com.wildstangs.subsystems.HotGoalDetector;
@@ -90,6 +91,7 @@ public class SubsystemContainer {
     public static final int HOT_GOAL_DETECTOR_INDEX = 7;
     public static final int WINGS_INDEX = 8;
     public static final int EAR_INDEX = 9;
+    public static final int AUTO_MOVEMENT_CONTROLLER = 10;
     
     /**
      * Constructor for the subsystem container.
@@ -105,8 +107,9 @@ public class SubsystemContainer {
         subsystem.addToIndex(BALL_HANDLER_INDEX, new BallHandler(BALL_HANDLER));
         subsystem.addToIndex(CATAPULT_INDEX, new Catapult(CATAPULT));
         subsystem.addToIndex(LANDING_GEAR_INDEX, new LandingGear(LANDING_GEAR));
-        subsystem.addToIndex(HOT_GOAL_DETECTOR_INDEX, new HotGoalDetector(HOT_GOAL_DETECTOR));
+//        subsystem.addToIndex(HOT_GOAL_DETECTOR_INDEX, new HotGoalDetector(HOT_GOAL_DETECTOR));
         subsystem.addToIndex(WINGS_INDEX, new Wings(WINGS));
        // subsystem.addToIndex(EAR_INDEX, new Ears("EARS"));
+        subsystem.addToIndex(AUTO_MOVEMENT_CONTROLLER, new AutoMovementControl("Auto Movement Control"));
     }
 }

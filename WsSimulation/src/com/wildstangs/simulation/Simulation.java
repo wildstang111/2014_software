@@ -7,6 +7,8 @@ import com.wildstangs.logger.*;
 import com.wildstangs.logviewer.LogViewer;
 import com.wildstangs.profiling.ProfilingTimer;
 import com.wildstangs.simulation.sensorsimulation.base.SensorSimulationContainer;
+import com.wildstangs.subsystems.AutoMovementControl;
+import com.wildstangs.subsystems.base.SubsystemContainer;
 import edu.wpi.first.wpilibj.DriverStation;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;

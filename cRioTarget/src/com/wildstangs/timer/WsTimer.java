@@ -1,6 +1,7 @@
 package com.wildstangs.timer;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -40,7 +41,9 @@ public class WsTimer {
 
     // Returns true if the given period, in seconds, has elapsed
     public synchronized boolean hasPeriodPassed(double period) {
-        if (timer.get() < period * 1000000) {
+        SmartDashboard.putNumber("Timer Time", timer.get());
+        SmartDashboard.putNumber("period Time", period * 1000);
+        if (timer.get() > period) {
             return true;
         } else {
             return false;

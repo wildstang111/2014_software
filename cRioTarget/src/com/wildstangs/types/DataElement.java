@@ -6,7 +6,7 @@ package com.wildstangs.types;
  */
 public class DataElement {
 
-    private String dkey;
+    private Object dkey;
     private Object dvalue;
 
     /**
@@ -15,7 +15,7 @@ public class DataElement {
      * @param key The key.
      * @param value The value
      */
-    public DataElement(String key, Object value) {
+    public DataElement(Object key, Object value) {
         dkey = key;
         dvalue = value;
     }
@@ -25,8 +25,13 @@ public class DataElement {
      *
      * @return the key
      */
-    public String getKey() {
+    public Object getKey() {
         return dkey;
+    }
+    
+    public void setKey(Object key)
+    {
+        this.dkey = key;
     }
 
     /**
@@ -36,5 +41,10 @@ public class DataElement {
      */
     public Object getValue() {
         return dvalue;
+    }
+    
+    public void setValue(Object value)
+    {
+        this.dvalue = value;
     }
 }

@@ -3,6 +3,7 @@ package com.wildstangs.subsystems;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickAxisEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.list.WsList;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
@@ -23,6 +24,8 @@ public class BallHandler extends Subsystem implements IObserver {
 
     public static WsList presets = new WsList(10);
     public static final ArmPreset DEFAULT_POSITION = new ArmPreset(0, 0, "DefaultPosition");
+    public static final ArmPreset CATAPULT_TENSION_PRESET = new ArmPreset(20, 20, "TensionPreset");
+    
     public static final ArmPreset FRONT_ARM_ONLY_90 = new ArmPreset(90, ArmPreset.IGNORE_VALUE, "FrontArmOnly90");
     public static final ArmPreset FRONT_ARM_ONLY_45 = new ArmPreset(45, ArmPreset.IGNORE_VALUE, "FrontArmOnly45");
     public static final ArmPreset FRONT_ARM_ONLY_135 = new ArmPreset(135, ArmPreset.IGNORE_VALUE, "FrontArmOnly135");
@@ -57,24 +60,6 @@ public class BallHandler extends Subsystem implements IObserver {
         subject.attach(this);
 
         subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_DPAD_X);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_DPAD_Y);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_HEADING);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_LEFT_JOYSTICK_X);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_RIGHT_JOYSTICK_Y);
-        subject.attach(this);
-
-        subject = InputManager.getInstance().getOiInput(InputManager.DRIVER_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.DRIVER_THROTTLE);
         subject.attach(this);
     }
 
@@ -140,9 +125,9 @@ public class BallHandler extends Subsystem implements IObserver {
     }
 
     public void notifyConfigChange() {
+        Arm.notifyConfigChangeStatic();
         frontArm.notifyConfigChange();
         backArm.notifyConfigChange();
-        Arm.notifyConfigChangeStatic();
            for (int i = 0; i < presets.size(); i++) {
             ArmPreset preset = (ArmPreset) presets.get(i);
             if(preset != null) preset.notifyConfigChange();
@@ -151,9 +136,6 @@ public class BallHandler extends Subsystem implements IObserver {
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
-        
-        System.out.println(subjectThatCaused.getType());
-        
         if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_5) {
             this.frontForwardButton = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_6) {
