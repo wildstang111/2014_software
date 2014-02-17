@@ -61,7 +61,12 @@ public class AnalogChannel {
     public double getVoltage() {
         return input.getVoltage();
     }
-
+    
+    public double getAverageVoltage()
+    {
+        return getVoltage();
+    }
+    
     /**
      * Get the channel of the digital input
      * @return The GPIO channel number that this object represents.

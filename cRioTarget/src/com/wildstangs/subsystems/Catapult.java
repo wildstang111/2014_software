@@ -93,7 +93,7 @@ public class Catapult extends Subsystem implements IObserver {
                 catapultState = CatapultState.DOWN;
             }
         } else if(catapultState == CatapultState.FIRING){
-            if(stateChangeTimer.hasPeriodPassed(3.0) || overrideFlag == true){
+            if(stateChangeTimer.hasPeriodPassed(3.0) && overrideFlag == false){
                 catapultState = CatapultState.WAITING_FOR_DOWN;
                 stateChangeTimer.stop();
             }

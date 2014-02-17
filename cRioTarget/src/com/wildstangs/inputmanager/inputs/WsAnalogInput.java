@@ -48,7 +48,7 @@ public class WsAnalogInput implements IInput {
     }
 
     public void pullData() {
-        analogValue.setValue(input.getVoltage());
+        analogValue.setValue(input.getAverageVoltage());
     }
     
     public void set(Object value)

@@ -5,6 +5,7 @@
 package com.wildstangs.subsystems.automovements;
 
 import com.wildstangs.autonomous.steps.arms.AutonomousStepSetArmPresets;
+import com.wildstangs.subsystems.BallHandler;
 import com.wildstangs.subsystems.arm.ArmPreset;
 import com.wildstangs.subsystems.base.AutoMovement;
 
@@ -12,18 +13,17 @@ import com.wildstangs.subsystems.base.AutoMovement;
  *
  * @author Alex
  */
-public class AutoMovementBackArmtoTension extends AutoMovement{
-    protected ArmPreset backArmTensionPreset = new ArmPreset(0, 20, "Back arm tension preset");
+public class AutoMovementArmsToTension extends AutoMovement{
     public void abort() {
     //nothing needed here. PID handles it.
     }
 
     protected void defineSteps() {
-        addStep(new AutonomousStepSetArmPresets(backArmTensionPreset));
+        addStep(new AutonomousStepSetArmPresets(BallHandler.CATAPULT_TENSION_PRESET));
     }
 
     public String toString() {
-        return "Back Arm is Tension.";
+        return "Arms to Tension";
     }
     
 }

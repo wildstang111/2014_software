@@ -24,6 +24,8 @@ public class BallHandler extends Subsystem implements IObserver {
 
     public static WsList presets = new WsList(10);
     public static final ArmPreset DEFAULT_POSITION = new ArmPreset(0, 0, "DefaultPosition");
+    public static final ArmPreset CATAPULT_TENSION_PRESET = new ArmPreset(20, 20, "TensionPreset");
+    
     public static final ArmPreset FRONT_ARM_ONLY_90 = new ArmPreset(90, ArmPreset.IGNORE_VALUE, "FrontArmOnly90");
     public static final ArmPreset FRONT_ARM_ONLY_45 = new ArmPreset(45, ArmPreset.IGNORE_VALUE, "FrontArmOnly45");
     public static final ArmPreset FRONT_ARM_ONLY_135 = new ArmPreset(135, ArmPreset.IGNORE_VALUE, "FrontArmOnly135");
@@ -123,9 +125,9 @@ public class BallHandler extends Subsystem implements IObserver {
     }
 
     public void notifyConfigChange() {
+        Arm.notifyConfigChangeStatic();
         frontArm.notifyConfigChange();
         backArm.notifyConfigChange();
-        Arm.notifyConfigChangeStatic();
            for (int i = 0; i < presets.size(); i++) {
             ArmPreset preset = (ArmPreset) presets.get(i);
             if(preset != null) preset.notifyConfigChange();

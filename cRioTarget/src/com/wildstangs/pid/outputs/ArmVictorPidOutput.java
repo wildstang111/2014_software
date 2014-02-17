@@ -14,15 +14,15 @@ import com.wildstangs.subsystems.arm.Arm;
  */
 public class ArmVictorPidOutput implements IPidOutput
 {
-    protected Arm arm;
-    public ArmVictorPidOutput(Arm arm)
+    protected int victorIndex;
+    public ArmVictorPidOutput(int victorIndex)
     {
-        this.arm = arm;
+        this.victorIndex = victorIndex;
     }
     
     public void pidWrite(double output)
     {
-        arm.setVictor(output);
+       OutputManager.getInstance().getOutput(victorIndex).set(new Double(output));
     }
     
 }
