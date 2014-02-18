@@ -41,8 +41,6 @@ public class WsTimer {
 
     // Returns true if the given period, in seconds, has elapsed
     public synchronized boolean hasPeriodPassed(double period) {
-        SmartDashboard.putNumber("Timer Time", timer.get());
-        SmartDashboard.putNumber("period Time", period * 1000);
         if (timer.get() > period) {
             return true;
         } else {

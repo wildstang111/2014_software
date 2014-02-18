@@ -5,6 +5,7 @@ import com.wildstangs.config.DoubleConfigFileParameter;
 import com.wildstangs.pid.inputs.base.IPidInput;
 import com.wildstangs.pid.outputs.base.IPidOutput;
 import com.wildstangs.timer.WsTimer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -382,6 +383,9 @@ public class PidController implements IPidController {
         output = this.limitOutput(output);
 
         // Write to the PidOutput object
+        SmartDashboard.putNumber(this.getName() + " PID output", output);
+        SmartDashboard.putNumber(this.getName() + " PID error", currentError);
+        SmartDashboard.putNumber(this.getName() + " PID input", current_pv);
         pidOutput.pidWrite(output);
 
         // Save the current error for next cycle's D calculation.
@@ -498,6 +502,7 @@ public class PidController implements IPidController {
 
     public void notifyConfigChange() {
         p = p_config.getValue();
+        SmartDashboard.putNumber(this.getName() + "New P", p);
         i = i_config.getValue();
         d = d_config.getValue();
         errorIncrement = errorIncrement_config.getValue();

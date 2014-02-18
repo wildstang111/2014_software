@@ -7,10 +7,9 @@
 package com.wildstangs.autonomous.steps.arms;
 
 import com.wildstangs.autonomous.steps.AutonomousStep;
-import com.wildstangs.inputmanager.base.InputManager;
-import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
-import com.wildstangs.subjects.base.BooleanSubject;
-import com.wildstangs.subjects.base.Subject;
+import com.wildstangs.subsystems.BallHandler;
+import com.wildstangs.subsystems.arm.ArmRollerEnum;
+import com.wildstangs.subsystems.base.SubsystemContainer;
 
 /**
  *
@@ -19,8 +18,7 @@ import com.wildstangs.subjects.base.Subject;
 public class AutonomousStepAccumulateFront extends AutonomousStep{
 
     public void initialize() {
-        Subject subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickButtonEnum.MANIPULATOR_BUTTON_5);
-        ((BooleanSubject) subject).setValue(true);
+        ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).setFrontArmAccumulator(ArmRollerEnum.OUTPUT);
         finished = true;
     }
 

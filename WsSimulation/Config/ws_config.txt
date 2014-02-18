@@ -31,11 +31,11 @@ com.wildstangs.subsystems.arm.Arm.RollerForwardSpeed-Front=0.5
 com.wildstangs.subsystems.arm.Arm.RollerReverseSpeed-Front=-0.5
 com.wildstangs.subsystems.arm.Arm.RollerForwardSpeed-Back=0.5
 com.wildstangs.subsystems.arm.Arm.RollerReverseSpeed-Back=-0.5
-com.wildstangs.pid.controller.base.PidController.FrontArmPid.p=14.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.p=0.374
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.i=0.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.d=0.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.errorIncrement=1.0
-com.wildstangs.pid.controller.base.PidController.FrontArmPid.errorEpsilon=1.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.errorEpsilon=0.1
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.staticEpsilon=0.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.maxIntegral=1.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.integralErrorThresh=-1.0
@@ -44,7 +44,7 @@ com.wildstangs.pid.controller.base.PidController.FrontArmPid.maxOutput=0.5
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.minOutput=-0.5
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.maxInput=1000.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.minInput=-1.0
-com.wildstangs.pid.controller.base.PidController.BackArmPid.p=1.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.p=0.374
 com.wildstangs.pid.controller.base.PidController.BackArmPid.i=0.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.d=0.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.errorIncrement=1.0
@@ -176,3 +176,20 @@ com.wildstangs.subsystems.automovements.AutoMovementPassFrontToBack.DelayTime=50
 //********************************//
 
 
+
+com.wildstangs.subsystems.arm.Arm.HighAngle-Front=359
+com.wildstangs.subsystems.arm.Arm.LowAngle-Front=-20
+com.wildstangs.subsystems.arm.Arm.HighAngle-Back=359
+com.wildstangs.subsystems.arm.Arm.LowAngle-Back=-20
+com.wildstangs.subsystems.arm.Arm.Front.RollerForwardSpeed=0.5
+com.wildstangs.subsystems.arm.Arm.Front.RollerReverseSpeed=-0.5
+com.wildstangs.subsystems.arm.Arm.Front.TopVoltageValue=5.1
+com.wildstangs.subsystems.arm.Arm.Front.BottomVoltageValue=0.0
+com.wildstangs.subsystems.arm.Arm.Back.RollerForwardSpeed=0.5
+com.wildstangs.subsystems.arm.Arm.Back.RollerReverseSpeed=-0.5
+com.wildstangs.subsystems.arm.Arm.Back.TopVoltageValue=5.1
+com.wildstangs.subsystems.arm.Arm.Back.BottomVoltageValue=0.0
+com.wildstangs.subsystems.arm.Arm.Front.HighAngle=359
+com.wildstangs.subsystems.arm.Arm.Front.LowAngle=-20
+com.wildstangs.subsystems.arm.Arm.Back.HighAngle=359
+com.wildstangs.subsystems.arm.Arm.Back.LowAngle=-20

@@ -29,7 +29,7 @@ public class AutoMovementAccumulateFrontArm extends AutoMovement{
         addStep(new AutonomousStepSetArmPresets(startPositionFrontAccumulate));
         addStep(new AutonomousStepAccumulateFront());
         addStep(new AutonomousStepDelay(delayTime.getValue()));
-        addStep(new AutonomousStepSetArmPresets(endPositionFrontAccumulate));
+//        addStep(new AutonomousStepSetArmPresets(endPositionFrontAccumulate));
         addStep(new AutonomousStepStopAccumulateFront());
     }
 

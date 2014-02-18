@@ -81,18 +81,18 @@ public class BallHandler extends Subsystem implements IObserver {
         if (frontForwardButton == frontReverseButton) {
             frontArm.setRoller(ArmRollerEnum.OFF);
         } else if (frontForwardButton) {
-            frontArm.setRoller(ArmRollerEnum.FORWARD);
+            frontArm.setRoller(ArmRollerEnum.INTAKE);
         } else if (frontReverseButton) {
-            frontArm.setRoller(ArmRollerEnum.REVERSE);
+            frontArm.setRoller(ArmRollerEnum.OUTPUT);
         }
 
         //Both pressed or both are not pressed
         if (backForwardButton == backReverseButton) {
             backArm.setRoller(ArmRollerEnum.OFF);
         } else if (backForwardButton) {
-            backArm.setRoller(ArmRollerEnum.FORWARD);
+            backArm.setRoller(ArmRollerEnum.INTAKE);
         } else if (backReverseButton) {
-            backArm.setRoller(ArmRollerEnum.REVERSE);
+            backArm.setRoller(ArmRollerEnum.OUTPUT);
         }
         //Need to reverse one of these to keep them consistant
         frontArm.setVictor(frontArmJoystickValue * -1);
@@ -103,8 +103,8 @@ public class BallHandler extends Subsystem implements IObserver {
 
         ArmRollerEnum frontValue = frontArm.getRollerValue();
         ArmRollerEnum backValue = backArm.getRollerValue();
-        String frontString = frontValue == ArmRollerEnum.FORWARD ? "Forward" : (frontValue == ArmRollerEnum.REVERSE ? "Reverse" : "Off");
-        String backString = backValue == ArmRollerEnum.FORWARD ? "Forward" : (backValue == ArmRollerEnum.REVERSE ? "Reverse" : "Off");
+        String frontString = frontValue == ArmRollerEnum.INTAKE ? "Forward" : (frontValue == ArmRollerEnum.OUTPUT ? "Reverse" : "Off");
+        String backString = backValue == ArmRollerEnum.INTAKE ? "Forward" : (backValue == ArmRollerEnum.OUTPUT ? "Reverse" : "Off");
         
         double voltageChangeFront = frontArm.getPotVoltage() - lastValueFront;
         double voltageChangeBack = backArm.getPotVoltage() - lastValueBack;
@@ -162,16 +162,56 @@ public class BallHandler extends Subsystem implements IObserver {
     public void setArmPreset(ArmPreset preset) {
         int frontArmPreset = preset.getwantedAngleMeasureFront();
         int backArmPreset = preset.getwantedAngleMeasureBack();
-        if (frontArmPreset <= Arm.getHighBound() && frontArmPreset >= Arm.getLowBound()) {
+        if (frontArmPreset <= frontArm.getHighBound() && frontArmPreset >= frontArm.getLowBound()) {
             this.frontArm.setToAngle(frontArmPreset);
         }
-        if (backArmPreset <= Arm.getHighBound() && backArmPreset >= Arm.getLowBound()){
+        if (backArmPreset <= backArm.getHighBound() && backArmPreset >= backArm.getLowBound()){
             this.backArm.setToAngle(backArmPreset);
         }
     }
     
     public boolean areArmsUsingPidControl()
     {
-        return (frontArm.isArmPidActive() && backArm.isArmPidActive());
+        return (frontArm.isArmPidActive() || backArm.isArmPidActive());
+    }
+    
+    public void setFrontArmAccumulator(ArmRollerEnum state)
+    {
+        frontArm.setRoller(state);
+        if(state == ArmRollerEnum.INTAKE)
+        {
+            frontForwardButton = true;
+            frontReverseButton = false;
+        }
+        else if(state == ArmRollerEnum.OUTPUT)
+        {
+            frontForwardButton = false;
+            frontReverseButton = true;
+        }
+        else if(state == ArmRollerEnum.OFF)
+        {
+            frontForwardButton = false;
+            frontReverseButton = false;
+        }
+    }
+    
+    public void setBackArmAccumulator(ArmRollerEnum state)
+    {
+        backArm.setRoller(state);
+        if(state == ArmRollerEnum.INTAKE)
+        {
+            backForwardButton = true;
+            backReverseButton = false;
+        }
+        else if(state == ArmRollerEnum.OUTPUT)
+        {
+            backForwardButton = false;
+            backReverseButton = true;
+        }
+        else if(state == ArmRollerEnum.OFF)
+        {
+            backForwardButton = false;
+            backReverseButton = false;
+        }
     }
 }

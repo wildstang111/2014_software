@@ -10,9 +10,9 @@ package com.wildstangs.subsystems.arm;
  */
 public class ArmRollerEnum {
     
-    public static final ArmRollerEnum FORWARD = new ArmRollerEnum();
+    public static final ArmRollerEnum INTAKE = new ArmRollerEnum();
     
-    public static final ArmRollerEnum  REVERSE = new ArmRollerEnum();
+    public static final ArmRollerEnum  OUTPUT = new ArmRollerEnum();
     
     public static final ArmRollerEnum OFF = new ArmRollerEnum();
     
