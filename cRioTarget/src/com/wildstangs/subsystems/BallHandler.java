@@ -177,8 +177,8 @@ public class BallHandler extends Subsystem implements IObserver {
             //The limit switches return false when pressed (Electrical)
             if(!((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
             {
-                System.out.println("Calibrate Front Arm Now");
-                //Calibrate Front Arm at this current point
+                System.out.println("Calibrating Front Arm Now");
+                frontArm.calibrate(true);
             }
         }
         else if(subjectThatCaused == this.backArmCalibrationDebouncer)
@@ -186,8 +186,8 @@ public class BallHandler extends Subsystem implements IObserver {
             //The limit switches return false when pressed (Electrical)
             if(!((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
             {
-                System.out.println("Calibrate Back Arm Now");
-                //Calibrate Back Arm at this current point
+                System.out.println("Calibrating Back Arm Now");
+                backArm.calibrate(true);
             }
         }
     }
