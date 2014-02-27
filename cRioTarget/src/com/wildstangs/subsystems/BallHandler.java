@@ -3,13 +3,13 @@ package com.wildstangs.subsystems;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickAxisEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
-import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.list.WsList;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.DoubleSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
+import com.wildstangs.subjects.debouncer.Debouncer;
 import com.wildstangs.subsystems.arm.Arm;
 import com.wildstangs.subsystems.arm.ArmPreset;
 import com.wildstangs.subsystems.arm.ArmRollerEnum;
@@ -42,13 +42,20 @@ public class BallHandler extends Subsystem implements IObserver {
     protected boolean backForwardButton = false, backReverseButton = false;
     protected double frontArmJoystickValue = 0.0, backArmJoystickValue = 0.0;
     protected double lastValueFront = 0.0, lastValueBack = 0.0;
+    protected Debouncer frontArmCalibrationDebouncer, backArmCalibrationDebouncer;
 
     public BallHandler(String name) {
         super(name);
 
         this.frontArm = new Arm(OutputManager.FRONT_ARM_VICTOR_INDEX, OutputManager.FRONT_ARM_ROLLER_VICTOR_INDEX, InputManager.FRONT_ARM_POT_INDEX, true);
         this.backArm = new Arm(OutputManager.BACK_ARM_VICTOR_INDEX, OutputManager.BACK_ARM_ROLLER_VICTOR_INDEX, InputManager.BACK_ARM_POT_INDEX, false);
-
+        
+        this.frontArmCalibrationDebouncer = new Debouncer(60, new Boolean(true));
+        this.backArmCalibrationDebouncer = new Debouncer(60, new Boolean(true));
+        
+        this.frontArmCalibrationDebouncer.attach(this);
+        this.backArmCalibrationDebouncer.attach(this);
+        
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_5);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_6);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_7);
@@ -61,6 +68,9 @@ public class BallHandler extends Subsystem implements IObserver {
 
         subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL);
         subject.attach(this);
+        
+        registerForSensorNotification(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX);
+        registerForSensorNotification(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX);
     }
 
     public void init() {
@@ -94,8 +104,8 @@ public class BallHandler extends Subsystem implements IObserver {
         } else if (backReverseButton) {
             backArm.setRoller(ArmRollerEnum.OUTPUT);
         }
-        //Need to reverse one of these to keep them consistant
-        frontArm.setVictor(frontArmJoystickValue * -1);
+        
+        frontArm.setVictor(frontArmJoystickValue);
         backArm.setVictor(backArmJoystickValue);
 
         frontArm.update();
@@ -112,6 +122,9 @@ public class BallHandler extends Subsystem implements IObserver {
         lastValueFront = frontArm.getPotVoltage();
         lastValueBack = backArm.getPotVoltage();
         
+        this.frontArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get());
+        this.backArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get());
+        
         SmartDashboard.putNumber("Current Front Arm Angle", frontArm.getCurrentAngle());
         SmartDashboard.putNumber("Wanted Front Arm Angle", frontArm.getWantedAngle());
         SmartDashboard.putNumber("Current Back Arm Angle", backArm.getCurrentAngle());
@@ -122,6 +135,8 @@ public class BallHandler extends Subsystem implements IObserver {
         SmartDashboard.putNumber("Back Arm Victor", backArm.getVictorSpeed());
         SmartDashboard.putNumber("Front Arm Joystick", frontArmJoystickValue);
         SmartDashboard.putNumber("Back Arm Joystick", backArmJoystickValue);
+        SmartDashboard.putBoolean("Front Arm At Zero", !((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
+        SmartDashboard.putBoolean("Back Arm At Zero", !((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
     }
 
     public void notifyConfigChange() {
@@ -145,9 +160,9 @@ public class BallHandler extends Subsystem implements IObserver {
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_8) {
             this.backReverseButton = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL) {
-            this.frontArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
+            this.frontArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue() * -1;
         } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
-            this.backArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
+            this.backArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue() * -1;
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1){
             if (((BooleanSubject) subjectThatCaused).getValue()){
                 setArmPreset(FRONT_ARM_ONLY_90);
@@ -155,6 +170,24 @@ public class BallHandler extends Subsystem implements IObserver {
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_2){
             if (((BooleanSubject) subjectThatCaused).getValue()){
                 setArmPreset(FRONT_ARM_ONLY_0);
+            }
+        }
+        else if(subjectThatCaused == this.frontArmCalibrationDebouncer)
+        {
+            //The limit switches return false when pressed (Electrical)
+            if(!((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
+            {
+                System.out.println("Calibrate Front Arm Now");
+                //Calibrate Front Arm at this current point
+            }
+        }
+        else if(subjectThatCaused == this.backArmCalibrationDebouncer)
+        {
+            //The limit switches return false when pressed (Electrical)
+            if(!((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
+            {
+                System.out.println("Calibrate Back Arm Now");
+                //Calibrate Back Arm at this current point
             }
         }
     }

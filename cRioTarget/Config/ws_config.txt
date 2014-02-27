@@ -155,20 +155,26 @@ com.wildstangs.subsystems.arm.ArmPreset.AutoMovementAccumulateFrontArm.StartPosi
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementAccumulateFrontArm.StartPosition.WantedFrontArmAngle=107
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementAccumulateFrontArm.EndPosition.WantedBackArmAngle=1000
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementAccumulateFrontArm.EndPosition.WantedFrontArmAngle=180
+com.wildstangs.subsystems.automovements.AutoMovementAccumulateFrontArm.AccumulateDelayTime=2000
+com.wildstangs.subsystems.automovements.AutoMovementAccumulateFrontArm.ForceStopAtStep=0
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementAccumulateBackArm.StartPosition.WantedBackArmAngle=90
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementAccumulateBackArm.StartPosition.WantedFrontArmAngle=1000
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementAccumulateBackArm.EndPosition.WantedBackArmAngle=180
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementAccumulateBackArm.EndPosition.WantedFrontArmAngle=1000
+com.wildstangs.subsystems.automovements.AutoMovementAccumulateBackArm.AccumulateDelayTime=2000
+com.wildstangs.subsystems.automovements.AutoMovementAccumulateBackArm.ForceStopAtStep=0
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementPassBackToFront.StartPosition.WantedBackArmAngle=160
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementPassBackToFront.StartPosition.WantedFrontArmAngle=90
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementPassBackToFront.EndPosition.WantedBackArmAngle=-160
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementPassBackToFront.EndPosition.WantedFrontArmAngle=90
 com.wildstangs.subsystems.automovements.AutoMovementPassBackToFront.DelayTime=500
+com.wildstangs.subsystems.automovements.AutoMovementPassBackToFront.ForceStopAtStep=0
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementPassFrontToBack.StartPosition.WantedBackArmAngle=90
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementPassFrontToBack.StartPosition.WantedFrontArmAngle=160
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementPassFrontToBack.EndPosition.WantedBackArmAngle=90
 com.wildstangs.subsystems.arm.ArmPreset.AutoMovementPassFrontToBack.EndPosition.WantedFrontArmAngle=-20
 com.wildstangs.subsystems.automovements.AutoMovementPassFrontToBack.DelayTime=500
+com.wildstangs.subsystems.automovements.AutoMovementArmsToTension.ForceStopAtStep=0
 
 
 //********************************//

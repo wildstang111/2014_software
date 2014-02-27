@@ -2,6 +2,7 @@ package com.wildstangs.subsystems;
 
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickAxisEnum;
+import com.wildstangs.inputmanager.inputs.joystick.manipulator.ManipulatorJoystick;
 import com.wildstangs.outputmanager.base.IOutputEnum;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.DoubleSubject;
@@ -21,7 +22,7 @@ public class LightCannon extends Subsystem implements IObserver {
     public LightCannon(String name) {
         super(name);
 
-        registerForJoystickButtonNotification(JoystickAxisEnum.MANIPULATOR_DPAD_Y);
+        InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_DPAD_Y).attach(this);
     }
     public void init(){
         relayState = Relay.Value.kOff;
