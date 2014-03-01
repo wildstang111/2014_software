@@ -28,20 +28,6 @@ public class AutoMovementControl extends Subsystem implements IObserver {
 
     public AutoMovementControl(String name) {
         super(name);
-        
-        Subject subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN);
-        subject.attach(this);
-        
-        subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_UP);
-        subject.attach(this);
-        
-        subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT);
-        subject.attach(this);
-        
-        subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT);
-        subject.attach(this);
-        
-        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_9);
     }
 
     public void init() {
@@ -71,31 +57,6 @@ public class AutoMovementControl extends Subsystem implements IObserver {
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
-        if(((BooleanSubject) subjectThatCaused).getValue() == false)
-        {
-            return;
-        }
-        
-        if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN)
-        {
-            this.requestMovement(new AutoMovementAccumulateBackArm());
-        }
-        else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_UP)
-        {
-            this.requestMovement(new AutoMovementAccumulateFrontArm());
-        }
-        else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT)
-        {
-            this.requestMovement(new AutoMovementArmsToTension());
-        }
-        else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT)
-        {
-            this.requestMovement(new AutoMovementPassBackToFront());
-        }
-        else if(subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_9)
-        {
-            this.requestMovement(new AutoMovementPassFrontToBack());
-        }
     }
 
     public void requestMovement(AutoMovement movement) {

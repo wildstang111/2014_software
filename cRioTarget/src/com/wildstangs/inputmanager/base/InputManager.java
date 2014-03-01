@@ -146,17 +146,19 @@ public class InputManager {
     public static final int LOCK_IN_SWITCH_INDEX = 4;
     public static final int START_POSITION_SELECTOR_INDEX = 5;
     //Sensor Inputs
-    public static final int PRESSURE_TRANSDUCER_INDEX = 7;
-    public static final int FRONT_ARM_POT_INDEX = 8;
-    public static final int BACK_ARM_POT_INDEX = 9;
-    public static final int LEFT_ENCODER_A_INDEX = 8;
-    public static final int LEFT_ENCODER_B_INDEX = 9;
-    public static final int RIGHT_ENCODER_A_INDEX = 10;
-    public static final int RIGHT_ENCODER_B_INDEX = 11;
-    public static final int TENSION_LIMIT_SWITCH_INDEX = 12;
-    public static final int BALL_DETECT_SWITCH_INDEX = 13;
-    public static final int LATCH_POSITION_SWITCH_INDEX = 14;
-    public static final int CATAPULT_DOWN_SWITCH_INDEX = 15;
+    public static final int PRESSURE_TRANSDUCER_INDEX = 1;
+    public static final int FRONT_ARM_POT_INDEX = 2;
+    public static final int BACK_ARM_POT_INDEX = 3;
+    public static final int LEFT_ENCODER_A_INDEX = 4;
+    public static final int LEFT_ENCODER_B_INDEX = 5;
+    public static final int RIGHT_ENCODER_A_INDEX = 6;
+    public static final int RIGHT_ENCODER_B_INDEX = 7;
+    public static final int TENSION_LIMIT_SWITCH_INDEX = 8;
+    public static final int BALL_DETECT_SWITCH_INDEX = 9;
+    public static final int LATCH_POSITION_SWITCH_INDEX = 10;
+    public static final int CATAPULT_DOWN_SWITCH_INDEX = 12;
+    public static final int FRONT_ARM_CALIBRATION_SWITCH_INDEX = 13;
+    public static final int BACK_ARM_CALIBRATION_SWITCH_INDEX = 14;
 
     /**
      * Constructor for the InputManager.
@@ -178,6 +180,8 @@ public class InputManager {
         sensorInputs.addToIndex(BALL_DETECT_SWITCH_INDEX, new WsDigitalInput(7));
         sensorInputs.addToIndex(LATCH_POSITION_SWITCH_INDEX, new WsDigitalInput(8));
         sensorInputs.addToIndex(CATAPULT_DOWN_SWITCH_INDEX, new WsDigitalInput(9));
+        sensorInputs.addToIndex(FRONT_ARM_CALIBRATION_SWITCH_INDEX, new WsDigitalInput(10));
+        sensorInputs.addToIndex(BACK_ARM_CALIBRATION_SWITCH_INDEX, new WsDigitalInput(11));
 
         oiInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         oiInputs.addToIndex(DRIVER_JOYSTICK_INDEX, new DriverJoystick());

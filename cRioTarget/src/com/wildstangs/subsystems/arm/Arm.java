@@ -36,6 +36,8 @@ public class Arm
     protected ArmRollerEnum rollerValue = ArmRollerEnum.OFF;
     protected double rollerReverseSpeed;
     protected double rollerForwardSpeed;
+    protected double topVoltage;
+    protected double bottomVoltage;
             
     
     
@@ -56,10 +58,11 @@ public class Arm
         LOW_BOUND_CONFIG = new IntegerConfigFileParameter(Arm.class.getName(), (front ? "Front" : "Back") + ".LowAngle", -20);
         rollerForwardSpeed = ROLLER_FORWARD_SPEED_CONFIG.getValue();
         rollerReverseSpeed = ROLLER_REVERSE_SPEED_CONFIG.getValue();
-        
+        topVoltage = TOP_VOLTAGE_VALUE_CONFIG.getValue();
+        bottomVoltage = BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
         
         this.front = front;
-        this.pidInput = new ArmPotPidInput(potIndex, TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue(), highBound, lowBound);
+        this.pidInput = new ArmPotPidInput(potIndex, topVoltage, bottomVoltage, highBound, lowBound);
         this.pid = new PidController(this.pidInput, new ArmVictorPidOutput(victorAngleIndex), front ? "FrontArmPid" : "BackArmPid");
         this.pid.disable();
     }
@@ -183,8 +186,10 @@ public class Arm
         rollerReverseSpeed = ROLLER_REVERSE_SPEED_CONFIG.getValue();
         highBound = HIGH_BOUND_CONFIG.getValue();
         lowBound = LOW_BOUND_CONFIG.getValue();
+        topVoltage = TOP_VOLTAGE_VALUE_CONFIG.getValue();
+        bottomVoltage = BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
         pidInput.setAngleBounds(lowBound, highBound);
-        pidInput.setVoltageValues(TOP_VOLTAGE_VALUE_CONFIG.getValue(), BOTTOM_VOLTAGE_VALUE_CONFIG.getValue());
+        pidInput.setVoltageValues(topVoltage, bottomVoltage);
         pid.notifyConfigChange();
     }
     
@@ -213,5 +218,22 @@ public class Arm
     public double getPotVoltage()
     {
         return ((Double) InputManager.getInstance().getSensorInput(this.POT_INDEX).get()).doubleValue();
+    }
+    
+    public void calibrate(boolean high)
+    {
+        double voltageDifferance = topVoltage - bottomVoltage;
+        if(high)
+        {
+            topVoltage = getPotVoltage();
+            bottomVoltage = topVoltage - voltageDifferance;
+        }
+        else
+        {
+            bottomVoltage = getPotVoltage();
+            topVoltage = bottomVoltage + voltageDifferance;
+        }
+        
+        pidInput.setVoltageValues(topVoltage, bottomVoltage);
     }
 }

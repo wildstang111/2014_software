@@ -54,24 +54,8 @@ public class ConfigManager {
      * @throws ConfigManagerException
      */
     public void setConfigFileName(String filename) throws ConfigManagerException {
-        String path = System.getProperty("user.dir");
-        path += filename;
-        System.out.println("Path " + path);
-        File testFile = new File(path);
-        try {
-            testFile.createNewFile();
-        } catch (IOException ex) {
-            Logger.getLogger(ConfigManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (testFile.exists()) {
-            if (testFile.canRead()) {
-                configFileName = path;
-            } else {
-                throw new ConfigManagerException("File " + path + " is not readable.");
-            }
-        } else {
-            throw new ConfigManagerException("File " + path + " does not exist.");
-        }
+        configFileName = new File(System.getProperty("user.dir") + "/.").getParentFile().getParentFile().getAbsolutePath() + "/cRioTarget/Config/ws_config.txt";
+        System.out.println(configFileName);
     }
 
     /**
@@ -85,14 +69,19 @@ public class ConfigManager {
      * @throws WsConfigFacadeException
      */
     public void readConfig() throws ConfigManagerException {
-        File configFile = new File(configFileName);
+        configFile = new File(configFileName);
         BufferedReader br = null;
         String line;
         StringTokenizer st;
         String value;
         String key;
         String configLine;
-
+        
+        if(!configFile.exists())
+        {
+            configFile.mkdirs();
+        }
+        
         if (configFile.exists()) {
             if (configFile.canRead()) {
                 try {
@@ -180,19 +169,19 @@ public class ConfigManager {
               bw.flush();
               bw.close();
               out.close();
-              
-              File cRioConfigFile = new File(configFile.getParentFile().getParentFile().getParentFile(), "cRioTarget/Config/ws_config.txt");
-              
-              if(cRioConfigFile.exists())
-              {
-                  out = new FileWriter(cRioConfigFile, true);
-                  BufferedWriter cRioWriter = new BufferedWriter(out);
-                  cRioWriter.newLine();
-                  cRioWriter.append(name + "=" + defaultValue);
-                  cRioWriter.flush();
-                  cRioWriter.close();
-                  out.close();
-              }
+//              
+//              File cRioConfigFile = new File(configFile.getParentFile().getParentFile().getParentFile(), "cRioTarget/Config/ws_config.txt");
+//              
+//              if(cRioConfigFile.exists())
+//              {
+//                  out = new FileWriter(cRioConfigFile, true);
+//                  BufferedWriter cRioWriter = new BufferedWriter(out);
+//                  cRioWriter.newLine();
+//                  cRioWriter.append(name + "=" + defaultValue);
+//                  cRioWriter.flush();
+//                  cRioWriter.close();
+//                  out.close();
+//              }
               
               config.put(name, defaultValue);
             } catch (IOException e) { 
