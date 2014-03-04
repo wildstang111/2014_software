@@ -107,7 +107,7 @@ public class SubsystemContainer {
         subsystem.addToIndex(BALL_HANDLER_INDEX, new BallHandler(BALL_HANDLER));
         subsystem.addToIndex(CATAPULT_INDEX, new Catapult(CATAPULT));
         subsystem.addToIndex(LANDING_GEAR_INDEX, new LandingGear(LANDING_GEAR));
-//        subsystem.addToIndex(HOT_GOAL_DETECTOR_INDEX, new HotGoalDetector(HOT_GOAL_DETECTOR));
+        subsystem.addToIndex(HOT_GOAL_DETECTOR_INDEX, new HotGoalDetector(HOT_GOAL_DETECTOR));
         subsystem.addToIndex(WINGS_INDEX, new Wings(WINGS));
        // subsystem.addToIndex(EAR_INDEX, new Ears("EARS"));
         subsystem.addToIndex(AUTO_MOVEMENT_CONTROLLER, new AutoMovementControl("Auto Movement Control"));

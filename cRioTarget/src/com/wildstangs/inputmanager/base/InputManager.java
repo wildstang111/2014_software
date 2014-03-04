@@ -6,6 +6,7 @@ import com.wildstangs.inputmanager.inputs.driverstation.WsDSAnalogInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSDigitalInput;
 import com.wildstangs.inputmanager.inputs.joystick.driver.DriverJoystick;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.inputmanager.inputs.joystick.manipulator.ManipulatorJoystick;
 import com.wildstangs.inputmanager.inputs.no.NoInput;
 import com.wildstangs.list.WsList;
@@ -131,6 +132,11 @@ public class InputManager {
     final public void attachJoystickButton(IInputEnum button, IObserver observer) {
         if (button instanceof JoystickButtonEnum) {
             Subject subject = InputManager.getInstance().getOiInput(((JoystickButtonEnum) button).isDriver() ? InputManager.DRIVER_JOYSTICK_INDEX : InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(button);
+            subject.attach(observer);
+        }
+        else if(button instanceof JoystickDPadButtonEnum)
+        {
+            Subject subject = InputManager.getInstance().getOiInput(((JoystickDPadButtonEnum) button).isDriver() ? InputManager.DRIVER_JOYSTICK_INDEX : InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(button);
             subject.attach(observer);
         } else {
             Logger.getLogger().debug(this.getClass().getName(), "attachJoystickButton", "Oops! Check that the inputs implement the required interfaces.");

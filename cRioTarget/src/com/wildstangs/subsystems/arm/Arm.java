@@ -168,13 +168,13 @@ public class Arm
             if(pid.isEnabled()) pid.disable();
         }
         if(rollerValue == ArmRollerEnum.INTAKE){ 
-            OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(rollerReverseSpeed));
+            OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(rollerForwardSpeed));
         }
         else if(rollerValue == ArmRollerEnum.OFF){
             OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(0.0));
         }  
         else if(rollerValue == ArmRollerEnum.OUTPUT){
-            OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(rollerForwardSpeed));
+            OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(rollerReverseSpeed));
         }  
         
         SmartDashboard.putString(this.pid.getName(), this.pid.getState().toString());

@@ -1,5 +1,7 @@
 package com.wildstangs.subsystems;
 
+import com.wildstangs.config.BooleanConfigFileParameter;
+import com.wildstangs.config.DoubleConfigFileParameter;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickAxisEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class BallHandler extends Subsystem implements IObserver {
 
+    
     public static WsList presets = new WsList(10);
     public static final ArmPreset DEFAULT_POSITION = new ArmPreset(0, 0, "DefaultPosition");
     public static final ArmPreset CATAPULT_TENSION_PRESET = new ArmPreset(20, 20, "TensionPreset");
@@ -37,11 +40,15 @@ public class BallHandler extends Subsystem implements IObserver {
     public static final ArmPreset BACK_ARM_ONLY_NEG15 = new ArmPreset(ArmPreset.IGNORE_VALUE, -15, "BackArmOnly-15"); 
     public static final ArmPreset BACK_ARM_ONLY_0 = new ArmPreset(ArmPreset.IGNORE_VALUE, 0, "BackArmOnly0"); 
     
+    protected final DoubleConfigFileParameter DEADBAND_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), "ArmControlDeadband", 0.05);
+    protected final BooleanConfigFileParameter DISABLE_CALIBRATION_SWITCHES_CONFIG = new BooleanConfigFileParameter(this.getClass().getName(), "DisableCalibrationSwitches", false);
+    
     protected Arm frontArm, backArm;
-    protected boolean frontForwardButton = false, frontReverseButton = false;
-    protected boolean backForwardButton = false, backReverseButton = false;
+    protected boolean disableCalibrationSwitches = false;
+    protected boolean frontIntakeButton = false, frontOutputButton = false;
+    protected boolean backIntakeButton = false, backOutputButton = false;
+    protected double deadband = 0.05;
     protected double frontArmJoystickValue = 0.0, backArmJoystickValue = 0.0;
-    protected double lastValueFront = 0.0, lastValueBack = 0.0;
     protected Debouncer frontArmCalibrationDebouncer, backArmCalibrationDebouncer;
 
     public BallHandler(String name) {
@@ -52,6 +59,9 @@ public class BallHandler extends Subsystem implements IObserver {
         
         this.frontArmCalibrationDebouncer = new Debouncer(60, new Boolean(true));
         this.backArmCalibrationDebouncer = new Debouncer(60, new Boolean(true));
+        
+        this.deadband = DEADBAND_CONFIG.getValue();
+        this.disableCalibrationSwitches = DISABLE_CALIBRATION_SWITCHES_CONFIG.getValue();
         
         this.frontArmCalibrationDebouncer.attach(this);
         this.backArmCalibrationDebouncer.attach(this);
@@ -74,39 +84,37 @@ public class BallHandler extends Subsystem implements IObserver {
     }
 
     public void init() {
-        frontForwardButton = false;
-        frontReverseButton = false;
-        backForwardButton = false;
-        backReverseButton = false;
+        frontIntakeButton = false;
+        frontOutputButton = false;
+        backIntakeButton = false;
+        backOutputButton = false;
         frontArmJoystickValue = 0.0;
         backArmJoystickValue = 0.0;
-        lastValueFront = 0.0;
-        lastValueBack = 0.0;
         frontArm.init();
         backArm.init();
     }
 
     public void update() {
         //Both pressed or both are not pressed
-        if (frontForwardButton == frontReverseButton) {
+        if (frontIntakeButton == frontOutputButton) {
             frontArm.setRoller(ArmRollerEnum.OFF);
-        } else if (frontForwardButton) {
+        } else if (frontIntakeButton) {
             frontArm.setRoller(ArmRollerEnum.INTAKE);
-        } else if (frontReverseButton) {
+        } else if (frontOutputButton) {
             frontArm.setRoller(ArmRollerEnum.OUTPUT);
         }
 
         //Both pressed or both are not pressed
-        if (backForwardButton == backReverseButton) {
+        if (backIntakeButton == backOutputButton) {
             backArm.setRoller(ArmRollerEnum.OFF);
-        } else if (backForwardButton) {
+        } else if (backIntakeButton) {
             backArm.setRoller(ArmRollerEnum.INTAKE);
-        } else if (backReverseButton) {
+        } else if (backOutputButton) {
             backArm.setRoller(ArmRollerEnum.OUTPUT);
         }
         
-        frontArm.setVictor(frontArmJoystickValue);
-        backArm.setVictor(backArmJoystickValue);
+        frontArm.setVictor(Math.abs(frontArmJoystickValue) <= deadband ? 0 : frontArmJoystickValue);
+        backArm.setVictor(Math.abs(backArmJoystickValue) <= deadband ? 0 : backArmJoystickValue);
 
         frontArm.update();
         backArm.update();
@@ -116,14 +124,11 @@ public class BallHandler extends Subsystem implements IObserver {
         String frontString = frontValue == ArmRollerEnum.INTAKE ? "Forward" : (frontValue == ArmRollerEnum.OUTPUT ? "Reverse" : "Off");
         String backString = backValue == ArmRollerEnum.INTAKE ? "Forward" : (backValue == ArmRollerEnum.OUTPUT ? "Reverse" : "Off");
         
-        double voltageChangeFront = frontArm.getPotVoltage() - lastValueFront;
-        double voltageChangeBack = backArm.getPotVoltage() - lastValueBack;
-        
-        lastValueFront = frontArm.getPotVoltage();
-        lastValueBack = backArm.getPotVoltage();
-        
-        this.frontArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get());
-        this.backArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get());
+        if(!disableCalibrationSwitches)
+        {
+            this.frontArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get());
+            this.backArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get());
+        }
         
         SmartDashboard.putNumber("Current Front Arm Angle", frontArm.getCurrentAngle());
         SmartDashboard.putNumber("Wanted Front Arm Angle", frontArm.getWantedAngle());
@@ -135,30 +140,31 @@ public class BallHandler extends Subsystem implements IObserver {
         SmartDashboard.putNumber("Back Arm Victor", backArm.getVictorSpeed());
         SmartDashboard.putNumber("Front Arm Joystick", frontArmJoystickValue);
         SmartDashboard.putNumber("Back Arm Joystick", backArmJoystickValue);
-        SmartDashboard.putBoolean("Front Arm At Zero", !((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
-        SmartDashboard.putBoolean("Back Arm At Zero", !((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
+        SmartDashboard.putBoolean("Front Arm At Zero", ((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
+        SmartDashboard.putBoolean("Back Arm At Zero", ((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
     }
 
     public void notifyConfigChange() {
         Arm.notifyConfigChangeStatic();
         frontArm.notifyConfigChange();
         backArm.notifyConfigChange();
-           for (int i = 0; i < presets.size(); i++) {
+        for (int i = 0; i < presets.size(); i++) {
             ArmPreset preset = (ArmPreset) presets.get(i);
             if(preset != null) preset.notifyConfigChange();
         }
-           
+        this.deadband = DEADBAND_CONFIG.getValue();
+        this.disableCalibrationSwitches = DISABLE_CALIBRATION_SWITCHES_CONFIG.getValue();
     }
 
     public void acceptNotification(Subject subjectThatCaused) {
         if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_5) {
-            this.frontForwardButton = ((BooleanSubject) subjectThatCaused).getValue();
+            this.frontIntakeButton = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_6) {
-            this.backForwardButton = ((BooleanSubject) subjectThatCaused).getValue();
+            this.backIntakeButton = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_7) {
-            this.frontReverseButton = ((BooleanSubject) subjectThatCaused).getValue();
+            this.frontOutputButton = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_8) {
-            this.backReverseButton = ((BooleanSubject) subjectThatCaused).getValue();
+            this.backOutputButton = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL) {
             this.frontArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue() * -1;
         } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
@@ -172,22 +178,23 @@ public class BallHandler extends Subsystem implements IObserver {
                 setArmPreset(FRONT_ARM_ONLY_0);
             }
         }
-        else if(subjectThatCaused == this.frontArmCalibrationDebouncer)
+        else if(!disableCalibrationSwitches)
         {
-            //The limit switches return false when pressed (Electrical)
-            if(!((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
+            if(subjectThatCaused == this.frontArmCalibrationDebouncer)
             {
-                System.out.println("Calibrating Front Arm Now");
-                frontArm.calibrate(true);
+                if(((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
+                {
+                    System.out.println("Calibrating Front Arm Now");
+                    frontArm.calibrate(true);
+                }
             }
-        }
-        else if(subjectThatCaused == this.backArmCalibrationDebouncer)
-        {
-            //The limit switches return false when pressed (Electrical)
-            if(!((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
+            else if(subjectThatCaused == this.backArmCalibrationDebouncer)
             {
-                System.out.println("Calibrating Back Arm Now");
-                backArm.calibrate(true);
+                if(((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
+                {
+                    System.out.println("Calibrating Back Arm Now");
+                    backArm.calibrate(true);
+                }
             }
         }
     }
@@ -213,18 +220,18 @@ public class BallHandler extends Subsystem implements IObserver {
         frontArm.setRoller(state);
         if(state == ArmRollerEnum.INTAKE)
         {
-            frontForwardButton = true;
-            frontReverseButton = false;
+            frontIntakeButton = true;
+            frontOutputButton = false;
         }
         else if(state == ArmRollerEnum.OUTPUT)
         {
-            frontForwardButton = false;
-            frontReverseButton = true;
+            frontIntakeButton = false;
+            frontOutputButton = true;
         }
         else if(state == ArmRollerEnum.OFF)
         {
-            frontForwardButton = false;
-            frontReverseButton = false;
+            frontIntakeButton = false;
+            frontOutputButton = false;
         }
     }
     
@@ -233,18 +240,18 @@ public class BallHandler extends Subsystem implements IObserver {
         backArm.setRoller(state);
         if(state == ArmRollerEnum.INTAKE)
         {
-            backForwardButton = true;
-            backReverseButton = false;
+            backIntakeButton = true;
+            backOutputButton = false;
         }
         else if(state == ArmRollerEnum.OUTPUT)
         {
-            backForwardButton = false;
-            backReverseButton = true;
+            backIntakeButton = false;
+            backOutputButton = true;
         }
         else if(state == ArmRollerEnum.OFF)
         {
-            backForwardButton = false;
-            backReverseButton = false;
+            backIntakeButton = false;
+            backOutputButton = false;
         }
     }
 }

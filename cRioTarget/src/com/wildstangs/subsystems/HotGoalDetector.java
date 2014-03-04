@@ -1,9 +1,10 @@
 package com.wildstangs.subsystems;
 
-import com.sun.cldc.jna.Pointer;
-import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
+import com.wildstangs.subjects.base.BooleanSubject;
+import com.wildstangs.subjects.base.IObserver;
+import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.base.Subsystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.image.BinaryImage;
 import edu.wpi.first.wpilibj.image.ColorImage;
@@ -11,13 +12,13 @@ import edu.wpi.first.wpilibj.image.CriteriaCollection;
 import edu.wpi.first.wpilibj.image.NIVision;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
-import edu.wpi.first.wpilibj.image.RGBImage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  * @author mail929
  */
-public class HotGoalDetector extends Subsystem
+public class HotGoalDetector extends Subsystem implements IObserver
 {
     final int Y_IMAGE_RES = 480;
     final double VIEW_ANGLE = 49;
@@ -25,16 +26,16 @@ public class HotGoalDetector extends Subsystem
     //final double VIEW_ANGLE = 37.4;  //Axis M1011 camera
     final double PI = 3.141592653;
 
-    final int RECTANGULARITY_LIMIT = 40;
-    final int ASPECT_RATIO_LIMIT = 55;
+    final int RECTANGULARITY_LIMIT = 30;
+    final int ASPECT_RATIO_LIMIT = 22;
 
-    final int TAPE_WIDTH_LIMIT = 50;
+    final int TAPE_WIDTH_LIMIT = 37;
     final int VERTICAL_SCORE_LIMIT = 50;
-    final int LR_SCORE_LIMIT = 50;
+    final int LR_SCORE_LIMIT = 20;
 
-    final int AREA_MINIMUM = 150;
+    final int AREA_MINIMUM = 160;
 
-    final int MAX_PARTICLES = 8;
+    final int MAX_PARTICLES = 10;
     AxisCamera camera;
     CriteriaCollection cc;
 
@@ -63,6 +64,8 @@ public class HotGoalDetector extends Subsystem
     {
         super(name);
         camera = AxisCamera.getInstance("10.1.11.11");
+        
+        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_UP);
     }
 
     public void init()
@@ -79,6 +82,21 @@ public class HotGoalDetector extends Subsystem
     {
     }
 
+    public void acceptNotification(Subject subjectThatCaused)
+    {
+        if(((BooleanSubject) subjectThatCaused).getValue())
+        {
+            SmartDashboard.putBoolean("Looking For Hot Goal", true);
+            int numberFound = 0;
+            for(int i = 0; i < 100; i++)
+            {
+                if(this.checkForHotGoal()) numberFound++;
+            }
+            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
+            SmartDashboard.putBoolean("Looking For Hot Goal", false);
+        }
+    }
+
     public boolean checkForHotGoal()
     {
         TargetReport target = new TargetReport();
@@ -91,7 +109,7 @@ public class HotGoalDetector extends Subsystem
             ColorImage image = camera.getImage();     // comment if using stored images
 //            ColorImage image;                           // next 2 lines read image from flash on cRIO
 //            image = new RGBImage("/image.jpg"); 	// get the sample image from the cRIO flash
-            BinaryImage thresholdImage = image.thresholdHSV(100, 250, 20, 255, 20, 183);   // keep only green objects
+            BinaryImage thresholdImage = image.thresholdHSV(100, 250, 20, 255, 20, 250);   // keep only green objects
 
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
 
@@ -108,20 +126,40 @@ public class HotGoalDetector extends Subsystem
                     scores[i].rectangularity = scoreRectangularity(report);
                     scores[i].aspectRatioVertical = scoreAspectRatio(filteredImage, report, i, true);
                     scores[i].aspectRatioHorizontal = scoreAspectRatio(filteredImage, report, i, false);
-
-                    if (scoreCompare(scores[i], false))
+                    
+                    if(scores[i].aspectRatioHorizontal > scores[i].aspectRatioVertical)
                     {
-                        System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
-                        horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
-                    }
-                    else if (scoreCompare(scores[i], true))
-                    {
-                        System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
-                        verticalTargets[verticalTargetCount++] = i;  //Add particle to target array and increment count
+                        if (scoreCompare(scores[i], false))
+                        {
+                            System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
+                        }
+                        else if (scoreCompare(scores[i], true))
+                        {
+                            System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            verticalTargets[verticalTargetCount++] = i;  //Add particle to target array and increment count
+                        }
+                        else
+                        {
+                            System.out.println("particle: " + i + "is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                        }
                     }
                     else
                     {
-                        System.out.println("particle: " + i + "is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                        if (scoreCompare(scores[i], true))
+                        {
+                            System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            verticalTargets[verticalTargetCount++] = i;  //Add particle to target array and increment count
+                        }
+                        else if (scoreCompare(scores[i], false))
+                        {
+                            System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
+                        }
+                        else
+                        {
+                            System.out.println("particle: " + i + "is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                        }
                     }
                     System.out.println("rect: " + scores[i].rectangularity + "ARHoriz: " + scores[i].aspectRatioHorizontal);
                     System.out.println("ARVert: " + scores[i].aspectRatioVertical);
