@@ -20,10 +20,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class HotGoalDetector extends Subsystem implements IObserver
 {
-    final int Y_IMAGE_RES = 480;
-    final double VIEW_ANGLE = 49;
+    final int Y_IMAGE_RES = 240;
+    final int X_IMAGE_RES = 320;
+
+//    final double VIEW_ANGLE = 49;
     //final double VIEW_ANGLE = 41.7;		//Axis 206 camera
-    //final double VIEW_ANGLE = 37.4;  //Axis M1011 camera
+    final double VIEW_ANGLE = 37.4;  //Axis M1011 camera Vertical
+    final double HORIZ_VIEW_ANGLE = 47.0;  //Axis M1011 camera Horizontal
+
     final double PI = 3.141592653;
 
     final int RECTANGULARITY_LIMIT = 30;
@@ -232,6 +236,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
         return target.Hot;
     }
     
+    
     double computeDistance(BinaryImage image, ParticleAnalysisReport report, int particleNumber) throws NIVisionException
     {
         double rectLong, height;
@@ -252,6 +257,37 @@ public class HotGoalDetector extends Subsystem implements IObserver
         rectLong = NIVision.MeasureParticle(image.image, particleNumber, false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_LONG_SIDE);
         rectShort = NIVision.MeasureParticle(image.image, particleNumber, false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
         idealAspectRatio = vertical ? (4.0 / 32) : (23.5 / 4);	//Vertical reflector 4" wide x 32" tall, horizontal 23.5" wide x 4" tall
+
+        if (report.boundingRectWidth > report.boundingRectHeight)
+        {
+            aspectRatio = ratioToScore((rectLong / rectShort) / idealAspectRatio);
+        }
+        else
+        {
+            aspectRatio = ratioToScore((rectShort / rectLong) / idealAspectRatio);
+        }
+        return aspectRatio;
+    }
+    double computeDistanceOnRotatedImage(BinaryImage image, ParticleAnalysisReport report, int particleNumber) throws NIVisionException
+    {
+        double rectLong, height;
+        int targetHeight;
+
+        rectLong = NIVision.MeasureParticle(image.image, particleNumber, false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_LONG_SIDE);
+
+        height = Math.min(report.boundingRectWidth, rectLong);
+        targetHeight = 32;
+
+        return X_IMAGE_RES * targetHeight / (height * 12 * 2 * Math.tan(HORIZ_VIEW_ANGLE * Math.PI / (180 * 2)));
+    }
+    
+    public double scoreAspectRatioOnRotatedImage(BinaryImage image, ParticleAnalysisReport report, int particleNumber, boolean vertical) throws NIVisionException
+    {
+        double rectLong, rectShort, aspectRatio, idealAspectRatio;
+
+        rectLong = NIVision.MeasureParticle(image.image, particleNumber, false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_LONG_SIDE);
+        rectShort = NIVision.MeasureParticle(image.image, particleNumber, false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
+        idealAspectRatio = vertical ? (32.0 / 4) : (4/23.5);	//Vertical reflector 4" wide x 32" tall, horizontal 23.5" wide x 4" tall
 
         if (report.boundingRectWidth > report.boundingRectHeight)
         {
