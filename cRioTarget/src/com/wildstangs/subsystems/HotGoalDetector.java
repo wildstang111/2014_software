@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class HotGoalDetector extends Subsystem implements IObserver
 {
     final int Y_IMAGE_RES = 480;
-    final double VIEW_ANGLE = 49;
+//    final double VIEW_ANGLE = 49;
     //final double VIEW_ANGLE = 41.7;		//Axis 206 camera
-    //final double VIEW_ANGLE = 37.4;  //Axis M1011 camera
+    final double VIEW_ANGLE = 37.4;  //Axis M1011 camera
     final double PI = 3.141592653;
 
     final int RECTANGULARITY_LIMIT = 30;

@@ -19,7 +19,7 @@ com.wildstangs.subsystems.WsCompressor.MaxPSI=115.0
 
 //Ball Handler
 com.wildstangs.subsystems.BallHandler.ArmControlDeadband=0.05
-com.wildstangs.subsystems.BallHandler.DisableCalibrationSwitches=true
+com.wildstangs.subsystems.BallHandler.DisableCalibrationSwitches=false
 com.wildstangs.subsystems.arm.Arm.DisablePIDCompletely=false
 com.wildstangs.subsystems.arm.Arm.DisablePIDInInit=true
 com.wildstangs.subsystems.arm.Arm.ArmVictorSpeedDilution=0.5

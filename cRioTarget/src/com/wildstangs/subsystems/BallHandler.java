@@ -73,10 +73,10 @@ public class BallHandler extends Subsystem implements IObserver {
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_1);
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_2);
         
-        Subject subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL);
+        Subject subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_LEFT_JOYSTICK_X);
         subject.attach(this);
 
-        subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL);
+        subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_RIGHT_JOYSTICK_X);
         subject.attach(this);
         
         registerForSensorNotification(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX);
@@ -165,9 +165,9 @@ public class BallHandler extends Subsystem implements IObserver {
             this.frontOutputButton = ((BooleanSubject) subjectThatCaused).getValue();
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_8) {
             this.backOutputButton = ((BooleanSubject) subjectThatCaused).getValue();
-        } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_FRONT_ARM_CONTROL) {
-            this.frontArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue() * -1;
-        } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_BACK_ARM_CONTROL) {
+        } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_LEFT_JOYSTICK_X) {
+            this.frontArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue();
+        } else if (subjectThatCaused.getType() == JoystickAxisEnum.MANIPULATOR_RIGHT_JOYSTICK_X) {
             this.backArmJoystickValue = ((DoubleSubject) subjectThatCaused).getValue() * -1;
         } else if (subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1){
             if (((BooleanSubject) subjectThatCaused).getValue()){
