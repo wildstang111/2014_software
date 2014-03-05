@@ -91,12 +91,13 @@ public class HotGoalDetector extends Subsystem implements IObserver
         if(((BooleanSubject) subjectThatCaused).getValue())
         {
             SmartDashboard.putBoolean("Looking For Hot Goal", true);
-            int numberFound = 0;
-            for(int i = 0; i < 100; i++)
-            {
-                if(this.checkForHotGoal()) numberFound++;
-            }
-            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
+//            int numberFound = 0;
+//            for(int i = 0; i < 100; i++)
+//            {
+//                if(this.checkForHotGoal()) numberFound++;
+//            }
+//            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
+            SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
             SmartDashboard.putBoolean("Looking For Hot Goal", false);
         }
     }
@@ -113,7 +114,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
             ColorImage image = camera.getImage();     // comment if using stored images
 //            ColorImage image;                           // next 2 lines read image from flash on cRIO
 //            image = new RGBImage("/image.jpg"); 	// get the sample image from the cRIO flash
-            BinaryImage thresholdImage = image.thresholdHSV(100, 250, 20, 255, 20, 250);   // keep only green objects
+            BinaryImage thresholdImage = image.thresholdHSV(100, 150, 50, 255, 90, 255);   // keep only green objects
 
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
 
@@ -128,8 +129,8 @@ public class HotGoalDetector extends Subsystem implements IObserver
                     scores[i] = new Scores();
 
                     scores[i].rectangularity = scoreRectangularity(report);
-                    scores[i].aspectRatioVertical = scoreAspectRatio(filteredImage, report, i, true);
-                    scores[i].aspectRatioHorizontal = scoreAspectRatio(filteredImage, report, i, false);
+                    scores[i].aspectRatioVertical = scoreAspectRatioOnRotatedImage(filteredImage, report, i, true);
+                    scores[i].aspectRatioHorizontal = scoreAspectRatioOnRotatedImage(filteredImage, report, i, false);
                     
                     if(scores[i].aspectRatioHorizontal > scores[i].aspectRatioVertical)
                     {
@@ -210,7 +211,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
                 if (verticalTargetCount > 0)
                 {
                     ParticleAnalysisReport distanceReport = filteredImage.getParticleAnalysisReport(target.verticalIndex);
-                    double distance = computeDistance(filteredImage, distanceReport, target.verticalIndex);
+                    double distance = computeDistanceOnRotatedImage(filteredImage, distanceReport, target.verticalIndex);
                     if (target.Hot)
                     {
                         System.out.println("Hot target located");
@@ -337,7 +338,9 @@ public class HotGoalDetector extends Subsystem implements IObserver
     protected boolean hotOrNot(TargetReport target)
     {
         boolean isHot = true;
-
+        
+        System.out.println("tw: " + target.tapeWidthScore + " vs: " + target.verticalScore + " ls: " + target.leftScore + " rs: " + target.rightScore);
+        
         isHot &= target.tapeWidthScore >= TAPE_WIDTH_LIMIT;
         isHot &= target.verticalScore >= VERTICAL_SCORE_LIMIT;
         isHot &= (target.leftScore > LR_SCORE_LIMIT) | (target.rightScore > LR_SCORE_LIMIT);

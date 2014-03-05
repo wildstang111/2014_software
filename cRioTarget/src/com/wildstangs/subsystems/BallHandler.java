@@ -57,8 +57,8 @@ public class BallHandler extends Subsystem implements IObserver {
         this.frontArm = new Arm(OutputManager.FRONT_ARM_VICTOR_INDEX, OutputManager.FRONT_ARM_ROLLER_VICTOR_INDEX, InputManager.FRONT_ARM_POT_INDEX, true);
         this.backArm = new Arm(OutputManager.BACK_ARM_VICTOR_INDEX, OutputManager.BACK_ARM_ROLLER_VICTOR_INDEX, InputManager.BACK_ARM_POT_INDEX, false);
         
-        this.frontArmCalibrationDebouncer = new Debouncer(60, new Boolean(true));
-        this.backArmCalibrationDebouncer = new Debouncer(60, new Boolean(true));
+        this.frontArmCalibrationDebouncer = new Debouncer(60, new Boolean(false));
+        this.backArmCalibrationDebouncer = new Debouncer(60, new Boolean(false));
         
         this.deadband = DEADBAND_CONFIG.getValue();
         this.disableCalibrationSwitches = DISABLE_CALIBRATION_SWITCHES_CONFIG.getValue();
@@ -121,8 +121,8 @@ public class BallHandler extends Subsystem implements IObserver {
 
         ArmRollerEnum frontValue = frontArm.getRollerValue();
         ArmRollerEnum backValue = backArm.getRollerValue();
-        String frontString = frontValue == ArmRollerEnum.INTAKE ? "Forward" : (frontValue == ArmRollerEnum.OUTPUT ? "Reverse" : "Off");
-        String backString = backValue == ArmRollerEnum.INTAKE ? "Forward" : (backValue == ArmRollerEnum.OUTPUT ? "Reverse" : "Off");
+        String frontString = frontValue == ArmRollerEnum.INTAKE ? "Intake" : (frontValue == ArmRollerEnum.OUTPUT ? "Output" : "Off");
+        String backString = backValue == ArmRollerEnum.INTAKE ? "Intake" : (backValue == ArmRollerEnum.OUTPUT ? "Output" : "Off");
         
         if(!disableCalibrationSwitches)
         {

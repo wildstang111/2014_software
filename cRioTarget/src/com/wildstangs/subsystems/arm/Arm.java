@@ -13,22 +13,27 @@ import com.wildstangs.pid.controller.base.PidController;
 import com.wildstangs.pid.inputs.ArmPotPidInput;
 import com.wildstangs.pid.outputs.ArmVictorPidOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.Random;
 /**
  *
  * @author Joey
  */
 public class Arm
 {
+    protected static final Random RND = new Random();
+    
     protected static final BooleanConfigFileParameter DISABLE_PID_COMPLETELY_CONFIG = new BooleanConfigFileParameter(Arm.class.getName(), "DisablePIDCompletely", false);
     protected static final BooleanConfigFileParameter DISABLE_PID_INIT_CONFIG = new BooleanConfigFileParameter(Arm.class.getName(), "DisablePIDInInit", false);
     protected static final DoubleConfigFileParameter ARM_VICTOR_SPEED_DILUTION_CONFIG = new DoubleConfigFileParameter(Arm.class.getName(), "ArmVictorSpeedDilution", 0.5);
     protected static boolean disablePidCompletely = DISABLE_PID_COMPLETELY_CONFIG.getValue(), diablePidInit = DISABLE_PID_INIT_CONFIG.getValue();
     protected static double armVictorSpeedDilution = ARM_VICTOR_SPEED_DILUTION_CONFIG.getValue();
     
+    protected final DoubleConfigFileParameter HARD_TOP_VOLTAGE_VALUE_CONFIG, HARD_BOTTOM_VOLTAGE_VALUE_CONFIG;
     protected final DoubleConfigFileParameter TOP_VOLTAGE_VALUE_CONFIG, BOTTOM_VOLTAGE_VALUE_CONFIG, ROLLER_FORWARD_SPEED_CONFIG, ROLLER_REVERSE_SPEED_CONFIG;
     protected final IntegerConfigFileParameter HIGH_BOUND_CONFIG, LOW_BOUND_CONFIG;
     protected final int VICTOR_ANGLE_INDEX, ARM_ROLLER_VICTOR_INDEX, POT_INDEX;
     
+    protected double hardTopVoltage, hardBottomVoltage;
     protected int highBound, lowBound;
     protected int currentAngle = 0, wantedAngle = 0;
     protected PidController pid;
@@ -50,16 +55,22 @@ public class Arm
         this.ARM_ROLLER_VICTOR_INDEX = armRollerVictorIndex;
         this.POT_INDEX = potIndex;
         
+        HARD_TOP_VOLTAGE_VALUE_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".HardTopVoltageValue", 4.8);
+        HARD_BOTTOM_VOLTAGE_VALUE_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".HardBottomVoltageValue", 0.2);
+        
         TOP_VOLTAGE_VALUE_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".TopVoltageValue", 5.1);
         BOTTOM_VOLTAGE_VALUE_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".BottomVoltageValue", 0.0);
         ROLLER_FORWARD_SPEED_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".RollerForwardSpeed", 0.5);
         ROLLER_REVERSE_SPEED_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".RollerReverseSpeed", -0.5);
         HIGH_BOUND_CONFIG = new IntegerConfigFileParameter(Arm.class.getName(), (front ? "Front" : "Back") + ".HighAngle", 359);
         LOW_BOUND_CONFIG = new IntegerConfigFileParameter(Arm.class.getName(), (front ? "Front" : "Back") + ".LowAngle", -20);
+        
         rollerForwardSpeed = ROLLER_FORWARD_SPEED_CONFIG.getValue();
         rollerReverseSpeed = ROLLER_REVERSE_SPEED_CONFIG.getValue();
         topVoltage = TOP_VOLTAGE_VALUE_CONFIG.getValue();
         bottomVoltage = BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
+        hardTopVoltage = HARD_TOP_VOLTAGE_VALUE_CONFIG.getValue();
+        hardBottomVoltage = HARD_BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
         
         this.front = front;
         this.pidInput = new ArmPotPidInput(potIndex, topVoltage, bottomVoltage, highBound, lowBound);
@@ -73,6 +84,13 @@ public class Arm
         {
             return;
         }
+        
+        double potVoltage = this.getPotVoltage();
+        if(potVoltage > hardTopVoltage || potVoltage < hardBottomVoltage)
+        {
+            return;
+        }
+        
         if(angle < lowBound) angle = lowBound;
         else if(angle > highBound) angle = highBound;
         
@@ -98,11 +116,13 @@ public class Arm
         if(speed < -1.0) speed = -1.0;
         else if(speed > 1.0) speed = 1.0;
         
-        if(currentAngle <= lowBound && speed < 0)
+        double potVoltage = this.getPotVoltage();
+        
+        if((currentAngle <= lowBound || potVoltage < hardBottomVoltage) && speed < 0)
         {
             speed = 0.0;
         }
-        else if(currentAngle >= highBound && speed > 0)
+        else if((currentAngle >= highBound || potVoltage > hardTopVoltage) && speed > 0)
         {
             speed = 0.0;
         }
@@ -150,9 +170,14 @@ public class Arm
         {
             pid.disable();
         }
-        double currentVoltage = ((Double) InputManager.getInstance().getSensorInput(POT_INDEX).get()).doubleValue();
+        double currentVoltage = this.getPotVoltage();
         
         SmartDashboard.putNumber("Pot Voltage " + (front ? "Front" : "Back"), currentVoltage);
+        
+        boolean safeVoltage = !(currentVoltage <= 0.6 || currentVoltage >= 4.4);
+        
+        SmartDashboard.putBoolean((front ? "Front" : "Back") + " Arm Pot at Safe Voltage", safeVoltage ? false : RND.nextInt(2) == 0);
+        //The random boolean is so that it hopefully catches someone's attention that the arm pot isn't at a safe position
         
         double victorSpeed = this.getVictorSpeed();
         currentAngle = (int) this.getCurrentAngle();
