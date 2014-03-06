@@ -24,7 +24,7 @@ public class AutonomousProgramDriveAndShootForHotGoal extends AutonomousProgram
         addStep(new AutonomousStepDelayForHotGoal(4500));
         addStep(new AutonomousStepStartDriveUsingMotionProfile(60.0, 0.75));
         addStep(new AutonomousStepWaitForDriveMotionProfile());
-        addStep(new AutonomousStepSetArmPresets(BallHandler.CATAPULT_TENSION_PRESET));
+        addStep(new AutonomousStepSetArmPresets(BallHandler.CATAPULT_TENSION_PRESET_BACK));
         addStep(new AutonomousStepArmCatapult());
         addStep(new AutonomousStepFireCatapult());
     }

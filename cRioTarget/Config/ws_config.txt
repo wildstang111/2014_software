@@ -184,3 +184,14 @@ com.wildstangs.subsystems.automovements.AutoMovementArmsToTension.ForceStopAtSte
 //        New Parameters          //
 //                                //
 //********************************//
+
+com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBackOnly.WantedBackArmAngle=160
+com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBackOnly.WantedFrontArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBothArms.WantedBackArmAngle=160
+com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBothArms.WantedFrontArmAngle=10
+com.wildstangs.subsystems.arm.Arm.Front.HardTopVoltageValue=4.8
+com.wildstangs.subsystems.arm.Arm.Front.HardBottomVoltageValue=0.2
+com.wildstangs.subsystems.arm.Arm.Back.HardTopVoltageValue=4.8
+com.wildstangs.subsystems.arm.Arm.Back.HardBottomVoltageValue=0.2
+com.wildstangs.subsystems.BallHandler.SafeFrontArmShoot.BottomBound=140.0
+com.wildstangs.subsystems.BallHandler.SafeFrontArmShoot.TopBound=180.0

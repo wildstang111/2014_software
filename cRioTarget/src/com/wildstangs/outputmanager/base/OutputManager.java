@@ -4,6 +4,7 @@ import com.wildstangs.list.WsList;
 import com.wildstangs.outputmanager.outputs.WsDoubleSolenoid;
 import com.wildstangs.outputmanager.outputs.WsDriveSpeed;
 import com.wildstangs.outputmanager.outputs.WsRelay;
+import com.wildstangs.outputmanager.outputs.WsServo;
 import com.wildstangs.outputmanager.outputs.WsSolenoid;
 import com.wildstangs.outputmanager.outputs.WsVictor;
 import com.wildstangs.outputmanager.outputs.no.NoOutput;
@@ -82,7 +83,8 @@ public class OutputManager {
     public static final int WINGS_SOLENOID_INDEX = 5;
     public static final int LANDING_GEAR_SOLENOID_INDEX = 6;
     public static final int CATAPAULT_SOLENOID_INDEX = 7;
-    public static final int EARS_SOLENOID_INDEX = 8;
+    public static final int FIRST_EAR_SERVO = 8;
+    public static final int SECOND_EAR_SERVO = 15;
     public static final int FRONT_ARM_VICTOR_INDEX = 10;
     public static final int BACK_ARM_VICTOR_INDEX = 11;
     public static final int FRONT_ARM_ROLLER_VICTOR_INDEX = 12;
@@ -105,11 +107,12 @@ public class OutputManager {
         outputs.addToIndex(WINGS_SOLENOID_INDEX, new WsDoubleSolenoid("Wings Solenoid1", 1, 3, 4));
         outputs.addToIndex(LANDING_GEAR_SOLENOID_INDEX, new WsDoubleSolenoid("Landing Gear Solenoid", 1, 7, 8));
         outputs.addToIndex(CATAPAULT_SOLENOID_INDEX, new WsSolenoid("Arm Catapult Solenoid", 1, 5));
-    //    outputs.addToIndex(EARS_SOLENOID_INDEX, new WsDoubleSolenoid("Ears Double Solenoid", 2, 1, 2));
         outputs.addToIndex(FRONT_ARM_VICTOR_INDEX, new WsVictor("Front Arm Victor", 5));       
         outputs.addToIndex(BACK_ARM_VICTOR_INDEX, new WsVictor("Back Arm Victor", 6));
         outputs.addToIndex(FRONT_ARM_ROLLER_VICTOR_INDEX, new WsVictor("Front Arm Roller Victor",7));
         outputs.addToIndex(BACK_ARM_ROLLER_VICTOR_INDEX, new WsVictor("Back Arm Roller Victor", 8));
         outputs.addToIndex(LATCH_SOLENOID_INDEX, new WsSolenoid("Latch Solenoid", 1, 6));
+        outputs.addToIndex(FIRST_EAR_SERVO, new WsServo("First Ear Servo", 8));
+        outputs.addToIndex(SECOND_EAR_SERVO, new WsServo("Second Ear Servo", 9));
     }
 }

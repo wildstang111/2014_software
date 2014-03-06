@@ -12,6 +12,9 @@ import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.pid.controller.base.PidController;
 import com.wildstangs.pid.inputs.ArmPotPidInput;
 import com.wildstangs.pid.outputs.ArmVictorPidOutput;
+import com.wildstangs.subjects.base.BooleanSubject;
+import com.wildstangs.subjects.base.IObserver;
+import com.wildstangs.subjects.base.Subject;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Random;
 /**
@@ -43,8 +46,7 @@ public class Arm
     protected double rollerForwardSpeed;
     protected double topVoltage;
     protected double bottomVoltage;
-            
-    
+    protected boolean forceOverrideToManualFlag;
     
     //The 'front' boolean is for String differentiation ONLY
     protected boolean front;
@@ -76,11 +78,13 @@ public class Arm
         this.pidInput = new ArmPotPidInput(potIndex, topVoltage, bottomVoltage, highBound, lowBound);
         this.pid = new PidController(this.pidInput, new ArmVictorPidOutput(victorAngleIndex), front ? "FrontArmPid" : "BackArmPid");
         this.pid.disable();
+        
+        
     }
     
     public void setToAngle(int angle)
     {
-        if(disablePidCompletely) 
+        if(disablePidCompletely || forceOverrideToManualFlag) 
         {
             return;
         }
@@ -116,15 +120,18 @@ public class Arm
         if(speed < -1.0) speed = -1.0;
         else if(speed > 1.0) speed = 1.0;
         
-        double potVoltage = this.getPotVoltage();
-        
-        if((currentAngle <= lowBound || potVoltage < hardBottomVoltage) && speed < 0)
+        if(!forceOverrideToManualFlag)
         {
-            speed = 0.0;
-        }
-        else if((currentAngle >= highBound || potVoltage > hardTopVoltage) && speed > 0)
-        {
-            speed = 0.0;
+            double potVoltage = this.getPotVoltage();
+
+            if((currentAngle <= lowBound || potVoltage < hardBottomVoltage) && speed < 0)
+            {
+                speed = 0.0;
+            }
+            else if((currentAngle >= highBound || potVoltage > hardTopVoltage) && speed > 0)
+            {
+                speed = 0.0;
+            }
         }
         
         OutputManager.getInstance().getOutput(VICTOR_ANGLE_INDEX).set(new Double(speed));
@@ -150,7 +157,7 @@ public class Arm
         rollerValue = ArmRollerEnum.OFF;
         OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(0.0));
         pid.disable();
-        if(!diablePidInit && !disablePidCompletely)
+        if(!diablePidInit && !disablePidCompletely && !forceOverrideToManualFlag)
         {
             setToAngle(0);
         }
@@ -160,7 +167,7 @@ public class Arm
     {
         if(pid.isEnabled()) 
         {
-            if(disablePidCompletely)
+            if(disablePidCompletely || forceOverrideToManualFlag)
             {
                 pid.disable();
             }
@@ -176,7 +183,7 @@ public class Arm
         
         boolean safeVoltage = !(currentVoltage <= 0.6 || currentVoltage >= 4.4);
         
-        SmartDashboard.putBoolean((front ? "Front" : "Back") + " Arm Pot at Safe Voltage", safeVoltage ? false : RND.nextInt(2) == 0);
+        SmartDashboard.putBoolean((front ? "Front" : "Back") + " Arm Pot at Safe Voltage", safeVoltage ? true : RND.nextInt(2) == 0);
         //The random boolean is so that it hopefully catches someone's attention that the arm pot isn't at a safe position
         
         double victorSpeed = this.getVictorSpeed();
@@ -260,5 +267,19 @@ public class Arm
         }
         
         pidInput.setVoltageValues(topVoltage, bottomVoltage);
+    }
+
+    public void acceptNotification(Subject subjectThatCaused)
+    {
+        this.forceOverrideToManualFlag = ((BooleanSubject) subjectThatCaused).getValue();
+    }
+
+    public void forceOverrideToManual(boolean forceOverrideToManualFlag)
+    {
+        this.forceOverrideToManualFlag = forceOverrideToManualFlag;
+        if(this.forceOverrideToManualFlag)
+        {
+            pid.disable();
+        }
     }
 }
