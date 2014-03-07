@@ -1,10 +1,12 @@
 package com.wildstangs.subsystems;
 
+import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.base.Subsystem;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.image.BinaryImage;
 import edu.wpi.first.wpilibj.image.ColorImage;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj.image.CriteriaCollection;
 import edu.wpi.first.wpilibj.image.NIVision;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
+import edu.wpi.first.wpilibj.image.RGBImage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -99,6 +102,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
 //            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
             SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
             SmartDashboard.putBoolean("Looking For Hot Goal", false);
+            
         }
     }
 
@@ -113,13 +117,13 @@ public class HotGoalDetector extends Subsystem implements IObserver
         {
             ColorImage image = camera.getImage();     // comment if using stored images
 //            ColorImage image;                           // next 2 lines read image from flash on cRIO
-//            image = new RGBImage("/image.jpg"); 	// get the sample image from the cRIO flash
+//            image = new RGBImage("/video.jpg"); 	// get the sample image from the cRIO flash
             BinaryImage thresholdImage = image.thresholdHSV(100, 150, 50, 255, 90, 255);   // keep only green objects
-
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
 
             Scores scores[] = new Scores[filteredImage.getNumberParticles()];
             horizontalTargetCount = verticalTargetCount = 0;
+            SmartDashboard.putString("Hot Target Side", "None found" );
 
             if (filteredImage.getNumberParticles() > 0)
             {
@@ -131,42 +135,42 @@ public class HotGoalDetector extends Subsystem implements IObserver
                     scores[i].rectangularity = scoreRectangularity(report);
                     scores[i].aspectRatioVertical = scoreAspectRatioOnRotatedImage(filteredImage, report, i, true);
                     scores[i].aspectRatioHorizontal = scoreAspectRatioOnRotatedImage(filteredImage, report, i, false);
-                    
+                    System.out.println("Particle " + i + " " + report.boundingRectWidth + " by " + report.boundingRectHeight);
                     if(scores[i].aspectRatioHorizontal > scores[i].aspectRatioVertical)
                     {
                         if (scoreCompare(scores[i], false))
                         {
-                            System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            System.out.println("particle: " + i + " is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                             horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
                         }
                         else if (scoreCompare(scores[i], true))
                         {
-                            System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            System.out.println("particle: " + i + " is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                             verticalTargets[verticalTargetCount++] = i;  //Add particle to target array and increment count
                         }
                         else
                         {
-                            System.out.println("particle: " + i + "is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            System.out.println("particle: " + i + " is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                         }
                     }
                     else
                     {
                         if (scoreCompare(scores[i], true))
                         {
-                            System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            System.out.println("particle: " + i + " is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                             verticalTargets[verticalTargetCount++] = i;  //Add particle to target array and increment count
                         }
                         else if (scoreCompare(scores[i], false))
                         {
-                            System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            System.out.println("particle: " + i + " is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                             horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
                         }
                         else
                         {
-                            System.out.println("particle: " + i + "is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            System.out.println("particle: " + i + " is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                         }
                     }
-                    System.out.println("rect: " + scores[i].rectangularity + "ARHoriz: " + scores[i].aspectRatioHorizontal);
+                    System.out.println("rect: " + scores[i].rectangularity + " ARHoriz: " + scores[i].aspectRatioHorizontal);
                     System.out.println("ARVert: " + scores[i].aspectRatioVertical);
                 }
 
@@ -183,14 +187,18 @@ public class HotGoalDetector extends Subsystem implements IObserver
                         horizWidth = NIVision.MeasureParticle(filteredImage.image, horizontalTargets[j], false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_LONG_SIDE);
                         vertWidth = NIVision.MeasureParticle(filteredImage.image, verticalTargets[i], false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
                         horizHeight = NIVision.MeasureParticle(filteredImage.image, horizontalTargets[j], false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
-
-                        leftScore = ratioToScore(1.2 * (verticalReport.boundingRectLeft - horizontalReport.center_mass_x) / horizWidth);
-
-                        rightScore = ratioToScore(1.2 * (horizontalReport.center_mass_x - verticalReport.boundingRectLeft - verticalReport.boundingRectWidth) / horizWidth);
+                        System.out.println("Horiz width: " + horizWidth + " Horiz height: " + horizHeight + " Vert Width: "+ vertWidth );
+//                        leftScore = ratioToScore(1.2 * (verticalReport.boundingRectLeft - horizontalReport.center_mass_x) / horizWidth);
+                        //Rotated image uses y axis values for the reports
+                        rightScore = ratioToScore(1.2 * (verticalReport.boundingRectTop - verticalReport.boundingRectHeight - horizontalReport.center_mass_y) / horizWidth);
+//                        rightScore = ratioToScore(1.2 * (horizontalReport.center_mass_x - verticalReport.boundingRectLeft - verticalReport.boundingRectWidth) / horizWidth);
+                        //Rotated image uses x axis values
+                        leftScore = ratioToScore(1.2 * (horizontalReport.center_mass_y - verticalReport.boundingRectTop ) / horizWidth);
 
                         tapeWidthScore = ratioToScore(vertWidth / horizHeight);
-
-                        verticalScore = ratioToScore(1 - (verticalReport.boundingRectTop - horizontalReport.center_mass_y) / (4 * horizHeight));
+                        verticalScore = ratioToScore(1 - (verticalReport.boundingRectLeft - horizontalReport.center_mass_x) / (4 * horizHeight));
+                        
+                        //verticalScore = ratioToScore(1 - (verticalReport.boundingRectTop - horizontalReport.center_mass_y) / (4 * horizHeight));
                         total = leftScore > rightScore ? leftScore : rightScore;
                         total += tapeWidthScore + verticalScore;
 
@@ -207,6 +215,8 @@ public class HotGoalDetector extends Subsystem implements IObserver
                     }
                     target.Hot = hotOrNot(target);
                 }
+                
+                //Show this unless one is found below
 
                 if (verticalTargetCount > 0)
                 {
@@ -215,6 +225,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
                     if (target.Hot)
                     {
                         System.out.println("Hot target located");
+                        SmartDashboard.putString("Hot Target Side", (target.leftScore > LR_SCORE_LIMIT ? "LEFT" : "RIGHT") );
                         System.out.println("Distance: " + distance);
                     }
                     else
