@@ -5,7 +5,9 @@
 package com.wildstangs.autonomous.steps.vision;
 
 import com.wildstangs.autonomous.steps.AutonomousStep;
+import com.wildstangs.logger.Logger;
 import com.wildstangs.subsystems.HotGoalDetector;
+import com.wildstangs.subsystems.HotGoalDetector.HotGoalSideEnum;
 import com.wildstangs.subsystems.base.SubsystemContainer;
 import com.wildstangs.timer.WsTimer;
 
@@ -16,19 +18,35 @@ import com.wildstangs.timer.WsTimer;
 public class AutonomousStepDelayForHotGoal extends AutonomousStep
 {
     protected int delayInMs;
+    protected HotGoalSideEnum sideToLookFor;
     protected WsTimer timer;
+    
     public AutonomousStepDelayForHotGoal(int delayInMs)
     {
+        this(delayInMs, HotGoalSideEnum.EITHER);
+    }
+    
+    public AutonomousStepDelayForHotGoal(int delayInMs, HotGoalSideEnum sideToLookFor)
+    {
         this.delayInMs = delayInMs;
+        this.sideToLookFor = sideToLookFor;
     }
     
     public void initialize()
     {
         if(((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).checkForHotGoal())
         {
-            finished = true;
+            if(sideToLookFor == HotGoalSideEnum.EITHER || sideToLookFor == HotGoalSideEnum.NONE)
+            {
+                finished = true;
+            }
+            else if(((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).getLastReportSide() == sideToLookFor)
+            {
+                finished = true;
+            }
         }
-        else
+        
+        if(!finished)
         {
             timer = new WsTimer();
             timer.start();
@@ -50,7 +68,7 @@ public class AutonomousStepDelayForHotGoal extends AutonomousStep
 
     public String toString()
     {
-        return "Delay for Hot Goal";
+        return "Delay " + this.delayInMs + "ms for Hot Goal on " + sideToLookFor.toString() + " Side";
     }
     
 }

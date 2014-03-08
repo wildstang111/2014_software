@@ -1,5 +1,6 @@
 package com.wildstangs.autonomous;
 
+import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal;
 import com.wildstangs.autonomous.programs.AutonomousProgramSleeper;
 import com.wildstangs.autonomous.programs.AutonomousProgramYMCA;
 import com.wildstangs.autonomous.programs.test.*;
@@ -153,6 +154,7 @@ public class AutonomousManager implements IObserver {
         addProgram(new AutonomousProgramDrivePatterns());
         addProgram(new AutonomousProgramTestParallel());
         addProgram(new AutonomousProgramYMCA());
+        addProgram(new AutonomousProgramDriveAndShootForHotGoal());
     }
     
     private void addProgram(AutonomousProgram program) {

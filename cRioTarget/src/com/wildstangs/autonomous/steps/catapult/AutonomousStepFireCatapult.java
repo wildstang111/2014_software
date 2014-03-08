@@ -26,11 +26,8 @@ public class AutonomousStepFireCatapult extends AutonomousStep{
 
     public void update() {
        Catapult catapult = (Catapult) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.CATAPULT_INDEX);
-       boolean ballInState = catapult.isBallIn();
-       if (ballInState == false){
-           button.setValue(false);
-           this.finished = true;
-       }
+//       button.setValue(false);
+       this.finished = true;
     }
 
     public String toString() {

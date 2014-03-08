@@ -2,14 +2,14 @@
 package com.wildstangs.subsystems;
 
 import com.wildstangs.config.IntegerConfigFileParameter;
-import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
+import com.wildstangs.outputmanager.base.IOutputEnum;
+import com.wildstangs.outputmanager.base.IServo;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.base.Subsystem;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -18,25 +18,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Ears extends Subsystem implements IObserver{
     
-    protected final IntegerConfigFileParameter FIRST_EAR_UP_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), "EarPreset.First.Up", 90);
-    protected final IntegerConfigFileParameter FIRST_EAR_DOWN_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), "EarPreset.First.Down", 0);
-    protected final IntegerConfigFileParameter SECOND_EAR_UP_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), "EarPreset.Second.Up", 0);
-    protected final IntegerConfigFileParameter SECOND_EAR_DOWN_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), "EarPreset.Second.down", 90);
+    protected final IntegerConfigFileParameter LEFT_EAR_UP_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), "EarPreset.Left.Up", 90);
+    protected final IntegerConfigFileParameter LEFT_EAR_DOWN_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), "EarPreset.Left.Down", 0);
+    protected final IntegerConfigFileParameter RIGHT_EAR_UP_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), "EarPreset.Right.Up", 0);
+    protected final IntegerConfigFileParameter RIGHT_EAR_DOWN_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), "EarPreset.Right.Down", 90);
     
     boolean currentEarState = false;
     
-    protected int firstEarUp, secondEarUp, firstEarDown, secondEarDown;
+    protected int leftEarUp, rightEarUp, leftEarDown, rightEarDown;
     
     public Ears(String name) {
         super(name);
         registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_UP);
         registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN);
         
-        firstEarUp = FIRST_EAR_UP_CONFIG.getValue();
-        secondEarUp = SECOND_EAR_UP_CONFIG.getValue();
+        leftEarUp = LEFT_EAR_UP_CONFIG.getValue();
+        rightEarUp = RIGHT_EAR_UP_CONFIG.getValue();
         
-        firstEarDown = FIRST_EAR_DOWN_CONFIG.getValue();
-        secondEarDown = SECOND_EAR_DOWN_CONFIG.getValue();
+        leftEarDown = LEFT_EAR_DOWN_CONFIG.getValue();
+        rightEarDown = RIGHT_EAR_DOWN_CONFIG.getValue();
     }
 
     public void init() {
@@ -46,16 +46,16 @@ public class Ears extends Subsystem implements IObserver{
     public void update() {
        SmartDashboard.putBoolean("Ears are up", currentEarState);
        
-       (OutputManager.getInstance().getOutput(OutputManager.FIRST_EAR_SERVO)).set(new Integer(currentEarState ? firstEarUp : firstEarDown));      
-       (OutputManager.getInstance().getOutput(OutputManager.SECOND_EAR_SERVO)).set(new Integer(currentEarState ? secondEarUp : secondEarDown));  
+       ((IServo) OutputManager.getInstance().getOutput(OutputManager.LEFT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState ? leftEarUp : leftEarDown));      
+       ((IServo) OutputManager.getInstance().getOutput(OutputManager.RIGHT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState ? rightEarUp : rightEarDown));  
     }
 
     public void notifyConfigChange() {
-        firstEarUp = FIRST_EAR_UP_CONFIG.getValue();
-        secondEarUp = SECOND_EAR_UP_CONFIG.getValue();
+        leftEarUp = LEFT_EAR_UP_CONFIG.getValue();
+        rightEarUp = RIGHT_EAR_UP_CONFIG.getValue();
         
-        firstEarDown = FIRST_EAR_DOWN_CONFIG.getValue();
-        secondEarDown = SECOND_EAR_DOWN_CONFIG.getValue();
+        leftEarDown = LEFT_EAR_DOWN_CONFIG.getValue();
+        rightEarDown = RIGHT_EAR_DOWN_CONFIG.getValue();
     }
 
     public void acceptNotification(Subject subjectThatCaused) 

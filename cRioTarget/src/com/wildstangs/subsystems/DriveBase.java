@@ -337,7 +337,7 @@ public class DriveBase extends Subsystem implements IObserver {
             }
         }
 
-        if (shifterFlag == DoubleSolenoid.Value.kReverse) {
+        if (shifterFlag == DoubleSolenoid.Value.kForward) {
             //We are in high gear, see if the turbo button is pressed
             if (turboFlag == true) {
                 //We are in turbo mode, don't cap the output

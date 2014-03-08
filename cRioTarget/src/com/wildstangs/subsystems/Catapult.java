@@ -77,10 +77,10 @@ public class Catapult extends Subsystem implements IObserver {
         armCatapultFlag = false;
         disarmCatapultFlag = false;
         fireCatapultFlag = false;
-        isCatapultDown = false;
+        isCatapultDown = true;
         isTension = false;
         isBallIn = false;
-        isLatched = false;
+        isLatched = true;
         catapultState = CatapultState.DOWN;
     }
 

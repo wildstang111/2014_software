@@ -7,8 +7,12 @@
 package com.wildstangs.crio;
 
 
+import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.profiling.ProfilingTimer;
+import com.wildstangs.subjects.base.BooleanSubject;
+import com.wildstangs.subsystems.BallHandler;
+import com.wildstangs.subsystems.base.SubsystemContainer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Watchdog;
 
@@ -48,6 +52,16 @@ public class RobotTemplate extends IterativeRobot {
 
     public void disabledPeriodic() {
         FrameworkAbstraction.disabledPeriodic();
+        
+        if(((Boolean) InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue())
+        {
+            ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateBackArm(true);
+        }
+        
+        if(((Boolean) InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue())
+        {
+            ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateFrontArm(true);
+        }
     }
 
     public void autonomousInit() {

@@ -8,7 +8,6 @@ import com.wildstangs.outputmanager.outputs.WsServo;
 import com.wildstangs.outputmanager.outputs.WsSolenoid;
 import com.wildstangs.outputmanager.outputs.WsVictor;
 import com.wildstangs.outputmanager.outputs.no.NoOutput;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
 
 /**
@@ -83,13 +82,14 @@ public class OutputManager {
     public static final int WINGS_SOLENOID_INDEX = 5;
     public static final int LANDING_GEAR_SOLENOID_INDEX = 6;
     public static final int CATAPAULT_SOLENOID_INDEX = 7;
-    public static final int FIRST_EAR_SERVO = 8;
-    public static final int SECOND_EAR_SERVO = 15;
+    public static final int LEFT_EAR_SERVO_INDEX = 8;
     public static final int FRONT_ARM_VICTOR_INDEX = 10;
     public static final int BACK_ARM_VICTOR_INDEX = 11;
     public static final int FRONT_ARM_ROLLER_VICTOR_INDEX = 12;
     public static final int BACK_ARM_ROLLER_VICTOR_INDEX = 13;
     public static final int LATCH_SOLENOID_INDEX = 14;
+    public static final int RIGHT_EAR_SERVO_INDEX = 15;
+    public static final int CAMERA_LED_SPIKE_INDEX = 16;
     /**
      * Constructor for OutputManager.
      *
@@ -112,7 +112,8 @@ public class OutputManager {
         outputs.addToIndex(FRONT_ARM_ROLLER_VICTOR_INDEX, new WsVictor("Front Arm Roller Victor",7));
         outputs.addToIndex(BACK_ARM_ROLLER_VICTOR_INDEX, new WsVictor("Back Arm Roller Victor", 8));
         outputs.addToIndex(LATCH_SOLENOID_INDEX, new WsSolenoid("Latch Solenoid", 1, 6));
-        outputs.addToIndex(FIRST_EAR_SERVO, new WsServo("First Ear Servo", 8));
-        outputs.addToIndex(SECOND_EAR_SERVO, new WsServo("Second Ear Servo", 9));
+        outputs.addToIndex(LEFT_EAR_SERVO_INDEX, new WsServo("Left Ear Servo", 9));
+        outputs.addToIndex(RIGHT_EAR_SERVO_INDEX, new WsServo("Right Ear Servo", 10));
+        outputs.addToIndex(CAMERA_LED_SPIKE_INDEX, new WsRelay(1, 2, Relay.Direction.kForward));
     }
 }

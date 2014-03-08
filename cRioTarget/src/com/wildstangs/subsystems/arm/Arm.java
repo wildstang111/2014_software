@@ -47,6 +47,7 @@ public class Arm
     protected double topVoltage;
     protected double bottomVoltage;
     protected boolean forceOverrideToManualFlag;
+    protected double armVictorSpeed = 0.0;
     
     //The 'front' boolean is for String differentiation ONLY
     protected boolean front;
@@ -75,7 +76,7 @@ public class Arm
         hardBottomVoltage = HARD_BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
         
         this.front = front;
-        this.pidInput = new ArmPotPidInput(potIndex, topVoltage, bottomVoltage, highBound, lowBound);
+        this.pidInput = new ArmPotPidInput(potIndex, topVoltage, bottomVoltage);
         this.pid = new PidController(this.pidInput, new ArmVictorPidOutput(victorAngleIndex), front ? "FrontArmPid" : "BackArmPid");
         this.pid.disable();
         
@@ -133,7 +134,7 @@ public class Arm
                 speed = 0.0;
             }
         }
-        
+        armVictorSpeed = speed;
         OutputManager.getInstance().getOutput(VICTOR_ANGLE_INDEX).set(new Double(speed));
     }
     
@@ -191,14 +192,20 @@ public class Arm
         
         if(currentAngle <= lowBound && victorSpeed < 0)
         {
-            this.setVictor(0.0);
+            armVictorSpeed = 0.0;
             if(pid.isEnabled()) pid.disable();
         }
         else if(currentAngle >= highBound && victorSpeed > 0)
         {
-            this.setVictor(0.0);
+            armVictorSpeed = 0.0;
             if(pid.isEnabled()) pid.disable();
         }
+        
+        if(!pid.isEnabled())
+        {
+            OutputManager.getInstance().getOutput(VICTOR_ANGLE_INDEX).set(new Double(armVictorSpeed));
+        }
+        
         if(rollerValue == ArmRollerEnum.INTAKE){ 
             OutputManager.getInstance().getOutput(ARM_ROLLER_VICTOR_INDEX).set(new Double(rollerForwardSpeed));
         }
@@ -220,7 +227,6 @@ public class Arm
         lowBound = LOW_BOUND_CONFIG.getValue();
         topVoltage = TOP_VOLTAGE_VALUE_CONFIG.getValue();
         bottomVoltage = BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
-        pidInput.setAngleBounds(lowBound, highBound);
         pidInput.setVoltageValues(topVoltage, bottomVoltage);
         pid.notifyConfigChange();
     }

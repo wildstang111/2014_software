@@ -20,6 +20,7 @@ public abstract class AutonomousProgram {
     //Remember to clear everything before all of your steps are finished, because once they are, it immediately drops into Sleeper.
 
     public void initialize() {
+        programSteps.clear();
         defineSteps();
         loadStopPosition();
         currentStep = 0;
@@ -30,9 +31,7 @@ public abstract class AutonomousProgram {
     }
 
     public void cleanup() {
-        for (int i = 0; i < programSteps.size(); i++) {
-            programSteps.remove(i);
-        }
+        programSteps.clear();
     }
 
     public void update() {

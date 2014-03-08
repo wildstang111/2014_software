@@ -31,6 +31,8 @@ public class BallHandler extends Subsystem implements IObserver {
     public static final ArmPreset CATAPULT_TENSION_PRESET_BACK = new ArmPreset(ArmPreset.IGNORE_VALUE, 160, "ShootPresetBackOnly");
     public static final ArmPreset CATAPULT_TENSION_PRESET_BOTH = new ArmPreset(10, 160, "ShootPresetBothArms");
     
+    public static final ArmPreset back90 = new ArmPreset(ArmPreset.IGNORE_VALUE, 90, "back90");
+    
     protected final DoubleConfigFileParameter DEADBAND_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), "ArmControlDeadband", 0.05);
     protected final DoubleConfigFileParameter SAFE_FRONT_ARM_SHOOT_TOP_BOUND_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), "SafeFrontArmShoot.TopBound", 180);
     protected final DoubleConfigFileParameter SAFE_FRONT_ARM_SHOOT_BOTTOM_BOUND_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), "SafeFrontArmShoot.BottomBound", 140);
@@ -70,6 +72,7 @@ public class BallHandler extends Subsystem implements IObserver {
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_7);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_8);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_9);
+//        registerForJoystickButtonNotification(JoystickDPadButtonEnum.DRIVER_D_PAD_BUTTON_UP);
         
         //"Oh Shit" button for the driver
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_10);
@@ -231,22 +234,26 @@ public class BallHandler extends Subsystem implements IObserver {
                 }
             }
         }
-        else if (subjectThatCaused == this.frontArmCalibrationDebouncer && !disableCalibrationSwitches)
-        {
-            if (((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
-            {
-                System.out.println("Calibrating Front Arm Now");
-                frontArm.calibrate(true);
-            }
-        }
-        else if (subjectThatCaused == this.backArmCalibrationDebouncer && !disableCalibrationSwitches)
-        {
-            if (((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
-            {
-                System.out.println("Calibrating Back Arm Now");
-                backArm.calibrate(true);
-            }
-        }
+//        else if (subjectThatCaused == this.frontArmCalibrationDebouncer && !disableCalibrationSwitches)
+//        {
+//            if (((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
+//            {
+//                System.out.println("Calibrating Front Arm Now");
+//                frontArm.calibrate(true);
+//            }
+//        }
+//        else if (subjectThatCaused == this.backArmCalibrationDebouncer && !disableCalibrationSwitches)
+//        {
+//            if (((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
+//            {
+//                System.out.println("Calibrating Back Arm Now");
+//                backArm.calibrate(true);
+//            }
+//        }
+//        else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.DRIVER_D_PAD_BUTTON_UP)
+//        {
+//            this.setArmPreset(back90);
+//        }
 //        else if(subjectThatCaused == InputManager.getInstance().getOiInput(InputManager.ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX).getSubject())
 //        {
 //            forceOverrideToManualFlag = ((BooleanSubject) subjectThatCaused).getValue();
@@ -314,6 +321,22 @@ public class BallHandler extends Subsystem implements IObserver {
         {
             backIntakeButton = false;
             backOutputButton = false;
+        }
+    }
+
+    public void calibrateBackArm(boolean high)
+    {
+        if(!disableCalibrationSwitches)
+        {
+            backArm.calibrate(high);
+        }
+    }
+    
+    public void calibrateFrontArm(boolean high)
+    {
+        if(!disableCalibrationSwitches)
+        {
+            frontArm.calibrate(high);
         }
     }
 }

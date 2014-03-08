@@ -2,11 +2,12 @@ package com.wildstangs.subsystems;
 
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
+import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.base.Subsystem;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.image.BinaryImage;
 import edu.wpi.first.wpilibj.image.ColorImage;
@@ -14,7 +15,6 @@ import edu.wpi.first.wpilibj.image.CriteriaCollection;
 import edu.wpi.first.wpilibj.image.NIVision;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
-import edu.wpi.first.wpilibj.image.RGBImage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -45,10 +45,32 @@ public class HotGoalDetector extends Subsystem implements IObserver
     final int MAX_PARTICLES = 10;
     AxisCamera camera;
     CriteriaCollection cc;
+    
+    protected Relay.Value ledState = Relay.Value.kOff;
+    
+    protected TargetReport lastReport = null;
+    
+    public static class HotGoalSideEnum
+    {
+        protected String denotion;
+        protected HotGoalSideEnum(String denotion)
+        {
+            this.denotion = denotion;
+        }
 
+        public String toString()
+        {
+            return denotion;
+        }
+        
+        public static final HotGoalSideEnum LEFT = new HotGoalSideEnum("LEFT");
+        public static final HotGoalSideEnum RIGHT = new HotGoalSideEnum("RIGHT");
+        public static final HotGoalSideEnum NONE = new HotGoalSideEnum("NONE");
+        public static final HotGoalSideEnum EITHER = new HotGoalSideEnum("EITHER"); //This is mostly for Auto
+    }
+    
     public class Scores
     {
-
         double rectangularity;
         double aspectRatioVertical;
         double aspectRatioHorizontal;
@@ -65,6 +87,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
         double rightScore;
         double tapeWidthScore;
         double verticalScore;
+        HotGoalSideEnum side;
     }
 
     public HotGoalDetector(String name)
@@ -72,17 +95,22 @@ public class HotGoalDetector extends Subsystem implements IObserver
         super(name);
         camera = AxisCamera.getInstance("10.1.11.11");
         
-        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_UP);
+        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT);
+        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT);
     }
 
     public void init()
     {
         cc = new CriteriaCollection();
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, AREA_MINIMUM, 65535, false);
+        
+        ledState = Relay.Value.kOff;
     }
 
     public void update()
     {
+        SmartDashboard.putString("Camera LEDs", "" + ledState);
+        OutputManager.getInstance().getOutput(OutputManager.CAMERA_LED_SPIKE_INDEX).set(ledState);
     }
 
     public void notifyConfigChange()
@@ -93,16 +121,22 @@ public class HotGoalDetector extends Subsystem implements IObserver
     {
         if(((BooleanSubject) subjectThatCaused).getValue())
         {
-            SmartDashboard.putBoolean("Looking For Hot Goal", true);
-//            int numberFound = 0;
-//            for(int i = 0; i < 100; i++)
-//            {
-//                if(this.checkForHotGoal()) numberFound++;
-//            }
-//            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
-            SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
-            SmartDashboard.putBoolean("Looking For Hot Goal", false);
-            
+            if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT)
+            {
+                SmartDashboard.putBoolean("Looking For Hot Goal", true);
+    //            int numberFound = 0;
+    //            for(int i = 0; i < 100; i++)
+    //            {
+    //                if(this.checkForHotGoal()) numberFound++;
+    //            }
+    //            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
+                SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
+                SmartDashboard.putBoolean("Looking For Hot Goal", false);
+            }
+            else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT)
+            {
+                ledState = (ledState == Relay.Value.kOff ? Relay.Value.kOn : Relay.Value.kOff);
+            }
         }
     }
 
@@ -217,7 +251,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
                 }
                 
                 //Show this unless one is found below
-
+                target.side = HotGoalSideEnum.NONE;
                 if (verticalTargetCount > 0)
                 {
                     ParticleAnalysisReport distanceReport = filteredImage.getParticleAnalysisReport(target.verticalIndex);
@@ -225,7 +259,14 @@ public class HotGoalDetector extends Subsystem implements IObserver
                     if (target.Hot)
                     {
                         System.out.println("Hot target located");
-                        SmartDashboard.putString("Hot Target Side", (target.leftScore > LR_SCORE_LIMIT ? "LEFT" : "RIGHT") );
+                        if(target.leftScore > LR_SCORE_LIMIT)
+                        {
+                            target.side = HotGoalSideEnum.LEFT;
+                        }
+                        else
+                        {
+                            target.side = HotGoalSideEnum.RIGHT;
+                        }
                         System.out.println("Distance: " + distance);
                     }
                     else
@@ -234,6 +275,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
                         System.out.println("Distance: " + distance);
                     }
                 }
+                SmartDashboard.putString("Hot Target Side", target.side.toString());
             }
 
             filteredImage.free();
@@ -244,10 +286,20 @@ public class HotGoalDetector extends Subsystem implements IObserver
         {
             t.printStackTrace();
         }
+        this.lastReport = target;
         
         return target.Hot;
     }
     
+    public boolean wasLastTargetHot()
+    {
+        return lastReport == null ? false : lastReport.Hot;
+    }
+    
+    public HotGoalSideEnum getLastReportSide()
+    {
+        return lastReport == null ? HotGoalSideEnum.NONE : lastReport.side;
+    }
     
     double computeDistance(BinaryImage image, ParticleAnalysisReport report, int particleNumber) throws NIVisionException
     {
@@ -344,6 +396,11 @@ public class HotGoalDetector extends Subsystem implements IObserver
     protected double ratioToScore(double ratio)
     {
         return (Math.max(0, Math.min(100 * (1 - Math.abs(1 - ratio)), 100)));
+    }
+    
+    public void setLedState(boolean on)
+    {
+        this.ledState = (on ? Relay.Value.kOn : Relay.Value.kOff);
     }
     
     protected boolean hotOrNot(TargetReport target)
