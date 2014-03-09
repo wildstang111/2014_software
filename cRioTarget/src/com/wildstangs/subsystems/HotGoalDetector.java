@@ -95,8 +95,8 @@ public class HotGoalDetector extends Subsystem implements IObserver
         super(name);
         camera = AxisCamera.getInstance("10.1.11.11");
         
-        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT);
-        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT);
+//        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT);
+//        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT);
     }
 
     public void init()
@@ -121,22 +121,22 @@ public class HotGoalDetector extends Subsystem implements IObserver
     {
         if(((BooleanSubject) subjectThatCaused).getValue())
         {
-            if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT)
-            {
-                SmartDashboard.putBoolean("Looking For Hot Goal", true);
-    //            int numberFound = 0;
-    //            for(int i = 0; i < 100; i++)
-    //            {
-    //                if(this.checkForHotGoal()) numberFound++;
-    //            }
-    //            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
-                SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
-                SmartDashboard.putBoolean("Looking For Hot Goal", false);
-            }
-            else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT)
-            {
-                ledState = (ledState == Relay.Value.kOff ? Relay.Value.kOn : Relay.Value.kOff);
-            }
+//            if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT)
+//            {
+//                SmartDashboard.putBoolean("Looking For Hot Goal", true);
+//    //            int numberFound = 0;
+//    //            for(int i = 0; i < 100; i++)
+//    //            {
+//    //                if(this.checkForHotGoal()) numberFound++;
+//    //            }
+//    //            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
+//                SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
+//                SmartDashboard.putBoolean("Looking For Hot Goal", false);
+//            }
+//            else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT)
+//            {
+//                ledState = (ledState == Relay.Value.kOff ? Relay.Value.kOn : Relay.Value.kOff);
+//            }
         }
     }
 
