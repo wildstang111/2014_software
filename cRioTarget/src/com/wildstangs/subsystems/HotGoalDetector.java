@@ -1,14 +1,14 @@
 package com.wildstangs.subsystems;
 
+import com.wildstangs.inputmanager.inputs.camera.WsCamera;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
-import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
+import com.wildstangs.logger.FileLogger;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.base.Subsystem;
 import edu.wpi.first.wpilibj.Relay;
-import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.image.BinaryImage;
 import edu.wpi.first.wpilibj.image.ColorImage;
 import edu.wpi.first.wpilibj.image.CriteriaCollection;
@@ -43,7 +43,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
     final int AREA_MINIMUM = 160;
 
     final int MAX_PARTICLES = 10;
-    AxisCamera camera;
+    WsCamera camera;
     CriteriaCollection cc;
     
     protected Relay.Value ledState = Relay.Value.kOff;
@@ -93,10 +93,9 @@ public class HotGoalDetector extends Subsystem implements IObserver
     public HotGoalDetector(String name)
     {
         super(name);
-        camera = AxisCamera.getInstance("10.1.11.11");
+        camera = WsCamera.getInstance("10.1.11.11");
         
-//        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT);
-//        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT);
+        this.registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_1);
     }
 
     public void init()
@@ -121,6 +120,18 @@ public class HotGoalDetector extends Subsystem implements IObserver
     {
         if(((BooleanSubject) subjectThatCaused).getValue())
         {
+            if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1)
+            {
+                if(this.camera != null)
+                {
+                    WsCamera.killCamera();
+                    this.camera = null;
+                }
+                else
+                {
+                    this.camera = WsCamera.getInstance("10.1.11.11");
+                }
+            }
 //            if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT)
 //            {
 //                SmartDashboard.putBoolean("Looking For Hot Goal", true);
@@ -158,54 +169,57 @@ public class HotGoalDetector extends Subsystem implements IObserver
             Scores scores[] = new Scores[filteredImage.getNumberParticles()];
             horizontalTargetCount = verticalTargetCount = 0;
             SmartDashboard.putString("Hot Target Side", "None found" );
-
+            FileLogger.getFileLogger().startLogger();
             if (filteredImage.getNumberParticles() > 0)
             {
                 for (int i = 0; i < MAX_PARTICLES && i < filteredImage.getNumberParticles(); i++)
                 {
+                    String particleString = "";
                     ParticleAnalysisReport report = filteredImage.getParticleAnalysisReport(i);
                     scores[i] = new Scores();
 
                     scores[i].rectangularity = scoreRectangularity(report);
                     scores[i].aspectRatioVertical = scoreAspectRatioOnRotatedImage(filteredImage, report, i, true);
                     scores[i].aspectRatioHorizontal = scoreAspectRatioOnRotatedImage(filteredImage, report, i, false);
-                    System.out.println("Particle " + i + " " + report.boundingRectWidth + " by " + report.boundingRectHeight);
+                    particleString += "Particle " + i + " " + report.boundingRectWidth + " by " + report.boundingRectHeight;
                     if(scores[i].aspectRatioHorizontal > scores[i].aspectRatioVertical)
                     {
                         if (scoreCompare(scores[i], false))
                         {
-                            System.out.println("particle: " + i + " is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            particleString += " is a Horizontal Target centerX: " + report.center_mass_x + " centerY: " + report.center_mass_y;
                             horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
                         }
                         else if (scoreCompare(scores[i], true))
                         {
-                            System.out.println("particle: " + i + " is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            particleString += " is a Vertical Target centerX: " + report.center_mass_x + " centerY: " + report.center_mass_y;
                             verticalTargets[verticalTargetCount++] = i;  //Add particle to target array and increment count
                         }
                         else
                         {
-                            System.out.println("particle: " + i + " is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            particleString += " is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y;
                         }
                     }
                     else
                     {
                         if (scoreCompare(scores[i], true))
                         {
-                            System.out.println("particle: " + i + " is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            particleString += " is a Vertical Target centerX: " + report.center_mass_x + " centerY: " + report.center_mass_y;
                             verticalTargets[verticalTargetCount++] = i;  //Add particle to target array and increment count
                         }
                         else if (scoreCompare(scores[i], false))
                         {
-                            System.out.println("particle: " + i + " is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            particleString += " is a Horizontal Target centerX: " + report.center_mass_x + " centerY: " + report.center_mass_y;
                             horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
                         }
                         else
                         {
-                            System.out.println("particle: " + i + " is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                            particleString += " is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y;
                         }
                     }
-                    System.out.println("rect: " + scores[i].rectangularity + " ARHoriz: " + scores[i].aspectRatioHorizontal);
-                    System.out.println("ARVert: " + scores[i].aspectRatioVertical);
+                    particleString += " rect: " + scores[i].rectangularity + " ARHoriz: " + scores[i].aspectRatioHorizontal;
+                    particleString += " ARVert: " + scores[i].aspectRatioVertical;
+                    
+                    FileLogger.getFileLogger().logData(particleString);
                 }
 
                 target.totalScore = target.leftScore = target.rightScore = target.tapeWidthScore = target.verticalScore = 0;
@@ -221,7 +235,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
                         horizWidth = NIVision.MeasureParticle(filteredImage.image, horizontalTargets[j], false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_LONG_SIDE);
                         vertWidth = NIVision.MeasureParticle(filteredImage.image, verticalTargets[i], false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
                         horizHeight = NIVision.MeasureParticle(filteredImage.image, horizontalTargets[j], false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
-                        System.out.println("Horiz width: " + horizWidth + " Horiz height: " + horizHeight + " Vert Width: "+ vertWidth );
+                        FileLogger.getFileLogger().logData("Particle Analysis " + i + " Horiz width: " + horizWidth + " Horiz height: " + horizHeight + " Vert Width: "+ vertWidth );
 //                        leftScore = ratioToScore(1.2 * (verticalReport.boundingRectLeft - horizontalReport.center_mass_x) / horizWidth);
                         //Rotated image uses y axis values for the reports
                         rightScore = ratioToScore(1.2 * (verticalReport.boundingRectTop - verticalReport.boundingRectHeight - horizontalReport.center_mass_y) / horizWidth);
@@ -258,7 +272,6 @@ public class HotGoalDetector extends Subsystem implements IObserver
                     double distance = computeDistanceOnRotatedImage(filteredImage, distanceReport, target.verticalIndex);
                     if (target.Hot)
                     {
-                        System.out.println("Hot target located");
                         if(target.leftScore > LR_SCORE_LIMIT)
                         {
                             target.side = HotGoalSideEnum.LEFT;
@@ -267,16 +280,22 @@ public class HotGoalDetector extends Subsystem implements IObserver
                         {
                             target.side = HotGoalSideEnum.RIGHT;
                         }
-                        System.out.println("Distance: " + distance);
+                        FileLogger.getFileLogger().logData("Hot Target Found - Distance: " + distance);
                     }
                     else
                     {
-                        System.out.println("No hot target present");
-                        System.out.println("Distance: " + distance);
+                        FileLogger.getFileLogger().logData("No Hot Target Found - Distance: " + distance);
                     }
+                }
+                else
+                {
+                    FileLogger.getFileLogger().logData("Not Hot Target Found");
                 }
                 SmartDashboard.putString("Hot Target Side", target.side.toString());
             }
+            
+//            FileLogger.getFileLogger().flushLogger();
+            FileLogger.getFileLogger().killLogger();
 
             filteredImage.free();
             thresholdImage.free();

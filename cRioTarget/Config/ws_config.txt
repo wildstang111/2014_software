@@ -118,6 +118,7 @@ com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minInput
 
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.DistanceToDrive=187
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.ForceStopAtStep=0
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.NoHotGoalDelayTimeMs=4500
 
 com.wildstangs.autonomous.programs.AutonomousProgramSleeper.ForceStopAtStep=0
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.unknown.distance=175.0
@@ -147,6 +148,8 @@ com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBothArms.WantedBackArmAngle=1
 com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBothArms.WantedFrontArmAngle=170
 
 //All these don't matter anymore except for testing
+com.wildstangs.subsystems.arm.ArmPreset.back90.WantedBackArmAngle=90
+com.wildstangs.subsystems.arm.ArmPreset.back90.WantedFrontArmAngle=1000
 com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly45.WantedBackArmAngle=1000
 com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly45.WantedFrontArmAngle=45
 com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly135.WantedBackArmAngle=1000
@@ -206,4 +209,3 @@ com.wildstangs.subsystems.automovements.AutoMovementArmsToTension.ForceStopAtSte
 //        New Parameters          //
 //                                //
 //********************************//
-

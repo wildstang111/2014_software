@@ -1,5 +1,45 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Hot Goals found in 100 checks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1015" y="407"/>
+	</widget>
+	<widget field="Looking For Hot Goal" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="1063" y="317"/>
+		<width>130</width>
+		<height>36</height>
+	</widget>
+	<widget field="Back Arm At Zero" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="960" y="292"/>
+	</widget>
+	<widget field="Front Arm At Zero" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="960" y="21"/>
+	</widget>
+	<widget field="Back Arm Pot safe" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="960" y="0"/>
+	</widget>
+	<widget field="Pot Voltage Back" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="709" y="271"/>
+	</widget>
+	<widget field="Front Arm Pot safe" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="531" y="271"/>
+	</widget>
+	<widget field="Pot Voltage Front" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="531" y="179"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.VideoStreamViewerExtension">
+		<location x="975" y="48"/>
+		<width>277</width>
+		<height>233</height>
+	</static-widget>
+	<widget field="BackArmPidNew P" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="531" y="101"/>
+	</widget>
+	<widget field="FrontArmPidNew P" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="226" y="453"/>
+	</widget>
+	<widget field="DriveBaseSpeedPidNew P" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="453"/>
+	</widget>
 	<widget field="Auto Movement:" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="531" y="80"/>
 		<width>285</width>
@@ -65,19 +105,19 @@
 		<location x="322" y="266"/>
 	</widget>
 	<widget field="Tension switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1042" y="177"/>
+		<location x="806" y="126"/>
 	</widget>
 	<widget field="catapult down limit switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1035" y="156"/>
+		<location x="757" y="102"/>
 	</widget>
 	<widget field="Latch switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1035" y="134"/>
+		<location x="820" y="80"/>
 	</widget>
 	<widget field="Ball detect switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="930" y="89"/>
+		<location x="787" y="58"/>
 	</widget>
 	<widget field="Catapult state" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="943" y="40"/>
+		<location x="804" y="4"/>
 	</widget>
 	<widget field="Back Arm Joystick" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="11" y="297"/>
@@ -110,10 +150,10 @@
 		<location x="1" y="167"/>
 	</widget>
 	<widget field="PSI" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1034" y="251"/>
+		<location x="859" y="156"/>
 	</widget>
 	<widget field="Pressure Transducer Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="908" y="224"/>
+		<location x="731" y="181"/>
 	</widget>
 	<widget field="Gyro angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="629" y="439"/>
