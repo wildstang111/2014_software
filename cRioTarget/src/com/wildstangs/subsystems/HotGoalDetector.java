@@ -196,7 +196,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
                         }
                         else
                         {
-                            particleString += " is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y;
+                            particleString += " is not a Target centerX: " + report.center_mass_x + " centerY: " + report.center_mass_y;
                         }
                     }
                     else
@@ -213,7 +213,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
                         }
                         else
                         {
-                            particleString += " is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y;
+                            particleString += " is not a Target centerX: " + report.center_mass_x + " centerY: " + report.center_mass_y;
                         }
                     }
                     particleString += " rect: " + scores[i].rectangularity + " ARHoriz: " + scores[i].aspectRatioHorizontal;
