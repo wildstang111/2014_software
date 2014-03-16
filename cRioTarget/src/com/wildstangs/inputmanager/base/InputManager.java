@@ -151,7 +151,8 @@ public class InputManager {
     public static final int AUTO_PROGRAM_SELECTOR_INDEX = 3;
     public static final int LOCK_IN_SWITCH_INDEX = 4;
     public static final int START_POSITION_SELECTOR_INDEX = 5;
-//    public static final int ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX = 6;
+    public static final int ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX = 6;
+    
     //Sensor Inputs
     public static final int PRESSURE_TRANSDUCER_INDEX = 1;
     public static final int FRONT_ARM_POT_INDEX = 2;
@@ -196,7 +197,7 @@ public class InputManager {
         oiInputs.addToIndex(AUTO_PROGRAM_SELECTOR_INDEX, new WsDSAnalogInput(1));
         oiInputs.addToIndex(LOCK_IN_SWITCH_INDEX, new WsDSDigitalInput(1));
         oiInputs.addToIndex(START_POSITION_SELECTOR_INDEX, new WsDSAnalogInput(2));
-//        oiInputs.addToIndex(ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX, new WsDSAnalogInput(3));
+        oiInputs.addToIndex(ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX, new WsDSDigitalInput(2));
 
     }
 }

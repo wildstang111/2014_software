@@ -23,6 +23,8 @@ public class AutonomousStepStartDriveUsingMotionProfile extends AutonomousStep {
     }
 
     public void initialize() {
+        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).resetLeftEncoder();
+        ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).resetRightEncoder();
         ((DriveBase) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.DRIVE_BASE_INDEX)).startStraightMoveWithMotionProfile(distance , goal_velocity);
         finished = true;
     }

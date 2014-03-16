@@ -2,6 +2,7 @@
 package com.wildstangs.subsystems;
 
 import com.wildstangs.config.IntegerConfigFileParameter;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.outputmanager.base.IOutputEnum;
 import com.wildstangs.outputmanager.base.IServo;
@@ -26,11 +27,15 @@ public class Ears extends Subsystem implements IObserver{
     boolean currentEarState = false;
     
     protected int leftEarUp, rightEarUp, leftEarDown, rightEarDown;
+    protected boolean ohShitFlag = false;
     
     public Ears(String name) {
         super(name);
         registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_UP);
-        registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN);
+//        registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN);
+        
+        //"Oh Shit" button for the driver
+        registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_10);
         
         leftEarUp = LEFT_EAR_UP_CONFIG.getValue();
         rightEarUp = RIGHT_EAR_UP_CONFIG.getValue();
@@ -41,13 +46,14 @@ public class Ears extends Subsystem implements IObserver{
 
     public void init() {
         currentEarState = false;
+        ohShitFlag = false;
     }
     
     public void update() {
        SmartDashboard.putBoolean("Ears are up", currentEarState);
        
-       ((IServo) OutputManager.getInstance().getOutput(OutputManager.LEFT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState ? leftEarUp : leftEarDown));      
-       ((IServo) OutputManager.getInstance().getOutput(OutputManager.RIGHT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState ? rightEarUp : rightEarDown));  
+       ((IServo) OutputManager.getInstance().getOutput(OutputManager.LEFT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState && !ohShitFlag ? leftEarUp : leftEarDown));      
+       ((IServo) OutputManager.getInstance().getOutput(OutputManager.RIGHT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState && !ohShitFlag ? rightEarUp : rightEarDown));  
     }
 
     public void notifyConfigChange() {
@@ -61,14 +67,19 @@ public class Ears extends Subsystem implements IObserver{
     public void acceptNotification(Subject subjectThatCaused) 
     {
         boolean buttonState = ((BooleanSubject) subjectThatCaused).getValue();
-        if(buttonState)
+        if (subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_UP)
         {
-            if (subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_UP)
+            this.currentEarState = buttonState;
+        }
+//        else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN)
+//        {
+//            this.currentEarState = false;
+//        }
+        else if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_10)
+        {
+            if(buttonState)
             {
-                this.currentEarState = true;
-            }
-            else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN)
-            {
+                ohShitFlag = !ohShitFlag;
                 this.currentEarState = false;
             }
         }

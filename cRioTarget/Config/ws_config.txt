@@ -28,7 +28,7 @@ com.wildstangs.subsystems.arm.Arm.Back.HardTopVoltageValue=4.6
 com.wildstangs.subsystems.arm.Arm.Back.HardBottomVoltageValue=0.4
 com.wildstangs.subsystems.arm.Arm.DisablePIDCompletely=false
 com.wildstangs.subsystems.arm.Arm.DisablePIDInInit=true
-com.wildstangs.subsystems.arm.Arm.ArmVictorSpeedDilution=0.5
+com.wildstangs.subsystems.arm.Arm.ArmVictorSpeedDilution=0.75
 com.wildstangs.subsystems.arm.Arm.Front.RollerForwardSpeed=0.75
 com.wildstangs.subsystems.arm.Arm.Front.RollerReverseSpeed=-0.75
 com.wildstangs.subsystems.arm.Arm.Front.TopVoltageValue=2.446
@@ -45,7 +45,7 @@ com.wildstangs.pid.controller.base.PidController.FrontArmPid.p=0.0235
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.i=0.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.d=0.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.errorIncrement=2.0
-com.wildstangs.pid.controller.base.PidController.FrontArmPid.errorEpsilon=2.0
+com.wildstangs.pid.controller.base.PidController.FrontArmPid.errorEpsilon=5.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.staticEpsilon=0.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.maxIntegral=1.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.integralErrorThresh=-1.0
@@ -54,25 +54,25 @@ com.wildstangs.pid.controller.base.PidController.FrontArmPid.maxOutput=0.5
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.minOutput=-0.5
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.maxInput=1000.0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.minInput=-1.0
-com.wildstangs.pid.controller.base.PidController.BackArmPid.p=0.0235
+com.wildstangs.pid.controller.base.PidController.BackArmPid.p=0.025
 com.wildstangs.pid.controller.base.PidController.BackArmPid.i=0.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.d=0.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.errorIncrement=1.0
-com.wildstangs.pid.controller.base.PidController.BackArmPid.errorEpsilon=2.0
+com.wildstangs.pid.controller.base.PidController.BackArmPid.errorEpsilon=5.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.staticEpsilon=0.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.maxIntegral=1.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.integralErrorThresh=-1.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.differentiatorBandLimit=1.0
-com.wildstangs.pid.controller.base.PidController.BackArmPid.maxOutput=0.5
-com.wildstangs.pid.controller.base.PidController.BackArmPid.minOutput=-0.5
+com.wildstangs.pid.controller.base.PidController.BackArmPid.maxOutput=0.75
+com.wildstangs.pid.controller.base.PidController.BackArmPid.minOutput=-0.75
 com.wildstangs.pid.controller.base.PidController.BackArmPid.maxInput=1000.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.minInput=-1.0
 
 //Ears
-com.wildstangs.subsystems.Ears.EarPreset.Left.Up=153
-com.wildstangs.subsystems.Ears.EarPreset.Right.Up=22
-com.wildstangs.subsystems.Ears.EarPreset.Left.Down=28
-com.wildstangs.subsystems.Ears.EarPreset.Right.Down=153
+com.wildstangs.subsystems.Ears.EarPreset.Left.Up=44
+com.wildstangs.subsystems.Ears.EarPreset.Left.Down=140
+com.wildstangs.subsystems.Ears.EarPreset.Right.Up=118
+com.wildstangs.subsystems.Ears.EarPreset.Right.Down=22
 
 //Drive Base
 com.wildstangs.subsystems.DriveBase.wheel_diameter=4.25
@@ -116,11 +116,25 @@ com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minInput
 //                                //
 //********************************//
 
-com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.DistanceToDrive=187
+//Drive and Shoot For Hot Goal
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.DistanceToDrive=168
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.NoHotGoalDelayTimeMs=5000
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.ForceStopAtStep=0
-com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.NoHotGoalDelayTimeMs=4500
 
+//Drive And Shoot for Goal In Front of us
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot.DistanceToDrive=175.0
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot.ForceStopAtStep=0
+
+//Drive And Shoot for Hot Goal in Parallel
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoalParallel.ForceStopAtStep=0
+
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootWithEars.DistanceToDrive=140.0
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootWithEars.ForceStopAtStep=0
+
+//Sleeper
 com.wildstangs.autonomous.programs.AutonomousProgramSleeper.ForceStopAtStep=0
+
+//Testing Programs
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.unknown.distance=175.0
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.unknown.heading=0.0
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.ForceStopAtStep=0
@@ -150,28 +164,6 @@ com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBothArms.WantedFrontArmAngle=
 //All these don't matter anymore except for testing
 com.wildstangs.subsystems.arm.ArmPreset.back90.WantedBackArmAngle=90
 com.wildstangs.subsystems.arm.ArmPreset.back90.WantedFrontArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly45.WantedBackArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly45.WantedFrontArmAngle=45
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly135.WantedBackArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly135.WantedFrontArmAngle=135
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly-15.WantedBackArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly-15.WantedFrontArmAngle=-15
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly45.WantedBackArmAngle=45
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly45.WantedFrontArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly90.WantedBackArmAngle=90
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly90.WantedFrontArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly135.WantedBackArmAngle=135
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly135.WantedFrontArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly-15.WantedBackArmAngle=-15
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly-15.WantedFrontArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly0.WantedBackArmAngle=0
-com.wildstangs.subsystems.arm.ArmPreset.BackArmOnly0.WantedFrontArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly90.WantedBackArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly90.WantedFrontArmAngle=90
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly0.WantedBackArmAngle=1000
-com.wildstangs.subsystems.arm.ArmPreset.FrontArmOnly0.WantedFrontArmAngle=0
-com.wildstangs.subsystems.arm.ArmPreset.TensionPreset.WantedBackArmAngle=160
-com.wildstangs.subsystems.arm.ArmPreset.TensionPreset.WantedFrontArmAngle=160
 
 //********************************//
 //                                //
@@ -209,3 +201,6 @@ com.wildstangs.subsystems.automovements.AutoMovementArmsToTension.ForceStopAtSte
 //        New Parameters          //
 //                                //
 //********************************//
+
+com.wildstangs.subsystems.arm.ArmPreset.CatchingPreset.WantedBackArmAngle=120
+com.wildstangs.subsystems.arm.ArmPreset.CatchingPreset.WantedFrontArmAngle=120

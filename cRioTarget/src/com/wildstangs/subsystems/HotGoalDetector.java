@@ -2,6 +2,7 @@ package com.wildstangs.subsystems;
 
 import com.wildstangs.inputmanager.inputs.camera.WsCamera;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.logger.FileLogger;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
@@ -95,7 +96,8 @@ public class HotGoalDetector extends Subsystem implements IObserver
         super(name);
         camera = WsCamera.getInstance("10.1.11.11");
         
-        this.registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_1);
+        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN);
+        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT);
     }
 
     public void init()
@@ -111,7 +113,24 @@ public class HotGoalDetector extends Subsystem implements IObserver
         SmartDashboard.putString("Camera LEDs", "" + ledState);
         OutputManager.getInstance().getOutput(OutputManager.CAMERA_LED_SPIKE_INDEX).set(ledState);
     }
-
+    int cyclesToCheck = 0;
+    public void disabledUpdate()
+    {
+//        cyclesToCheck++;
+//        if(cyclesToCheck > 50)
+//        {
+//            cyclesToCheck = 0;
+//            try
+//            {
+//                camera.getImage();
+//            }
+//            catch (Throwable t)
+//            {
+//                t.printStackTrace();
+//            }
+//        }
+    }
+    
     public void notifyConfigChange()
     {
     }
@@ -120,34 +139,34 @@ public class HotGoalDetector extends Subsystem implements IObserver
     {
         if(((BooleanSubject) subjectThatCaused).getValue())
         {
-            if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1)
+//            if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1)
+//            {
+//                if(this.camera != null)
+//                {
+//                    WsCamera.killCamera();
+//                    this.camera = null;
+//                }
+//                else
+//                {
+//                    this.camera = WsCamera.getInstance("10.1.11.11");
+//                }
+//            }
+            if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN)
             {
-                if(this.camera != null)
-                {
-                    WsCamera.killCamera();
-                    this.camera = null;
-                }
-                else
-                {
-                    this.camera = WsCamera.getInstance("10.1.11.11");
-                }
+                SmartDashboard.putBoolean("Looking For Hot Goal", true);
+    //            int numberFound = 0;
+    //            for(int i = 0; i < 100; i++)
+    //            {
+    //                if(this.checkForHotGoal()) numberFound++;
+    //            }
+    //            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
+                SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
+                SmartDashboard.putBoolean("Looking For Hot Goal", false);
             }
-//            if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT)
-//            {
-//                SmartDashboard.putBoolean("Looking For Hot Goal", true);
-//    //            int numberFound = 0;
-//    //            for(int i = 0; i < 100; i++)
-//    //            {
-//    //                if(this.checkForHotGoal()) numberFound++;
-//    //            }
-//    //            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
-//                SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
-//                SmartDashboard.putBoolean("Looking For Hot Goal", false);
-//            }
-//            else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT)
-//            {
-//                ledState = (ledState == Relay.Value.kOff ? Relay.Value.kOn : Relay.Value.kOff);
-//            }
+            else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT)
+            {
+                ledState = (ledState == Relay.Value.kOff ? Relay.Value.kOn : Relay.Value.kOff);
+            }
         }
     }
 
@@ -161,6 +180,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
         try
         {
             ColorImage image = camera.getImage();     // comment if using stored images
+            image = camera.getImage();
 //            ColorImage image;                           // next 2 lines read image from flash on cRIO
 //            image = new RGBImage("/video.jpg"); 	// get the sample image from the cRIO flash
             BinaryImage thresholdImage = image.thresholdHSV(100, 150, 50, 255, 90, 255);   // keep only green objects
@@ -306,6 +326,8 @@ public class HotGoalDetector extends Subsystem implements IObserver
             t.printStackTrace();
         }
         this.lastReport = target;
+        
+        SmartDashboard.putBoolean("Found Hot Goal", target.Hot);
         
         return target.Hot;
     }

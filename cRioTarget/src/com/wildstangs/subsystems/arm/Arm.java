@@ -48,6 +48,7 @@ public class Arm
     protected double bottomVoltage;
     protected boolean forceOverrideToManualFlag;
     protected double armVictorSpeed = 0.0;
+    protected boolean calibrated = false;
     
     //The 'front' boolean is for String differentiation ONLY
     protected boolean front;
@@ -225,9 +226,12 @@ public class Arm
         rollerReverseSpeed = ROLLER_REVERSE_SPEED_CONFIG.getValue();
         highBound = HIGH_BOUND_CONFIG.getValue();
         lowBound = LOW_BOUND_CONFIG.getValue();
-        topVoltage = TOP_VOLTAGE_VALUE_CONFIG.getValue();
-        bottomVoltage = BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
-        pidInput.setVoltageValues(topVoltage, bottomVoltage);
+        if(!calibrated)
+        {
+            topVoltage = TOP_VOLTAGE_VALUE_CONFIG.getValue();
+            bottomVoltage = BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
+            pidInput.setVoltageValues(topVoltage, bottomVoltage);
+        }
         pid.notifyConfigChange();
     }
     
@@ -260,6 +264,7 @@ public class Arm
     
     public void calibrate(boolean high)
     {
+        calibrated = true;
         double voltageDifferance = topVoltage - bottomVoltage;
         if(high)
         {
@@ -273,11 +278,6 @@ public class Arm
         }
         
         pidInput.setVoltageValues(topVoltage, bottomVoltage);
-    }
-
-    public void acceptNotification(Subject subjectThatCaused)
-    {
-        this.forceOverrideToManualFlag = ((BooleanSubject) subjectThatCaused).getValue();
     }
 
     public void forceOverrideToManual(boolean forceOverrideToManualFlag)

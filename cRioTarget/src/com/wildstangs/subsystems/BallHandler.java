@@ -12,7 +12,6 @@ import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.DoubleSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
-import com.wildstangs.subjects.debouncer.Debouncer;
 import com.wildstangs.subsystems.arm.Arm;
 import com.wildstangs.subsystems.arm.ArmPreset;
 import com.wildstangs.subsystems.arm.ArmRollerEnum;
@@ -30,6 +29,7 @@ public class BallHandler extends Subsystem implements IObserver {
     public static final ArmPreset DEFAULT_POSITION = new ArmPreset(180, 180, "DefaultPosition");
     public static final ArmPreset CATAPULT_TENSION_PRESET_BACK = new ArmPreset(ArmPreset.IGNORE_VALUE, 160, "ShootPresetBackOnly");
     public static final ArmPreset CATAPULT_TENSION_PRESET_BOTH = new ArmPreset(10, 160, "ShootPresetBothArms");
+    public static final ArmPreset CATCHING_PRESET = new ArmPreset(120, 120, "CatchingPreset");
     
     public static final ArmPreset back90 = new ArmPreset(ArmPreset.IGNORE_VALUE, 90, "back90");
     
@@ -48,7 +48,7 @@ public class BallHandler extends Subsystem implements IObserver {
     protected double deadband = 0.05;
     protected double frontArmJoystickValue = 0.0, backArmJoystickValue = 0.0;
     protected double safeFrontArmShootTopBound = 180, safeFrontArmShootBottomBound = 140;
-    protected Debouncer frontArmCalibrationDebouncer, backArmCalibrationDebouncer;
+//    protected Debouncer frontArmCalibrationDebouncer, backArmCalibrationDebouncer;
 
     public BallHandler(String name) {
         super(name);
@@ -56,23 +56,24 @@ public class BallHandler extends Subsystem implements IObserver {
         this.frontArm = new Arm(OutputManager.FRONT_ARM_VICTOR_INDEX, OutputManager.FRONT_ARM_ROLLER_VICTOR_INDEX, InputManager.FRONT_ARM_POT_INDEX, true);
         this.backArm = new Arm(OutputManager.BACK_ARM_VICTOR_INDEX, OutputManager.BACK_ARM_ROLLER_VICTOR_INDEX, InputManager.BACK_ARM_POT_INDEX, false);
         
-        this.frontArmCalibrationDebouncer = new Debouncer(60, new Boolean(false));
-        this.backArmCalibrationDebouncer = new Debouncer(60, new Boolean(false));
+//        this.frontArmCalibrationDebouncer = new Debouncer(60, new Boolean(false));
+//        this.backArmCalibrationDebouncer = new Debouncer(60, new Boolean(false));
         
         this.deadband = DEADBAND_CONFIG.getValue();
         this.disableCalibrationSwitches = DISABLE_CALIBRATION_SWITCHES_CONFIG.getValue();
         this.safeFrontArmShootBottomBound = SAFE_FRONT_ARM_SHOOT_BOTTOM_BOUND_CONFIG.getValue();
         this.safeFrontArmShootTopBound = SAFE_FRONT_ARM_SHOOT_TOP_BOUND_CONFIG.getValue();
         
-        this.frontArmCalibrationDebouncer.attach(this);
-        this.backArmCalibrationDebouncer.attach(this);
+//        this.frontArmCalibrationDebouncer.attach(this);
+//        this.backArmCalibrationDebouncer.attach(this);
         
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_5);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_6);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_7);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_8);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_9);
-//        registerForJoystickButtonNotification(JoystickDPadButtonEnum.DRIVER_D_PAD_BUTTON_UP);
+        registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT);
+        registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_1);
         
         //"Oh Shit" button for the driver
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_10);
@@ -83,8 +84,8 @@ public class BallHandler extends Subsystem implements IObserver {
         subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_RIGHT_JOYSTICK_X);
         subject.attach(this);
         
-//        subject = InputManager.getInstance().getOiInput(InputManager.ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX).getSubject();
-//        subject.attach(this);
+        subject = InputManager.getInstance().getOiInput(InputManager.ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX).getSubject();
+        subject.attach(this);
         
         registerForSensorNotification(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX);
         registerForSensorNotification(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX);
@@ -144,29 +145,22 @@ public class BallHandler extends Subsystem implements IObserver {
         frontArm.update();
         backArm.update();
 
-        ArmRollerEnum frontValue = frontArm.getRollerValue();
-        ArmRollerEnum backValue = backArm.getRollerValue();
-        String frontString = frontValue == ArmRollerEnum.INTAKE ? "Intake" : (frontValue == ArmRollerEnum.OUTPUT ? "Output" : "Off");
-        String backString = backValue == ArmRollerEnum.INTAKE ? "Intake" : (backValue == ArmRollerEnum.OUTPUT ? "Output" : "Off");
-        
-        if(!disableCalibrationSwitches)
-        {
-            this.frontArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get());
-            this.backArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get());
-        }
+//        if(!disableCalibrationSwitches)
+//        {
+//            this.frontArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get());
+//            this.backArmCalibrationDebouncer.update(InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get());
+//        }
         
         SmartDashboard.putNumber("Current Front Arm Angle", frontArm.getCurrentAngle());
         SmartDashboard.putNumber("Wanted Front Arm Angle", frontArm.getWantedAngle());
         SmartDashboard.putNumber("Current Back Arm Angle", backArm.getCurrentAngle());
         SmartDashboard.putNumber("Wanted Back Arm Angle", backArm.getWantedAngle());
-        SmartDashboard.putString("Front Arm Roller", frontString);
-        SmartDashboard.putString("Back Arm Roller", backString);
+        SmartDashboard.putString("Front Arm Roller", frontArm.getRollerValue().toString());
+        SmartDashboard.putString("Back Arm Roller", backArm.getRollerValue().toString());
         SmartDashboard.putNumber("Front Arm Victor", frontArm.getVictorSpeed());
         SmartDashboard.putNumber("Back Arm Victor", backArm.getVictorSpeed());
-        SmartDashboard.putNumber("Front Arm Joystick", frontArmJoystickValue);
-        SmartDashboard.putNumber("Back Arm Joystick", backArmJoystickValue);
-        SmartDashboard.putBoolean("Front Arm At Zero", ((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
-        SmartDashboard.putBoolean("Back Arm At Zero", ((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
+//        SmartDashboard.putBoolean("Front Arm At Zero", ((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
+//        SmartDashboard.putBoolean("Back Arm At Zero", ((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
     }
 
     public void notifyConfigChange() {
@@ -234,32 +228,26 @@ public class BallHandler extends Subsystem implements IObserver {
                 }
             }
         }
-//        else if (subjectThatCaused == this.frontArmCalibrationDebouncer && !disableCalibrationSwitches)
-//        {
-//            if (((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
-//            {
-//                System.out.println("Calibrating Front Arm Now");
-//                frontArm.calibrate(true);
-//            }
-//        }
-//        else if (subjectThatCaused == this.backArmCalibrationDebouncer && !disableCalibrationSwitches)
-//        {
-//            if (((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue())
-//            {
-//                System.out.println("Calibrating Back Arm Now");
-//                backArm.calibrate(true);
-//            }
-//        }
-//        else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.DRIVER_D_PAD_BUTTON_UP)
-//        {
-//            this.setArmPreset(back90);
-//        }
-//        else if(subjectThatCaused == InputManager.getInstance().getOiInput(InputManager.ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX).getSubject())
-//        {
-//            forceOverrideToManualFlag = ((BooleanSubject) subjectThatCaused).getValue();
-//            frontArm.forceOverrideToManual(forceOverrideToManualFlag);
-//            backArm.forceOverrideToManual(forceOverrideToManualFlag);
-//        }
+        else if(subjectThatCaused == InputManager.getInstance().getOiInput(InputManager.ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX).getSubject())
+        {
+            forceOverrideToManualFlag = ((BooleanSubject) subjectThatCaused).getValue();
+            frontArm.forceOverrideToManual(forceOverrideToManualFlag);
+            backArm.forceOverrideToManual(forceOverrideToManualFlag);
+        }
+        else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT)
+        {
+            if(((BooleanSubject) subjectThatCaused).getValue())
+            {
+                this.setArmPreset(CATCHING_PRESET);
+            }
+        }
+        else if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1)
+        {
+            if(((BooleanSubject) subjectThatCaused).getValue())
+            {
+                this.setArmPreset(back90);
+            }
+        }
     }
 
     public void setArmPreset(ArmPreset preset) {

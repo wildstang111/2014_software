@@ -10,8 +10,8 @@ package com.wildstangs.crio;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.profiling.ProfilingTimer;
-import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subsystems.BallHandler;
+import com.wildstangs.subsystems.HotGoalDetector;
 import com.wildstangs.subsystems.base.SubsystemContainer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Watchdog;
@@ -62,6 +62,8 @@ public class RobotTemplate extends IterativeRobot {
         {
             ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateFrontArm(true);
         }
+        
+//        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).disabledUpdate();
     }
 
     public void autonomousInit() {

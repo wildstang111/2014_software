@@ -36,6 +36,7 @@ public class AutonomousStepDelayForHotGoal extends AutonomousStep
     {
         if(((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).checkForHotGoal())
         {
+            System.out.println("Found Hot Goal");
             if(sideToLookFor == HotGoalSideEnum.EITHER || sideToLookFor == HotGoalSideEnum.NONE)
             {
                 finished = true;
