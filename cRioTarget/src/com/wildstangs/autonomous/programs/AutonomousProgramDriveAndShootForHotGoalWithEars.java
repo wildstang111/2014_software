@@ -14,22 +14,22 @@ import com.wildstangs.autonomous.steps.drivebase.AutonomousStepSetShifter;
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepStartDriveUsingMotionProfile;
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepStopDriveUsingMotionProfile;
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepWaitForDriveMotionProfile;
+import com.wildstangs.autonomous.steps.ears.AutonomousStepSetEarState;
 import com.wildstangs.autonomous.steps.vision.AutonomousStepDelayForHotGoal;
 import com.wildstangs.autonomous.steps.vision.AutonomousStepSetCameraLedState;
 import com.wildstangs.config.DoubleConfigFileParameter;
 import com.wildstangs.config.IntegerConfigFileParameter;
 import com.wildstangs.subsystems.BallHandler;
 import com.wildstangs.subsystems.HotGoalDetector;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  *
  * @author Joey
  */
-public class AutonomousProgramDriveAndShootForHotGoalParallel extends AutonomousProgram
+public class AutonomousProgramDriveAndShootForHotGoalWithEars extends AutonomousProgram
 {
-    protected final DoubleConfigFileParameter DISTANCE_CONFIG = new DoubleConfigFileParameter(AutonomousProgramDriveAndShootForHotGoal.class.getName(), "DistanceToDrive", 175.0);
-    protected final IntegerConfigFileParameter NO_HOT_GOAL_DELAY_TIME = new IntegerConfigFileParameter(AutonomousProgramDriveAndShootForHotGoal.class.getName(), "NoHotGoalDelayTimeMs", 4500);
+    protected final DoubleConfigFileParameter DISTANCE_CONFIG = new DoubleConfigFileParameter(AutonomousProgramDriveAndShootForHotGoalWithEars.class.getName(), "DistanceToDrive", 175.0);
+    protected final IntegerConfigFileParameter NO_HOT_GOAL_DELAY_TIME = new IntegerConfigFileParameter(AutonomousProgramDriveAndShootForHotGoalWithEars.class.getName(), "NoHotGoalDelayTimeMs", 4500);
     
     protected void defineSteps()
     {
@@ -38,10 +38,8 @@ public class AutonomousProgramDriveAndShootForHotGoalParallel extends Autonomous
         addStep(new AutonomousStepSetCameraLedState(false));
         AutonomousParallelStepGroup tensionAndDrive = new AutonomousParallelStepGroup("Tension And Drive");
         
-        AutonomousSerialStepGroup visionSteps = new AutonomousSerialStepGroup("Vision Steps");
-        
-//        tensionAndDrive.addStep(visionSteps);
         tensionAndDrive.addStep(new AutonomousStepArmCatapult());
+        tensionAndDrive.addStep(new AutonomousStepSetEarState(true));
         tensionAndDrive.addStep(new AutonomousStepSetArmPresets(BallHandler.CATAPULT_TENSION_PRESET_BACK));
         
         AutonomousSerialStepGroup drive = new AutonomousSerialStepGroup("Drive");
@@ -53,10 +51,11 @@ public class AutonomousProgramDriveAndShootForHotGoalParallel extends Autonomous
         
         addStep(tensionAndDrive);
         addStep(new AutonomousStepFireCatapult());
+        addStep(new AutonomousStepSetEarState(false));
     }
 
     public String toString()
     {
-        return "Drive and Shoot for the Hot Goal in parallel";
+        return "Drive and Shoot for the Hot Goal With Ears";
     }
 }

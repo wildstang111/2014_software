@@ -485,8 +485,11 @@ public class WsCamera implements ISensor {
     
     public static void killCamera()
     {
-        deleteInstanceFn.call0();
-        m_instance = null;
+        if(m_instance != null)
+        {
+            deleteInstanceFn.call0();
+            m_instance = null;
+        }
     }
     
     private static final Function deleteInstanceFn = NativeLibrary.getDefaultInstance().getFunction("AxisCameraDeleteInstance");

@@ -69,10 +69,10 @@ com.wildstangs.pid.controller.base.PidController.BackArmPid.maxInput=1000.0
 com.wildstangs.pid.controller.base.PidController.BackArmPid.minInput=-1.0
 
 //Ears
-com.wildstangs.subsystems.Ears.EarPreset.Left.Up=44
-com.wildstangs.subsystems.Ears.EarPreset.Left.Down=140
-com.wildstangs.subsystems.Ears.EarPreset.Right.Up=118
-com.wildstangs.subsystems.Ears.EarPreset.Right.Down=22
+com.wildstangs.subsystems.Ears.EarPreset.Left.Up=18
+com.wildstangs.subsystems.Ears.EarPreset.Left.Down=116
+com.wildstangs.subsystems.Ears.EarPreset.Right.Up=170
+com.wildstangs.subsystems.Ears.EarPreset.Right.Down=50
 
 //Drive Base
 com.wildstangs.subsystems.DriveBase.wheel_diameter=4.25
@@ -109,6 +109,10 @@ com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minOutpu
 com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.maxInput=0.0
 com.wildstangs.pid.controller.base.SpeedPidController.DriveBaseSpeedPid.minInput=0.0
 
+//Hot Goal Detector
+//1, 2, and 3 will save different versions of the image
+com.wildstangs.subsystems.HotGoalDetector.ImageWriteLevel=3
+
 
 //********************************//
 //                                //
@@ -121,13 +125,16 @@ com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.Dist
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.NoHotGoalDelayTimeMs=5000
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.ForceStopAtStep=0
 
+//Drive and Shoot for Hot Goal with Ears
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoalWithEars.DistanceToDrive=140
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoalWithEars.NoHotGoalDelayTimeMs=5000
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoalWithEars.ForceStopAtStep=0
+
 //Drive And Shoot for Goal In Front of us
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot.DistanceToDrive=175.0
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot.ForceStopAtStep=0
 
-//Drive And Shoot for Hot Goal in Parallel
-com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoalParallel.ForceStopAtStep=0
-
+//Drive And Shoot for Goal In Front of us With Ears
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootWithEars.DistanceToDrive=140.0
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootWithEars.ForceStopAtStep=0
 

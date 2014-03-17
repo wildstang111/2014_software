@@ -1,7 +1,8 @@
 package com.wildstangs.subsystems;
 
+import com.sun.cldc.jna.Pointer;
+import com.wildstangs.config.IntegerConfigFileParameter;
 import com.wildstangs.inputmanager.inputs.camera.WsCamera;
-import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.logger.FileLogger;
 import com.wildstangs.outputmanager.base.OutputManager;
@@ -94,12 +95,27 @@ public class HotGoalDetector extends Subsystem implements IObserver
     public HotGoalDetector(String name)
     {
         super(name);
-        camera = WsCamera.getInstance("10.1.11.11");
         
-        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN);
+        imageWriteLevel = imageLevel_config.getValue();
+        
+        this.initCamera();
+        
         this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT);
+        this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN);
     }
-
+    
+    public void initCamera()
+    {
+        this.killCamera();
+        camera = WsCamera.getInstance("10.1.11.11");
+    }
+    
+    public void killCamera()
+    {
+        WsCamera.killCamera();
+        this.camera = null;
+    }
+    
     public void init()
     {
         cc = new CriteriaCollection();
@@ -133,45 +149,38 @@ public class HotGoalDetector extends Subsystem implements IObserver
     
     public void notifyConfigChange()
     {
+        imageWriteLevel = imageLevel_config.getValue();
     }
 
     public void acceptNotification(Subject subjectThatCaused)
     {
         if(((BooleanSubject) subjectThatCaused).getValue())
         {
-//            if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1)
-//            {
-//                if(this.camera != null)
-//                {
-//                    WsCamera.killCamera();
-//                    this.camera = null;
-//                }
-//                else
-//                {
-//                    this.camera = WsCamera.getInstance("10.1.11.11");
-//                }
-//            }
             if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN)
             {
                 SmartDashboard.putBoolean("Looking For Hot Goal", true);
-    //            int numberFound = 0;
-    //            for(int i = 0; i < 100; i++)
-    //            {
-    //                if(this.checkForHotGoal()) numberFound++;
-    //            }
-    //            SmartDashboard.putNumber("Hot Goals found in 100 checks", numberFound);
                 SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
                 SmartDashboard.putBoolean("Looking For Hot Goal", false);
             }
-            else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT)
+            if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT)
             {
                 ledState = (ledState == Relay.Value.kOff ? Relay.Value.kOn : Relay.Value.kOff);
             }
         }
     }
-
+    
+    protected IntegerConfigFileParameter imageLevel_config = new IntegerConfigFileParameter(this.getClass().getName(), "ImageWriteLevel", 0);
+    protected int imageWriteLevel;
+    
     public boolean checkForHotGoal()
     {
+//        boolean killCameraAfter = false;
+        if(this.camera == null)
+        {
+            this.initCamera();
+//            killCameraAfter = true;
+        }
+
         TargetReport target = new TargetReport();
         int verticalTargets[] = new int[MAX_PARTICLES];
         int horizontalTargets[] = new int[MAX_PARTICLES];
@@ -181,11 +190,32 @@ public class HotGoalDetector extends Subsystem implements IObserver
         {
             ColorImage image = camera.getImage();     // comment if using stored images
             image = camera.getImage();
+            if(imageWriteLevel >= 1 && imageWriteLevel <= 3)
+            {
+//                image.write("colorImage.png");
+                NIVision.writeFile(image.image, "/ColorImage.jpg");
+                System.out.println("Saving Color Image");
+            }
 //            ColorImage image;                           // next 2 lines read image from flash on cRIO
 //            image = new RGBImage("/video.jpg"); 	// get the sample image from the cRIO flash
             BinaryImage thresholdImage = image.thresholdHSV(100, 150, 50, 255, 90, 255);   // keep only green objects
+            
+            if(imageWriteLevel >= 2 && imageWriteLevel <= 3)
+            {
+//                thresholdImage.write("thresholdImage.png");
+                NIVision.writeFile(thresholdImage.image, "/ThresholdImage.jpg");
+                System.out.println("Saving Threshold Image");
+            }
+            
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
-
+            
+            if(imageWriteLevel == 3)
+            {
+//                filteredImage.write("filteredImage.png");
+                NIVision.writeFile(filteredImage.image, "/FilteredImage.jpg");
+                System.out.println("Saving Filtered Image");
+            }
+            
             Scores scores[] = new Scores[filteredImage.getNumberParticles()];
             horizontalTargetCount = verticalTargetCount = 0;
             SmartDashboard.putString("Hot Target Side", "None found" );
@@ -323,11 +353,17 @@ public class HotGoalDetector extends Subsystem implements IObserver
         }
         catch(Throwable t)
         {
+            SmartDashboard.putString("Something Went Wrong in Hot Goal Detection", t.getMessage());
             t.printStackTrace();
         }
         this.lastReport = target;
         
         SmartDashboard.putBoolean("Found Hot Goal", target.Hot);
+        
+//        if(killCameraAfter)
+//        {
+//            this.killCamera();
+//        }
         
         return target.Hot;
     }

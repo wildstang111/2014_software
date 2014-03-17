@@ -3,10 +3,9 @@ package com.wildstangs.autonomous;
 import com.wildstangs.autonomous.programs.AutonomousProgramCenterToGoal;
 import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot;
 import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal;
-import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoalParallel;
+import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoalWithEars;
 import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootWithEars;
 import com.wildstangs.autonomous.programs.AutonomousProgramSleeper;
-import com.wildstangs.autonomous.programs.test.*;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.subjects.base.*;
@@ -154,10 +153,9 @@ public class AutonomousManager implements IObserver {
     private void definePrograms() {
         addProgram(new AutonomousProgramSleeper()); //Always leave Sleeper as 0. Other parts of the code assume 0 is Sleeper.
         addProgram(new AutonomousProgramDriveAndShoot());
-        addProgram(new AutonomousProgramCenterToGoal());
-        addProgram(new AutonomousProgramDriveAndShootForHotGoalParallel());
-        addProgram(new AutonomousProgramDriveAndShootForHotGoal());
         addProgram(new AutonomousProgramDriveAndShootWithEars());
+        addProgram(new AutonomousProgramDriveAndShootForHotGoal());
+        addProgram(new AutonomousProgramDriveAndShootForHotGoalWithEars());
     }
     
     private void addProgram(AutonomousProgram program) {

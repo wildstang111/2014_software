@@ -62,12 +62,11 @@ public class RobotTemplate extends IterativeRobot {
         {
             ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateFrontArm(true);
         }
-        
-//        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).disabledUpdate();
     }
 
     public void autonomousInit() {
         FrameworkAbstraction.autonomousInit();
+        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).initCamera();
     }
 
     /**
@@ -83,6 +82,8 @@ public class RobotTemplate extends IterativeRobot {
      */
     public void teleopInit() {
         FrameworkAbstraction.teleopInit();
+        //Killing the camera so it doesn't cause out CPU usage to go to 100%
+//        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).killCamera();
         periodTimer.startTimingSection();
     }
 
