@@ -27,14 +27,14 @@ public class Ears extends Subsystem implements IObserver{
     boolean currentEarState = false;
     
     protected int leftEarUp, rightEarUp, leftEarDown, rightEarDown;
-    protected boolean ohShitFlag = false;
+    protected boolean ohNoFlag = false;
     
     public Ears(String name) {
         super(name);
         registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_UP);
 //        registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN);
         
-        //"Oh Shit" button for the driver
+        //"Oh No" button for the driver
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_10);
         
         leftEarUp = LEFT_EAR_UP_CONFIG.getValue();
@@ -46,14 +46,14 @@ public class Ears extends Subsystem implements IObserver{
 
     public void init() {
         currentEarState = false;
-        ohShitFlag = false;
+        ohNoFlag = false;
     }
     
     public void update() {
        SmartDashboard.putBoolean("Ears are up", currentEarState);
        
-       ((IServo) OutputManager.getInstance().getOutput(OutputManager.LEFT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState && !ohShitFlag ? leftEarUp : leftEarDown));      
-       ((IServo) OutputManager.getInstance().getOutput(OutputManager.RIGHT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState && !ohShitFlag ? rightEarUp : rightEarDown));  
+       ((IServo) OutputManager.getInstance().getOutput(OutputManager.LEFT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState && !ohNoFlag ? leftEarUp : leftEarDown));      
+       ((IServo) OutputManager.getInstance().getOutput(OutputManager.RIGHT_EAR_SERVO_INDEX)).setAngle((IOutputEnum) null, new Double(currentEarState && !ohNoFlag ? rightEarUp : rightEarDown));  
     }
 
     public void notifyConfigChange() {
@@ -79,7 +79,7 @@ public class Ears extends Subsystem implements IObserver{
         {
             if(buttonState)
             {
-                ohShitFlag = !ohShitFlag;
+                ohNoFlag = !ohNoFlag;
                 this.currentEarState = false;
             }
         }

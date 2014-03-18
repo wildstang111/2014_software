@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.image.CriteriaCollection;
 import edu.wpi.first.wpilibj.image.NIVision;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
+import edu.wpi.first.wpilibj.image.RGBImage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -35,12 +36,12 @@ public class HotGoalDetector extends Subsystem implements IObserver
 
     final double PI = 3.141592653;
 
-    final int RECTANGULARITY_LIMIT = 30;
-    final int ASPECT_RATIO_LIMIT = 22;
+    final int RECTANGULARITY_LIMIT = 40;
+    final int ASPECT_RATIO_LIMIT = 55;
 
-    final int TAPE_WIDTH_LIMIT = 37;
+    final int TAPE_WIDTH_LIMIT = 50;
     final int VERTICAL_SCORE_LIMIT = 50;
-    final int LR_SCORE_LIMIT = 20;
+    final int LR_SCORE_LIMIT = 50;
 
     final int AREA_MINIMUM = 160;
 
@@ -92,6 +93,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
         HotGoalSideEnum side;
     }
 
+    Pointer colorTable = new Pointer(1024);
     public HotGoalDetector(String name)
     {
         super(name);
@@ -99,6 +101,17 @@ public class HotGoalDetector extends Subsystem implements IObserver
         imageWriteLevel = imageLevel_config.getValue();
         
         this.initCamera();
+        
+        //Background
+        colorTable.setByte(0, (byte)0); //R
+        colorTable.setByte(1, (byte)0); //G
+        colorTable.setByte(2, (byte)0); //B
+        colorTable.setByte(3, (byte)0); //Alpha
+        //Particles
+        colorTable.setByte(4, (byte)0); //R
+        colorTable.setByte(5, (byte)0); //G
+        colorTable.setByte(6, (byte)255); //B
+        colorTable.setByte(7, (byte)0); //Alpha
         
         this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT);
         this.registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN);
@@ -115,6 +128,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
         WsCamera.killCamera();
         this.camera = null;
     }
+    
     
     public void init()
     {
@@ -172,7 +186,28 @@ public class HotGoalDetector extends Subsystem implements IObserver
     protected IntegerConfigFileParameter imageLevel_config = new IntegerConfigFileParameter(this.getClass().getName(), "ImageWriteLevel", 0);
     protected int imageWriteLevel;
     
+    public void getImages(String imageAppend)
+    {   
+        try
+        {
+            ColorImage image = camera.getImage();
+            if(imageWriteLevel >= 1 && imageWriteLevel <= 3)
+            {
+                NIVision.writeFile(image.image, "/ColorImage" + imageAppend + ".jpg");
+                System.out.println("Saving Color Image");
+            }
+        }
+        catch(Throwable t)
+        {
+            t.printStackTrace();
+        }
+    }
+    
     public boolean checkForHotGoal()
+    {
+        return this.checkForHotGoal("");
+    }
+    public boolean checkForHotGoal(String imageAppend)
     {
 //        boolean killCameraAfter = false;
         if(this.camera == null)
@@ -188,22 +223,42 @@ public class HotGoalDetector extends Subsystem implements IObserver
         System.out.println("Hot Goal Detection started");
         try
         {
-            ColorImage image = camera.getImage();     // comment if using stored images
+            ColorImage image = null;
+            for(int i = 0; i < 5 && image == null; i++)
+            {
+                try
+                {
+                    image = camera.getImage();     // comment if using stored images
+                }
+                catch(Throwable t)
+                {
+                    System.out.println("Not Image Found");
+                    image = null;
+                }
+                
+            }
+            
+            if(image == null)
+            {
+                return false;
+            }
+            
             image = camera.getImage();
+//            ColorImage image = new RGBImage("/video.jpg");
             if(imageWriteLevel >= 1 && imageWriteLevel <= 3)
             {
 //                image.write("colorImage.png");
-                NIVision.writeFile(image.image, "/ColorImage.jpg");
+                NIVision.writeFile(image.image, "/ColorImage" + imageAppend + ".jpg");
                 System.out.println("Saving Color Image");
             }
 //            ColorImage image;                           // next 2 lines read image from flash on cRIO
 //            image = new RGBImage("/video.jpg"); 	// get the sample image from the cRIO flash
-            BinaryImage thresholdImage = image.thresholdHSV(100, 150, 50, 255, 90, 255);   // keep only green objects
+            BinaryImage thresholdImage = image.thresholdHSV(110, 170, 160, 255, 90, 255);   // keep only green objects
             
             if(imageWriteLevel >= 2 && imageWriteLevel <= 3)
             {
 //                thresholdImage.write("thresholdImage.png");
-                NIVision.writeFile(thresholdImage.image, "/ThresholdImage.jpg");
+                NIVision.writeFile(thresholdImage.image, "/ThresholdImage" + imageAppend + ".bmp", colorTable);
                 System.out.println("Saving Threshold Image");
             }
             
@@ -212,7 +267,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
             if(imageWriteLevel == 3)
             {
 //                filteredImage.write("filteredImage.png");
-                NIVision.writeFile(filteredImage.image, "/FilteredImage.jpg");
+                NIVision.writeFile(filteredImage.image, "/FilteredImage" + imageAppend + ".bmp", colorTable);
                 System.out.println("Saving Filtered Image");
             }
             
@@ -364,6 +419,8 @@ public class HotGoalDetector extends Subsystem implements IObserver
 //        {
 //            this.killCamera();
 //        }
+        
+        System.out.println("Hot Goal Detection Finished");
         
         return target.Hot;
     }

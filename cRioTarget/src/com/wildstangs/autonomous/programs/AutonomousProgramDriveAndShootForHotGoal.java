@@ -29,6 +29,7 @@ public class AutonomousProgramDriveAndShootForHotGoal extends AutonomousProgram
 {
     protected final DoubleConfigFileParameter DISTANCE_CONFIG = new DoubleConfigFileParameter(AutonomousProgramDriveAndShootForHotGoal.class.getName(), "DistanceToDrive", 175.0);
     protected final IntegerConfigFileParameter NO_HOT_GOAL_DELAY_TIME = new IntegerConfigFileParameter(AutonomousProgramDriveAndShootForHotGoal.class.getName(), "NoHotGoalDelayTimeMs", 4500);
+    protected final IntegerConfigFileParameter LED_DELAY_TIME = new IntegerConfigFileParameter(AutonomousProgramDriveAndShootForHotGoal.class.getName(), "LEDDelayTimeMs", 70);
     
     protected void defineSteps()
     {

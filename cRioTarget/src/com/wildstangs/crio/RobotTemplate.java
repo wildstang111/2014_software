@@ -66,7 +66,7 @@ public class RobotTemplate extends IterativeRobot {
 
     public void autonomousInit() {
         FrameworkAbstraction.autonomousInit();
-        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).initCamera();
+//        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).initCamera();
     }
 
     /**
