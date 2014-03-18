@@ -178,6 +178,27 @@ public class DriveBase extends Subsystem implements IObserver {
         previousTime = Timer.getFPGATimestamp();
         currentProfileX = 0.0;
         continuousAccelerationFilter = new ContinuousAccelFilter(0, 0, 0);
+        goal_velocity = 0.0;
+        distance_to_move = 0.0;
+        distance_moved = 0.0;
+        distance_remaining = 0.0;
+        motionProfileActive = false;
+        currentProfileX = 0.0;
+        currentProfileV = 0.0;
+        currentProfileA = 0.0;
+        deltaPosition = 0.0;
+        deltaTime = 0.0;
+        deltaPosError = 0.0;
+        deltaProfilePosition = 0.0;
+        previousTime = 0.0;
+        previousVelocity = 0.0;
+        currentVelocity = 0.0;
+        currentAcceleration = 0.0;
+        totalPosition = 0.0;
+        previousPositionSinceLastReset = 0.0;
+        previousRightPositionSinceLastReset = 0.0;
+        previousLeftPositionSinceLastReset = 0.0;
+        pidSpeedValue = 0.0;
         //Zero out all motor values left over from autonomous
         (OutputManager.getInstance().getOutput(OutputManager.LEFT_DRIVE_SPEED_INDEX)).set(new Double(0.0));
         (OutputManager.getInstance().getOutput(OutputManager.RIGHT_DRIVE_SPEED_INDEX)).set(new Double(0.0));
@@ -337,7 +358,7 @@ public class DriveBase extends Subsystem implements IObserver {
             }
         }
 
-        if (shifterFlag == DoubleSolenoid.Value.kReverse) {
+        if (shifterFlag == DoubleSolenoid.Value.kForward) {
             //We are in high gear, see if the turbo button is pressed
             if (turboFlag == true) {
                 //We are in turbo mode, don't cap the output
@@ -424,7 +445,7 @@ public class DriveBase extends Subsystem implements IObserver {
         double angularPower = 0.0;
         if (Math.abs(driveBaseHeadingValue) > 0.05) {
             //Absolute value on driveBaseThrottleValue, creates a S curve, none is banana
-            angularPower = driveBaseThrottleValue * driveBaseHeadingValue * HEADING_SENSITIVITY;
+            angularPower = Math.abs(driveBaseThrottleValue) * driveBaseHeadingValue * HEADING_SENSITIVITY;
         }
 
         rightMotorSpeed = driveBaseThrottleValue - angularPower;

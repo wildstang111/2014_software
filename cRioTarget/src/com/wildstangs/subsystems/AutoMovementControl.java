@@ -1,18 +1,9 @@
 package com.wildstangs.subsystems;
 
-import com.wildstangs.inputmanager.base.InputManager;
-import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
-import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.subsystems.base.AutoMovement;
 import com.wildstangs.logger.Logger;
-import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
-import com.wildstangs.subsystems.automovements.AutoMovementAccumulateBackArm;
-import com.wildstangs.subsystems.automovements.AutoMovementAccumulateFrontArm;
-import com.wildstangs.subsystems.automovements.AutoMovementArmsToTension;
-import com.wildstangs.subsystems.automovements.AutoMovementPassBackToFront;
-import com.wildstangs.subsystems.automovements.AutoMovementPassFrontToBack;
 import com.wildstangs.subsystems.base.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

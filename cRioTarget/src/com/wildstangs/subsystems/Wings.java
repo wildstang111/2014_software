@@ -18,23 +18,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Wings extends Subsystem implements IObserver
 {
+    boolean ohShitFlag = false;
+    
     boolean currentState = false;
     
     public Wings(String name)
     {
         super(name);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_1);
+        
+        //"Oh Shit" button for the driver
+        registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_10);
     }
 
     public void init()
     {
         currentState = false;
+        ohShitFlag = false;
     }
 
     public void update()
     {
         int wingsValue = 0;
-        if(currentState == true){
+        if(currentState == true && !ohShitFlag){
             wingsValue = DoubleSolenoid.Value.kReverse_val;
         }
         else {
@@ -52,13 +58,17 @@ public class Wings extends Subsystem implements IObserver
     {
         if(subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_1)
         {
+            currentState = ((BooleanSubject)subjectThatCaused).getValue();
+        }
+        else if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_10)
+        {
             if(((BooleanSubject)subjectThatCaused).getValue())
             {
-                currentState = true;
-            }
-            else
-            {
-                currentState = false;
+                ohShitFlag = !ohShitFlag;
+                if(ohShitFlag)
+                {
+                    currentState = false;
+                }
             }
         }
     }

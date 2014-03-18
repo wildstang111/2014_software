@@ -19,7 +19,7 @@ public class AutoMovementArmsToTension extends AutoMovement{
     }
 
     protected void defineSteps() {
-        addStep(new AutonomousStepSetArmPresets(BallHandler.CATAPULT_TENSION_PRESET));
+        addStep(new AutonomousStepSetArmPresets(BallHandler.CATAPULT_TENSION_PRESET_BACK));
     }
 
     public String toString() {

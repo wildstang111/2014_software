@@ -6,6 +6,7 @@ import com.wildstangs.inputmanager.inputs.driverstation.WsDSAnalogInput;
 import com.wildstangs.inputmanager.inputs.driverstation.WsDSDigitalInput;
 import com.wildstangs.inputmanager.inputs.joystick.driver.DriverJoystick;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.inputmanager.inputs.joystick.manipulator.ManipulatorJoystick;
 import com.wildstangs.inputmanager.inputs.no.NoInput;
 import com.wildstangs.list.WsList;
@@ -132,19 +133,26 @@ public class InputManager {
         if (button instanceof JoystickButtonEnum) {
             Subject subject = InputManager.getInstance().getOiInput(((JoystickButtonEnum) button).isDriver() ? InputManager.DRIVER_JOYSTICK_INDEX : InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(button);
             subject.attach(observer);
+        }
+        else if(button instanceof JoystickDPadButtonEnum)
+        {
+            Subject subject = InputManager.getInstance().getOiInput(((JoystickDPadButtonEnum) button).isDriver() ? InputManager.DRIVER_JOYSTICK_INDEX : InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(button);
+            subject.attach(observer);
         } else {
             Logger.getLogger().debug(this.getClass().getName(), "attachJoystickButton", "Oops! Check that the inputs implement the required interfaces.");
         }
     }
-    /**
-     * Keys to represent OI Inputs
-     */
+
     public static final int UNKNOWN_INDEX = 0;
+    
+    //Keys to represent OI Inputs
     public static final int DRIVER_JOYSTICK_INDEX = 1;
     public static final int MANIPULATOR_JOYSTICK_INDEX = 2;
     public static final int AUTO_PROGRAM_SELECTOR_INDEX = 3;
     public static final int LOCK_IN_SWITCH_INDEX = 4;
     public static final int START_POSITION_SELECTOR_INDEX = 5;
+    public static final int ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX = 6;
+    
     //Sensor Inputs
     public static final int PRESSURE_TRANSDUCER_INDEX = 1;
     public static final int FRONT_ARM_POT_INDEX = 2;
@@ -189,6 +197,7 @@ public class InputManager {
         oiInputs.addToIndex(AUTO_PROGRAM_SELECTOR_INDEX, new WsDSAnalogInput(1));
         oiInputs.addToIndex(LOCK_IN_SWITCH_INDEX, new WsDSDigitalInput(1));
         oiInputs.addToIndex(START_POSITION_SELECTOR_INDEX, new WsDSAnalogInput(2));
+        oiInputs.addToIndex(ARM_FORCE_OVERRIDE_TO_MANUAL_SWITCH_INDEX, new WsDSDigitalInput(2));
 
     }
 }

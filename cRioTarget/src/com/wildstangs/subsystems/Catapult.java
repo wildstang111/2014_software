@@ -25,6 +25,7 @@ public class Catapult extends Subsystem implements IObserver {
     private boolean isTension;
     private boolean isBallIn;
     private boolean isLatched;
+    protected boolean ohShitFlag = false;
     private WsTimer stateChangeTimer;
     private CatapultState catapultState;
 
@@ -54,7 +55,7 @@ public class Catapult extends Subsystem implements IObserver {
         // Override all the things required to shoot
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_10);
         //Override latches out
-        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_9);
+        registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_9);
         // Limit switch to detect when the catapult is down
         registerForSensorNotification(InputManager.CATAPULT_DOWN_SWITCH_INDEX);
         // Limit switch to detect the position of the latch
@@ -63,6 +64,9 @@ public class Catapult extends Subsystem implements IObserver {
         registerForSensorNotification(InputManager.BALL_DETECT_SWITCH_INDEX);
         // Limit switch that shows if there is tension on the catapult
         registerForSensorNotification(InputManager.TENSION_LIMIT_SWITCH_INDEX);
+        
+        //"Oh Shit" button for the driver
+        registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_10);
         
         stateChangeTimer = new WsTimer();
     }
@@ -73,10 +77,10 @@ public class Catapult extends Subsystem implements IObserver {
         armCatapultFlag = false;
         disarmCatapultFlag = false;
         fireCatapultFlag = false;
-        isCatapultDown = false;
+        isCatapultDown = true;
         isTension = false;
         isBallIn = false;
-        isLatched = false;
+        isLatched = true;
         catapultState = CatapultState.DOWN;
     }
 
@@ -90,7 +94,7 @@ public class Catapult extends Subsystem implements IObserver {
                 catapultState = CatapultState.WAITING_FOR_DOWN;
             }
         } else if(catapultState == CatapultState.UP){
-            if(armCatapultFlag == false && fireCatapultFlag == true && ((isTension && isLatched) || overrideFlag)){
+            if(ohShitFlag == false && armCatapultFlag == false && fireCatapultFlag == true && ((isTension && isLatched) || overrideFlag)){
                 catapultState = CatapultState.FIRING;
                 stateChangeTimer.stop();
                 stateChangeTimer.reset();
@@ -175,9 +179,16 @@ public class Catapult extends Subsystem implements IObserver {
         {
             disarmCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
         }
-        else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_9)
+        else if (subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_9)
         {
             latchesOutOverrideFlag = ((BooleanSubject) subjectThatCaused).getValue();
+        }
+        else if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_10)
+        {
+            if(((BooleanSubject)subjectThatCaused).getValue())
+            {
+                ohShitFlag = !ohShitFlag;
+            }
         }
     }
 }

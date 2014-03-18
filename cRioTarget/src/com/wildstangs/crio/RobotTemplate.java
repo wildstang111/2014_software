@@ -7,8 +7,12 @@
 package com.wildstangs.crio;
 
 
+import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.profiling.ProfilingTimer;
+import com.wildstangs.subsystems.BallHandler;
+import com.wildstangs.subsystems.HotGoalDetector;
+import com.wildstangs.subsystems.base.SubsystemContainer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Watchdog;
 
@@ -48,10 +52,21 @@ public class RobotTemplate extends IterativeRobot {
 
     public void disabledPeriodic() {
         FrameworkAbstraction.disabledPeriodic();
+        
+        if(((Boolean) InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue())
+        {
+            ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateBackArm(true);
+        }
+        
+        if(((Boolean) InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue())
+        {
+            ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateFrontArm(true);
+        }
     }
 
     public void autonomousInit() {
         FrameworkAbstraction.autonomousInit();
+        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).initCamera();
     }
 
     /**
@@ -67,6 +82,8 @@ public class RobotTemplate extends IterativeRobot {
      */
     public void teleopInit() {
         FrameworkAbstraction.teleopInit();
+        //Killing the camera so it doesn't cause out CPU usage to go to 100%
+//        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).killCamera();
         periodTimer.startTimingSection();
     }
 

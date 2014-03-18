@@ -34,13 +34,20 @@ public class AutonomousParallelStepGroup extends AutonomousStep {
     }
 
     public void update() {
+        List toRemove = new List();
         for (int i = 0; i < steps.size(); i++) {
             AutonomousStep step = (AutonomousStep) steps.get(i);
             step.update();
             if (step.isFinished()) {
-                steps.remove(step);
+                toRemove.add(step);
             }
         }
+        
+        for(int i = 0; i < toRemove.size(); i++)
+        {
+            steps.remove(toRemove.get(i));
+        }
+        
         if (steps.isEmpty()) {
             finished = true;
         }

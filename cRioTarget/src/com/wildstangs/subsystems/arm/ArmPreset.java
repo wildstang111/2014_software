@@ -5,6 +5,7 @@
 package com.wildstangs.subsystems.arm;
 
 import com.wildstangs.config.IntegerConfigFileParameter;
+import com.wildstangs.list.WsList;
 import com.wildstangs.subsystems.BallHandler;
 
 /**
