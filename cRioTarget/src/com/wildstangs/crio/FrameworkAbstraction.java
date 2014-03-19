@@ -61,6 +61,7 @@ public class FrameworkAbstraction {
 
     public static void disabledPeriodic() {
         InputManager.getInstance().updateOiData();
+        InputManager.getInstance().updateSensorData();
     }
 
     public static void disabledInit() {

@@ -122,7 +122,7 @@ public class Arm
         if(speed < -1.0) speed = -1.0;
         else if(speed > 1.0) speed = 1.0;
         
-        if(!forceOverrideToManualFlag)
+        if(forceOverrideToManualFlag == false)
         {
             double potVoltage = this.getPotVoltage();
 
@@ -190,16 +190,18 @@ public class Arm
         
         double victorSpeed = this.getVictorSpeed();
         currentAngle = (int) this.getCurrentAngle();
-        
-        if(currentAngle <= lowBound && victorSpeed < 0)
+        if(this.forceOverrideToManualFlag == false)
         {
-            armVictorSpeed = 0.0;
-            if(pid.isEnabled()) pid.disable();
-        }
-        else if(currentAngle >= highBound && victorSpeed > 0)
-        {
-            armVictorSpeed = 0.0;
-            if(pid.isEnabled()) pid.disable();
+            if(currentAngle <= lowBound && victorSpeed < 0)
+            {
+                armVictorSpeed = 0.0;
+                if(pid.isEnabled()) pid.disable();
+            }
+            else if(currentAngle >= highBound && victorSpeed > 0)
+            {
+                armVictorSpeed = 0.0;
+                if(pid.isEnabled()) pid.disable();
+            }
         }
         
         if(!pid.isEnabled())

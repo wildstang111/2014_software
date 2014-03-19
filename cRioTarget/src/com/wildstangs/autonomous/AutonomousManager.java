@@ -6,6 +6,7 @@ import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGo
 import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoalWithEars;
 import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootWithEars;
 import com.wildstangs.autonomous.programs.AutonomousProgramSleeper;
+import com.wildstangs.autonomous.programs.test.AutonomousProgramTestImages;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.subjects.base.*;
@@ -156,6 +157,7 @@ public class AutonomousManager implements IObserver {
         addProgram(new AutonomousProgramDriveAndShootWithEars());
         addProgram(new AutonomousProgramDriveAndShootForHotGoal());
         addProgram(new AutonomousProgramDriveAndShootForHotGoalWithEars());
+        addProgram(new AutonomousProgramTestImages());
     }
     
     private void addProgram(AutonomousProgram program) {

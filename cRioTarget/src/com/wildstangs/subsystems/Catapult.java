@@ -25,7 +25,7 @@ public class Catapult extends Subsystem implements IObserver {
     private boolean isTension;
     private boolean isBallIn;
     private boolean isLatched;
-    protected boolean ohShitFlag = false;
+    protected boolean ohNoFlag = false;
     private WsTimer stateChangeTimer;
     private CatapultState catapultState;
 
@@ -65,7 +65,7 @@ public class Catapult extends Subsystem implements IObserver {
         // Limit switch that shows if there is tension on the catapult
         registerForSensorNotification(InputManager.TENSION_LIMIT_SWITCH_INDEX);
         
-        //"Oh Shit" button for the driver
+        //"Oh No" button for the driver
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_10);
         
         stateChangeTimer = new WsTimer();
@@ -94,7 +94,7 @@ public class Catapult extends Subsystem implements IObserver {
                 catapultState = CatapultState.WAITING_FOR_DOWN;
             }
         } else if(catapultState == CatapultState.UP){
-            if(ohShitFlag == false && armCatapultFlag == false && fireCatapultFlag == true && ((isTension && isLatched) || overrideFlag)){
+            if(ohNoFlag == false && armCatapultFlag == false && fireCatapultFlag == true && ((isTension && isLatched) || overrideFlag)){
                 catapultState = CatapultState.FIRING;
                 stateChangeTimer.stop();
                 stateChangeTimer.reset();
@@ -187,7 +187,7 @@ public class Catapult extends Subsystem implements IObserver {
         {
             if(((BooleanSubject)subjectThatCaused).getValue())
             {
-                ohShitFlag = !ohShitFlag;
+                ohNoFlag = !ohNoFlag;
             }
         }
     }

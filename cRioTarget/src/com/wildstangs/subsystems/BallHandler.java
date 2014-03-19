@@ -38,7 +38,7 @@ public class BallHandler extends Subsystem implements IObserver {
     protected final DoubleConfigFileParameter SAFE_FRONT_ARM_SHOOT_BOTTOM_BOUND_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), "SafeFrontArmShoot.BottomBound", 140);
     protected final BooleanConfigFileParameter DISABLE_CALIBRATION_SWITCHES_CONFIG = new BooleanConfigFileParameter(this.getClass().getName(), "DisableCalibrationSwitches", false);
     
-    protected boolean ohShitFlag = false;
+    protected boolean ohNoFlag = false;
     protected boolean forceOverrideToManualFlag = false;
     
     protected Arm frontArm, backArm;
@@ -75,7 +75,7 @@ public class BallHandler extends Subsystem implements IObserver {
         registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT);
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_1);
         
-        //"Oh Shit" button for the driver
+        //"Oh No" button for the driver
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_10);
         
         Subject subject = InputManager.getInstance().getOiInput(InputManager.MANIPULATOR_JOYSTICK_INDEX).getSubject(JoystickAxisEnum.MANIPULATOR_LEFT_JOYSTICK_X);
@@ -100,12 +100,12 @@ public class BallHandler extends Subsystem implements IObserver {
         backArmJoystickValue = 0.0;
         frontArm.init();
         backArm.init();
-        ohShitFlag = false;
+        ohNoFlag = false;
         forceOverrideToManualFlag = false;
     }
 
     public void update() {
-        if(!ohShitFlag)
+        if(!ohNoFlag)
         {
             //Both pressed or both are not pressed
             if (frontIntakeButton == frontOutputButton) {
@@ -219,8 +219,8 @@ public class BallHandler extends Subsystem implements IObserver {
         {
             if(((BooleanSubject) subjectThatCaused).getValue())
             {
-                ohShitFlag = !ohShitFlag;
-                if(ohShitFlag)
+                ohNoFlag = !ohNoFlag;
+                if(ohNoFlag)
                 {
                     frontArm.setVictor(0.0);
                     backArm.setVictor(0.0);
@@ -252,7 +252,7 @@ public class BallHandler extends Subsystem implements IObserver {
 
     public void setArmPreset(ArmPreset preset) {
         
-        if(ohShitFlag && preset != DEFAULT_POSITION)
+        if(ohNoFlag && preset != DEFAULT_POSITION)
         {
             return;
         }
@@ -317,6 +317,7 @@ public class BallHandler extends Subsystem implements IObserver {
         if(!disableCalibrationSwitches)
         {
             backArm.calibrate(high);
+            SmartDashboard.putNumber("Current Back Arm Angle", backArm.getCurrentAngle());
         }
     }
     
@@ -325,6 +326,7 @@ public class BallHandler extends Subsystem implements IObserver {
         if(!disableCalibrationSwitches)
         {
             frontArm.calibrate(high);
+            SmartDashboard.putNumber("Current Front Arm Angle", frontArm.getCurrentAngle());
         }
     }
 }
