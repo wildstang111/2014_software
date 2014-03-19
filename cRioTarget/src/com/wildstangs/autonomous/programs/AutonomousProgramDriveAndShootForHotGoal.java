@@ -10,6 +10,7 @@ import com.wildstangs.autonomous.steps.AutonomousSerialStepGroup;
 import com.wildstangs.autonomous.steps.arms.AutonomousStepSetArmPresets;
 import com.wildstangs.autonomous.steps.catapult.AutonomousStepArmCatapult;
 import com.wildstangs.autonomous.steps.catapult.AutonomousStepFireCatapult;
+import com.wildstangs.autonomous.steps.control.AutonomousStepDelay;
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepSetShifter;
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepStartDriveUsingMotionProfile;
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepStopDriveUsingMotionProfile;
@@ -34,6 +35,7 @@ public class AutonomousProgramDriveAndShootForHotGoal extends AutonomousProgram
     protected void defineSteps()
     {
         addStep(new AutonomousStepSetCameraLedState(true));
+        addStep(new AutonomousStepDelay(LED_DELAY_TIME.getValue()));
         addStep(new AutonomousStepDelayForHotGoal(NO_HOT_GOAL_DELAY_TIME.getValue(), HotGoalDetector.HotGoalSideEnum.EITHER));
         addStep(new AutonomousStepSetCameraLedState(false));
         AutonomousParallelStepGroup tensionAndDrive = new AutonomousParallelStepGroup("Tension And Drive");

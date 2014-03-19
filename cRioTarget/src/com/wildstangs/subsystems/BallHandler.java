@@ -317,6 +317,7 @@ public class BallHandler extends Subsystem implements IObserver {
         if(!disableCalibrationSwitches)
         {
             backArm.calibrate(high);
+            SmartDashboard.putNumber("Current Back Arm Angle", backArm.getCurrentAngle());
         }
     }
     
@@ -325,6 +326,7 @@ public class BallHandler extends Subsystem implements IObserver {
         if(!disableCalibrationSwitches)
         {
             frontArm.calibrate(high);
+            SmartDashboard.putNumber("Current Front Arm Angle", frontArm.getCurrentAngle());
         }
     }
 }

@@ -121,7 +121,7 @@ com.wildstangs.subsystems.HotGoalDetector.ImageWriteLevel=3
 //********************************//
 
 //Drive and Shoot For Hot Goal
-com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.DistanceToDrive=170
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.DistanceToDrive=172
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.NoHotGoalDelayTimeMs=5000
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.LEDDelayTimeMs=70
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.ForceStopAtStep=0

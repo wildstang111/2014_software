@@ -13,8 +13,10 @@ import com.wildstangs.profiling.ProfilingTimer;
 import com.wildstangs.subsystems.BallHandler;
 import com.wildstangs.subsystems.HotGoalDetector;
 import com.wildstangs.subsystems.base.SubsystemContainer;
+import com.wildstangs.timer.WsTimer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Watchdog;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -41,26 +43,49 @@ public class RobotTemplate extends IterativeRobot {
     ProfilingTimer periodTimer = new ProfilingTimer("Periodic method period", 50);
     ProfilingTimer startupTimer = new ProfilingTimer("Startup duration", 1);
     ProfilingTimer initTimer = new ProfilingTimer("Init duration", 1);
+    
+    //We may not want to check the calibration switches right away incase they have bad states from start up
+    protected WsTimer waitForCalibrationTimer = new WsTimer();
+    protected boolean waitingForArmCalibration = false;
 
     public void disabledInit() {
         initTimer.startTimingSection();
         FrameworkAbstraction.disabledInit();
         initTimer.endTimingSection();
         Logger.getLogger().always(this.getClass().getName(), "disabledInit", "Disabled Init Complete");
-
+        waitForCalibrationTimer.reset();
+        waitForCalibrationTimer.start();
+        waitingForArmCalibration = true;
     }
 
     public void disabledPeriodic() {
         FrameworkAbstraction.disabledPeriodic();
         
-        if(((Boolean) InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue())
-        {
-            ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateBackArm(true);
-        }
+        boolean backArmCalibrationSwitch = ((Boolean) InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue();
+        boolean frontArmCalibrationSwitch = ((Boolean) InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue();
         
-        if(((Boolean) InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue())
+        SmartDashboard.putBoolean("BackArmCalibrationSwitch", backArmCalibrationSwitch);
+        SmartDashboard.putBoolean("FrontArmCalibrationSwitch", frontArmCalibrationSwitch);
+        
+        if(!waitingForArmCalibration)
         {
-            ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateFrontArm(true);
+            if(backArmCalibrationSwitch)
+            {
+                ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateBackArm(true);
+            }
+
+            if(frontArmCalibrationSwitch)
+            {
+                ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateFrontArm(true);
+            }
+        }
+        else
+        {
+            if(waitForCalibrationTimer.hasPeriodPassed(1.5))
+            {
+                waitForCalibrationTimer.stop();
+                waitingForArmCalibration = false;
+            }
         }
     }
 
