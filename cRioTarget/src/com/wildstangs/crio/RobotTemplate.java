@@ -7,6 +7,7 @@
 package com.wildstangs.crio;
 
 
+import com.wildstangs.config.BooleanConfigFileParameter;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.profiling.ProfilingTimer;
@@ -101,14 +102,14 @@ public class RobotTemplate extends IterativeRobot {
         FrameworkAbstraction.autonomousPeriodic();
         Watchdog.getInstance().feed();
     }
-
+    protected final BooleanConfigFileParameter KILL_CAMERA_CONFIG = new BooleanConfigFileParameter(this.getClass().getName(), "KillCamera", true);
     /**
      * This function is called periodically during operator control
      */
     public void teleopInit() {
         FrameworkAbstraction.teleopInit();
         //Killing the camera so it doesn't cause out CPU usage to go to 100%
-//        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).killCamera();
+        if(KILL_CAMERA_CONFIG.getValue()) ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).killCamera();
         periodTimer.startTimingSection();
     }
 
