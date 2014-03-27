@@ -10,6 +10,7 @@ import com.wildstangs.autonomous.steps.AutonomousSerialStepGroup;
 import com.wildstangs.autonomous.steps.arms.AutonomousStepSetArmPresets;
 import com.wildstangs.autonomous.steps.catapult.AutonomousStepArmCatapult;
 import com.wildstangs.autonomous.steps.catapult.AutonomousStepFireCatapult;
+import com.wildstangs.autonomous.steps.control.AutonomousStepDelay;
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepSetShifter;
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepStartDriveUsingMotionProfile;
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepStopDriveUsingMotionProfile;
@@ -41,6 +42,7 @@ public class AutonomousProgramDriveAndShoot extends AutonomousProgram
         tensionAndDrive.addStep(drive);
         
         addStep(tensionAndDrive);
+        addStep(new AutonomousStepDelay(1500));
         addStep(new AutonomousStepFireCatapult());
     }
 
