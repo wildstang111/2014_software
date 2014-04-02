@@ -170,12 +170,12 @@ public class HotGoalDetector extends Subsystem implements IObserver
     {
         if(((BooleanSubject) subjectThatCaused).getValue())
         {
-            if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN)
-            {
-                SmartDashboard.putBoolean("Looking For Hot Goal", true);
-                SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
-                SmartDashboard.putBoolean("Looking For Hot Goal", false);
-            }
+//            if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_DOWN)
+//            {
+//                SmartDashboard.putBoolean("Looking For Hot Goal", true);
+//                SmartDashboard.putBoolean("Found Hot Goal", this.checkForHotGoal());
+//                SmartDashboard.putBoolean("Looking For Hot Goal", false);
+//            }
             if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_RIGHT)
             {
                 ledState = (ledState == Relay.Value.kOff ? Relay.Value.kOn : Relay.Value.kOff);

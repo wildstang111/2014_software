@@ -16,7 +16,7 @@ public class AutonomousStepSetEarState extends AutonomousStep  {
 
     public void initialize() {
         
-      ((Ears)SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.EAR_INDEX)).setEarState(earPreset);
+//      ((Ears)SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.EAR_INDEX)).setEarState(earPreset);
               finished = true;
     }
 

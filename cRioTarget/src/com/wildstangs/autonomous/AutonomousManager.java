@@ -1,15 +1,15 @@
 package com.wildstangs.autonomous;
 
-import com.wildstangs.autonomous.programs.AutonomousProgramCenterToGoal;
+import com.wildstangs.autonomous.parameters.IAutonomousChangeOnLockIn;
 import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot;
 import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal;
-import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoalWithEars;
-import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootWithEars;
 import com.wildstangs.autonomous.programs.AutonomousProgramSleeper;
-import com.wildstangs.autonomous.programs.test.AutonomousProgramTestImages;
+import com.wildstangs.autonomous.programs.AutonomousProgramTwoBall;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.subjects.base.*;
+import com.wildstangs.timer.WsTimer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.networktables2.util.List;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -49,9 +49,14 @@ public class AutonomousManager implements IObserver {
         runningProgram.update();
         if (runningProgram.isFinished()) {
             programFinished = true;
+            if(runningProgram instanceof IAutonomousChangeOnLockIn)
+            {
+                ((IAutonomousChangeOnLockIn) runningProgram).onDisengage();
+            }
+            SmartDashboard.putNumber("Autonomous Time", DriverStation.getInstance().getMatchTime());
         }
     }
-
+    
     public void startCurrentProgram() {
         runningProgram = (AutonomousProgram) programs.get(lockedProgram);
         Logger.getLogger().always("Auton", "Running Autonomous Program", runningProgram.toString());
@@ -124,8 +129,19 @@ public class AutonomousManager implements IObserver {
             }
         } else if (cause instanceof BooleanSubject) {
             lockInSwitch = ((BooleanSubject) cause).getValue();
+            
+            if(programs.get(lockedProgram) instanceof IAutonomousChangeOnLockIn)
+            {
+                ((IAutonomousChangeOnLockIn) programs.get(lockedProgram)).onDisengage();
+            }
+            
             lockedProgram = !lockInSwitch ? currentProgram : 0;
             SmartDashboard.putString("Locked Autonomous Program", programs.get(lockedProgram).toString());
+            
+            if(programs.get(lockedProgram) instanceof IAutonomousChangeOnLockIn)
+            {
+                ((IAutonomousChangeOnLockIn) programs.get(lockedProgram)).onLockIn();
+            }
         }
     }
 
@@ -154,10 +170,11 @@ public class AutonomousManager implements IObserver {
     private void definePrograms() {
         addProgram(new AutonomousProgramSleeper()); //Always leave Sleeper as 0. Other parts of the code assume 0 is Sleeper.
         addProgram(new AutonomousProgramDriveAndShoot());
-        addProgram(new AutonomousProgramDriveAndShootWithEars());
+//        addProgram(new AutonomousProgramDriveAndShootWithEars());
         addProgram(new AutonomousProgramDriveAndShootForHotGoal());
-        addProgram(new AutonomousProgramDriveAndShootForHotGoalWithEars());
-        addProgram(new AutonomousProgramTestImages());
+        addProgram(new AutonomousProgramTwoBall());
+//        addProgram(new AutonomousProgramDriveAndShootForHotGoalWithEars());
+//        addProgram(new AutonomousProgramTestImages());
     }
     
     private void addProgram(AutonomousProgram program) {

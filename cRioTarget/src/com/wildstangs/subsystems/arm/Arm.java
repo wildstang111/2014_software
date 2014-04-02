@@ -27,6 +27,7 @@ public class Arm
     
     protected static final BooleanConfigFileParameter DISABLE_PID_COMPLETELY_CONFIG = new BooleanConfigFileParameter(Arm.class.getName(), "DisablePIDCompletely", false);
     protected static final BooleanConfigFileParameter DISABLE_PID_INIT_CONFIG = new BooleanConfigFileParameter(Arm.class.getName(), "DisablePIDInInit", false);
+    protected static final BooleanConfigFileParameter RENEW_VOLTAGES_ON_CONFIG_CHANGE_CONFIG = new BooleanConfigFileParameter(Arm.class.getName(), "RenewVoltagesOnConfigChange", false);
     protected static final DoubleConfigFileParameter ARM_VICTOR_SPEED_DILUTION_CONFIG = new DoubleConfigFileParameter(Arm.class.getName(), "ArmVictorSpeedDilution", 0.5);
     protected static boolean disablePidCompletely = DISABLE_PID_COMPLETELY_CONFIG.getValue(), diablePidInit = DISABLE_PID_INIT_CONFIG.getValue();
     protected static double armVictorSpeedDilution = ARM_VICTOR_SPEED_DILUTION_CONFIG.getValue();
@@ -49,6 +50,7 @@ public class Arm
     protected boolean forceOverrideToManualFlag;
     protected double armVictorSpeed = 0.0;
     protected boolean calibrated = false;
+    protected boolean renewVoltagesOnConfigChange;
     
     //The 'front' boolean is for String differentiation ONLY
     protected boolean front;
@@ -66,8 +68,8 @@ public class Arm
         BOTTOM_VOLTAGE_VALUE_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".BottomVoltageValue", 0.0);
         ROLLER_FORWARD_SPEED_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".RollerForwardSpeed", 0.5);
         ROLLER_REVERSE_SPEED_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".RollerReverseSpeed", -0.5);
-        HIGH_BOUND_CONFIG = new IntegerConfigFileParameter(Arm.class.getName(), (front ? "Front" : "Back") + ".HighAngle", 359);
-        LOW_BOUND_CONFIG = new IntegerConfigFileParameter(Arm.class.getName(), (front ? "Front" : "Back") + ".LowAngle", -20);
+        HIGH_BOUND_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".HighAngle", 359);
+        LOW_BOUND_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), (front ? "Front" : "Back") + ".LowAngle", -20);
         
         rollerForwardSpeed = ROLLER_FORWARD_SPEED_CONFIG.getValue();
         rollerReverseSpeed = ROLLER_REVERSE_SPEED_CONFIG.getValue();
@@ -75,6 +77,7 @@ public class Arm
         bottomVoltage = BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
         hardTopVoltage = HARD_TOP_VOLTAGE_VALUE_CONFIG.getValue();
         hardBottomVoltage = HARD_BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
+        renewVoltagesOnConfigChange = RENEW_VOLTAGES_ON_CONFIG_CHANGE_CONFIG.getValue();
         
         this.front = front;
         this.pidInput = new ArmPotPidInput(potIndex, topVoltage, bottomVoltage);
@@ -228,7 +231,8 @@ public class Arm
         rollerReverseSpeed = ROLLER_REVERSE_SPEED_CONFIG.getValue();
         highBound = HIGH_BOUND_CONFIG.getValue();
         lowBound = LOW_BOUND_CONFIG.getValue();
-        if(!calibrated)
+        renewVoltagesOnConfigChange = RENEW_VOLTAGES_ON_CONFIG_CHANGE_CONFIG.getValue();
+        if(!calibrated || renewVoltagesOnConfigChange)
         {
             topVoltage = TOP_VOLTAGE_VALUE_CONFIG.getValue();
             bottomVoltage = BOTTOM_VOLTAGE_VALUE_CONFIG.getValue();
@@ -279,6 +283,9 @@ public class Arm
             topVoltage = bottomVoltage + voltageDifferance;
         }
         
+        SmartDashboard.putNumber((front ? "Front " : "Back ") + "arm new Top Voltage", topVoltage);
+        SmartDashboard.putNumber((front ? "Front " : "Back ") + "arm new Bottom Voltage", bottomVoltage);
+        
         pidInput.setVoltageValues(topVoltage, bottomVoltage);
     }
 
@@ -289,5 +296,10 @@ public class Arm
         {
             pid.disable();
         }
+    }
+    
+    public static boolean isPidCompletelyDisabled()
+    {
+        return disablePidCompletely;
     }
 }
