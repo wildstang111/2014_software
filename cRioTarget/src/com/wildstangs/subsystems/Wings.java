@@ -26,6 +26,7 @@ public class Wings extends Subsystem implements IObserver
     {
         super(name);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_1);
+        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_3);
         
         //"Oh No" button for the driver
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_10);
@@ -56,7 +57,7 @@ public class Wings extends Subsystem implements IObserver
     
     public void acceptNotification(Subject subjectThatCaused)
     {
-        if(subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_1)
+        if(subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_1 || subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_3)
         {
             currentState = ((BooleanSubject)subjectThatCaused).getValue();
         }

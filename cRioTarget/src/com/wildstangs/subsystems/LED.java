@@ -36,7 +36,13 @@ public class LED extends Subsystem implements IObserver {
         }
 
         byte[] getBytes() {
-            return dataBytes;
+            byte[] newBytes = new byte[5];
+            newBytes[0] = dataBytes[0];
+            newBytes[1] = dataBytes[1];
+            newBytes[2] = dataBytes[2];
+            newBytes[3] = dataBytes[3];
+            newBytes[4] = dataBytes[4];
+            return newBytes;
         }
     }
     /*
@@ -70,12 +76,12 @@ public class LED extends Subsystem implements IObserver {
         //This is safe because there is only one instance of the subsystem in the subsystem container.
         t.start();
 
-        //Kicker
-        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_6);
+        //Catapult
+        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_4);
         //Intake
-        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_5);
+//        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_5);
         //Climb
-        registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_2);
+//        registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_2);
     }
 
     public void init() {
@@ -136,16 +142,11 @@ public class LED extends Subsystem implements IObserver {
         boolean buttonState = ((BooleanSubject) subjectThatCaused).getValue();
         if (DriverStation.getInstance().isOperatorControl()) {
             if (buttonState) {
-                if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_6) {
-                    if (buttonState) {
-                        sendData(shootCmd);
-                    }
-                }
-                if (subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_2) {
-                    if (buttonState) {
-                        sendData(climbCmd);
-                    }
-                }
+//                if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_4) {
+//                    if (buttonState) {
+//                        sendData(shootCmd);
+//                    }
+//                }
             } else {
                 //send cmds on buttone release
             }

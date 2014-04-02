@@ -2,11 +2,13 @@ package com.wildstangs.subsystems;
 
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.inputmanager.inputs.joystick.JoystickButtonEnum;
+import com.wildstangs.inputmanager.inputs.joystick.JoystickDPadButtonEnum;
 import com.wildstangs.outputmanager.base.OutputManager;
 import com.wildstangs.subjects.base.BooleanSubject;
 import com.wildstangs.subjects.base.IObserver;
 import com.wildstangs.subjects.base.Subject;
 import com.wildstangs.subsystems.base.Subsystem;
+import com.wildstangs.subsystems.base.SubsystemContainer;
 import com.wildstangs.timer.WsTimer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -49,7 +51,7 @@ public class Catapult extends Subsystem implements IObserver {
         // Arm the catapault
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_2);
         // Disarm the catapult
-        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_3);
+        registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT);
         // Fire the catapault
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_4);
         // Override all the things required to shoot
@@ -175,7 +177,7 @@ public class Catapult extends Subsystem implements IObserver {
         } else if (subjectThatCaused.equals(InputManager.getInstance().getSensorInput(InputManager.TENSION_LIMIT_SWITCH_INDEX).getSubject())) {
             isTension = ((BooleanSubject) subjectThatCaused).getValue();
         } 
-        else if (subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_3)
+        else if (subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT)
         {
             disarmCatapultFlag = ((BooleanSubject) subjectThatCaused).getValue();
         }

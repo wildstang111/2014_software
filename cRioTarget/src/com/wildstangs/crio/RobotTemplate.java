@@ -58,7 +58,7 @@ public class RobotTemplate extends IterativeRobot {
         waitForCalibrationTimer.start();
         waitingForArmCalibration = true;
     }
-
+    
     public void disabledPeriodic() {
         FrameworkAbstraction.disabledPeriodic();
         
@@ -72,17 +72,17 @@ public class RobotTemplate extends IterativeRobot {
         {
             if(backArmCalibrationSwitch)
             {
-                ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateBackArm(true);
+                ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateBackArm();
             }
 
             if(frontArmCalibrationSwitch)
             {
-                ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateFrontArm(true);
+                ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).calibrateFrontArm();
             }
         }
         else
         {
-            if(waitForCalibrationTimer.hasPeriodPassed(1.5))
+            if(waitForCalibrationTimer.hasPeriodPassed(1.25))
             {
                 waitForCalibrationTimer.stop();
                 waitingForArmCalibration = false;
@@ -108,7 +108,7 @@ public class RobotTemplate extends IterativeRobot {
      */
     public void teleopInit() {
         FrameworkAbstraction.teleopInit();
-        //Killing the camera so it doesn't cause out CPU usage to go to 100%
+        //Killing the camera so it doesn't cause our CPU usage to go to 100%
         if(KILL_CAMERA_CONFIG.getValue()) ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).killCamera();
         periodTimer.startTimingSection();
     }

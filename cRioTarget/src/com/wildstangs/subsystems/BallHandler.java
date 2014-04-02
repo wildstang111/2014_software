@@ -17,6 +17,7 @@ import com.wildstangs.subsystems.arm.ArmPreset;
 import com.wildstangs.subsystems.arm.ArmRollerEnum;
 import com.wildstangs.subsystems.base.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.Random;
 
 /**
  *
@@ -37,6 +38,8 @@ public class BallHandler extends Subsystem implements IObserver {
     protected final DoubleConfigFileParameter SAFE_FRONT_ARM_SHOOT_TOP_BOUND_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), "SafeFrontArmShoot.TopBound", 180);
     protected final DoubleConfigFileParameter SAFE_FRONT_ARM_SHOOT_BOTTOM_BOUND_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), "SafeFrontArmShoot.BottomBound", 140);
     protected final BooleanConfigFileParameter DISABLE_CALIBRATION_SWITCHES_CONFIG = new BooleanConfigFileParameter(this.getClass().getName(), "DisableCalibrationSwitches", false);
+    
+    protected final Random RND = new Random();
     
     protected boolean ohNoFlag = false;
     protected boolean forceOverrideToManualFlag = false;
@@ -72,7 +75,7 @@ public class BallHandler extends Subsystem implements IObserver {
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_7);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_8);
         registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_9);
-        registerForJoystickButtonNotification(JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT);
+        registerForJoystickButtonNotification(JoystickButtonEnum.MANIPULATOR_BUTTON_3);
         registerForJoystickButtonNotification(JoystickButtonEnum.DRIVER_BUTTON_1);
         
         //"Oh No" button for the driver
@@ -159,6 +162,7 @@ public class BallHandler extends Subsystem implements IObserver {
         SmartDashboard.putString("Back Arm Roller", backArm.getRollerValue().toString());
         SmartDashboard.putNumber("Front Arm Victor", frontArm.getVictorSpeed());
         SmartDashboard.putNumber("Back Arm Victor", backArm.getVictorSpeed());
+        SmartDashboard.putBoolean("Arm PIDs Disabled", this.areArmPidsCompletelyDisabled() ? (RND.nextInt(2) == 0) : false);
 //        SmartDashboard.putBoolean("Front Arm At Zero", ((Boolean) this.frontArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
 //        SmartDashboard.putBoolean("Back Arm At Zero", ((Boolean) this.backArmCalibrationDebouncer.getDebouncedValue()).booleanValue());
     }
@@ -234,20 +238,20 @@ public class BallHandler extends Subsystem implements IObserver {
             frontArm.forceOverrideToManual(forceOverrideToManualFlag);
             backArm.forceOverrideToManual(forceOverrideToManualFlag);
         }
-        else if(subjectThatCaused.getType() == JoystickDPadButtonEnum.MANIPULATOR_D_PAD_BUTTON_LEFT)
+        else if(subjectThatCaused.getType() == JoystickButtonEnum.MANIPULATOR_BUTTON_3)
         {
             if(((BooleanSubject) subjectThatCaused).getValue())
             {
                 this.setArmPreset(CATCHING_PRESET);
             }
         }
-        else if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1)
-        {
-            if(((BooleanSubject) subjectThatCaused).getValue())
-            {
-                this.setArmPreset(back90);
-            }
-        }
+//        else if(subjectThatCaused.getType() == JoystickButtonEnum.DRIVER_BUTTON_1)
+//        {
+//            if(((BooleanSubject) subjectThatCaused).getValue())
+//            {
+//                this.setArmPreset(back90);
+//            }
+//        }
     }
 
     public void setArmPreset(ArmPreset preset) {
@@ -270,6 +274,11 @@ public class BallHandler extends Subsystem implements IObserver {
     public boolean areArmsUsingPidControl()
     {
         return (frontArm.isArmPidActive() || backArm.isArmPidActive());
+    }
+    
+    public boolean areArmPidsCompletelyDisabled()
+    {
+        return this.forceOverrideToManualFlag || this.ohNoFlag || Arm.isPidCompletelyDisabled();
     }
     
     public void setFrontArmAccumulator(ArmRollerEnum state)
@@ -311,21 +320,33 @@ public class BallHandler extends Subsystem implements IObserver {
             backOutputButton = false;
         }
     }
-
-    public void calibrateBackArm(boolean high)
+    
+    protected boolean backArmCalibrateHigh = true, frontArmCalibrateHigh = true;
+    
+    public void setBackArmCalibrateState(boolean high)
+    {
+        this.backArmCalibrateHigh = high;
+    }
+    
+    public void setFrontArmCalibrateState(boolean high)
+    {
+        this.frontArmCalibrateHigh = high;
+    }
+    
+    public void calibrateBackArm()
     {
         if(!disableCalibrationSwitches)
         {
-            backArm.calibrate(high);
+            backArm.calibrate(backArmCalibrateHigh);
             SmartDashboard.putNumber("Current Back Arm Angle", backArm.getCurrentAngle());
         }
     }
     
-    public void calibrateFrontArm(boolean high)
+    public void calibrateFrontArm()
     {
         if(!disableCalibrationSwitches)
         {
-            frontArm.calibrate(high);
+            frontArm.calibrate(frontArmCalibrateHigh);
             SmartDashboard.putNumber("Current Front Arm Angle", frontArm.getCurrentAngle());
         }
     }
