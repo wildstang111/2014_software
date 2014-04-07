@@ -340,10 +340,9 @@ public class HotGoalDetector extends Subsystem implements IObserver
                         horizWidth = NIVision.MeasureParticle(filteredImage.image, horizontalTargets[j], false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_LONG_SIDE);
                         vertWidth = NIVision.MeasureParticle(filteredImage.image, verticalTargets[i], false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
                         horizHeight = NIVision.MeasureParticle(filteredImage.image, horizontalTargets[j], false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_SHORT_SIDE);
-                        FileLogger.getFileLogger().logData("Particle Analysis " + i + " Horiz width: " + horizWidth + " Horiz height: " + horizHeight + " Vert Width: "+ vertWidth );
 //                        leftScore = ratioToScore(1.2 * (verticalReport.boundingRectLeft - horizontalReport.center_mass_x) / horizWidth);
                         //Rotated image uses y axis values for the reports
-                        rightScore = ratioToScore(1.2 * (verticalReport.boundingRectTop - verticalReport.boundingRectHeight - horizontalReport.center_mass_y) / horizWidth);
+                        rightScore = ratioToScore(1.2 * (verticalReport.boundingRectTop /*- verticalReport.boundingRectHeight*/ - horizontalReport.center_mass_y) / horizWidth);
 //                        rightScore = ratioToScore(1.2 * (horizontalReport.center_mass_x - verticalReport.boundingRectLeft - verticalReport.boundingRectWidth) / horizWidth);
                         //Rotated image uses x axis values
                         leftScore = ratioToScore(1.2 * (horizontalReport.center_mass_y - verticalReport.boundingRectTop ) / horizWidth);
@@ -351,6 +350,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
                         tapeWidthScore = ratioToScore(vertWidth / horizHeight);
                         verticalScore = ratioToScore(1 - (verticalReport.boundingRectLeft - horizontalReport.center_mass_x) / (4 * horizHeight));
                         
+                        FileLogger.getFileLogger().logData("Particle Analysis " + i + " => Horiz width: " + horizWidth + " Horiz height: " + horizHeight + " Vert Width: "+ vertWidth + " Right Score: " + rightScore + " Left score: " + leftScore + " Tape Width Score: " + tapeWidthScore + " Vertical Score: " + verticalScore);
                         //verticalScore = ratioToScore(1 - (verticalReport.boundingRectTop - horizontalReport.center_mass_y) / (4 * horizHeight));
                         total = leftScore > rightScore ? leftScore : rightScore;
                         total += tapeWidthScore + verticalScore;
