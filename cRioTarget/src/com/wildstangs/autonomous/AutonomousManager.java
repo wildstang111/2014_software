@@ -4,11 +4,12 @@ import com.wildstangs.autonomous.parameters.IAutonomousChangeOnLockIn;
 import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot;
 import com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal;
 import com.wildstangs.autonomous.programs.AutonomousProgramSleeper;
-import com.wildstangs.autonomous.programs.AutonomousProgramTwoBall;
+import com.wildstangs.autonomous.programs.AutonomousProgramTwoBallBack;
+import com.wildstangs.autonomous.programs.AutonomousProgramTwoBallFront;
+import com.wildstangs.autonomous.programs.test.AutonomousProgramYMCA;
 import com.wildstangs.inputmanager.base.InputManager;
 import com.wildstangs.logger.Logger;
 import com.wildstangs.subjects.base.*;
-import com.wildstangs.timer.WsTimer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.networktables2.util.List;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -172,7 +173,9 @@ public class AutonomousManager implements IObserver {
         addProgram(new AutonomousProgramDriveAndShoot());
 //        addProgram(new AutonomousProgramDriveAndShootWithEars());
         addProgram(new AutonomousProgramDriveAndShootForHotGoal());
-        addProgram(new AutonomousProgramTwoBall());
+        addProgram(new AutonomousProgramTwoBallBack());
+        addProgram(new AutonomousProgramTwoBallFront());
+        addProgram(new AutonomousProgramYMCA());
 //        addProgram(new AutonomousProgramDriveAndShootForHotGoalWithEars());
 //        addProgram(new AutonomousProgramTestImages());
     }

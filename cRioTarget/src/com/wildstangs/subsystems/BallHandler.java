@@ -308,6 +308,24 @@ public class BallHandler extends Subsystem implements IObserver {
         {
             backIntakeButton = true;
             backOutputButton = false;
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         }
         else if(state == ArmRollerEnum.OUTPUT)
         {
@@ -349,5 +367,10 @@ public class BallHandler extends Subsystem implements IObserver {
             frontArm.calibrate(frontArmCalibrateHigh);
             SmartDashboard.putNumber("Current Front Arm Angle", frontArm.getCurrentAngle());
         }
+    }
+    
+    public void checkArmPidsDisabled()
+    {
+        SmartDashboard.putBoolean("Arm PIDs Disabled", this.areArmPidsCompletelyDisabled() ? (RND.nextInt(2) == 0) : false);
     }
 }

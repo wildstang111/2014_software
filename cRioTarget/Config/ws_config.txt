@@ -26,21 +26,21 @@ com.wildstangs.subsystems.arm.Arm.RenewVoltagesOnConfigChange=false
 com.wildstangs.subsystems.arm.Arm.DisablePIDCompletely=false
 com.wildstangs.subsystems.arm.Arm.DisablePIDInInit=true
 com.wildstangs.subsystems.arm.Arm.ArmVictorSpeedDilution=0.75
-com.wildstangs.subsystems.arm.Arm.Front.HardTopVoltageValue=4.6
+com.wildstangs.subsystems.arm.Arm.Front.HardTopVoltageValue=4.8
 com.wildstangs.subsystems.arm.Arm.Front.HardBottomVoltageValue=0.4
-com.wildstangs.subsystems.arm.Arm.Back.HardTopVoltageValue=4.6
+com.wildstangs.subsystems.arm.Arm.Back.HardTopVoltageValue=4.8
 com.wildstangs.subsystems.arm.Arm.Back.HardBottomVoltageValue=0.4
-com.wildstangs.subsystems.arm.Arm.Front.RollerForwardSpeed=0.75
-com.wildstangs.subsystems.arm.Arm.Front.RollerReverseSpeed=-0.75
-com.wildstangs.subsystems.arm.Arm.Front.TopVoltageValue=3.381
-com.wildstangs.subsystems.arm.Arm.Front.BottomVoltageValue=2.702
+com.wildstangs.subsystems.arm.Arm.Front.RollerForwardSpeed=1.0
+com.wildstangs.subsystems.arm.Arm.Front.RollerReverseSpeed=-1.0
+com.wildstangs.subsystems.arm.Arm.Front.TopVoltageValue=3.39
+com.wildstangs.subsystems.arm.Arm.Front.BottomVoltageValue=2.71
 com.wildstangs.subsystems.arm.Arm.Front.HighAngle=200
 com.wildstangs.subsystems.arm.Arm.Front.LowAngle=0
 com.wildstangs.subsystems.arm.Arm.Back.RollerForwardSpeed=0.75
 com.wildstangs.subsystems.arm.Arm.Back.RollerReverseSpeed=-0.75
-com.wildstangs.subsystems.arm.Arm.Back.TopVoltageValue=3.854
-com.wildstangs.subsystems.arm.Arm.Back.BottomVoltageValue=3.175
-com.wildstangs.subsystems.arm.Arm.Back.HighAngle=200
+com.wildstangs.subsystems.arm.Arm.Back.TopVoltageValue=3.39
+com.wildstangs.subsystems.arm.Arm.Back.BottomVoltageValue=2.72
+com.wildstangs.subsystems.arm.Arm.Back.HighAngle=220
 com.wildstangs.subsystems.arm.Arm.Back.LowAngle=0
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.p=0.0235
 com.wildstangs.pid.controller.base.PidController.FrontArmPid.i=0.0
@@ -123,24 +123,42 @@ com.wildstangs.crio.RobotTemplate.KillCamera=false
 //********************************//
 
 //Drive and Shoot For Hot Goal
-com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.DistanceToDrive=168.0
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.DistanceToDrive=157.0
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.NoHotGoalDelayTimeMs=3500
-com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.LEDDelayTimeMs=70
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.LEDDelayTimeMs=700
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.BallSettleDelayTimeMS=250
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShootForHotGoal.ForceStopAtStep=0
 
 //Drive And Shoot for Goal In Front of us
-com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot.DistanceToDrive=168.0
+com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot.DistanceToDrive=157.0
 com.wildstangs.autonomous.programs.AutonomousProgramDriveAndShoot.ForceStopAtStep=0
 
-//Two Ball
-com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBall.CaptureBall.WantedBackArmAngle=120
-com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBall.CaptureBall.WantedFrontArmAngle=1000
-com.wildstangs.autonomous.programs.AutonomousProgramTwoBall.SmallIntakeTimeMS=1000
-com.wildstangs.autonomous.programs.AutonomousProgramTwoBall.SmallOutputTimeMS=10
-com.wildstangs.autonomous.programs.AutonomousProgramTwoBall.DistanceToDrive=168.0
-com.wildstangs.autonomous.programs.AutonomousProgramTwoBall.BallSettleDelayMS=700
-com.wildstangs.autonomous.programs.AutonomousProgramTwoBall.ForceStopAtStep=14
+//Two Ball, Back
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallBack.CaptureBall.WantedBackArmAngle=120
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallBack.CaptureBall.WantedFrontArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallBack.ReleaseBall.WantedBackArmAngle=100
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallBack.ReleaseBall.WantedFrontArmAngle=1000
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallBack.SmallIntakeTimeMS=1000
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallBack.SmallOutputTimeMS=10
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallBack.DistanceToDrive=168.0
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallBack.BallSettleDelayMS=700
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallBack.ForceStopAtStep=14
+
+//Two Ball, Front
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallFront.CaptureBallInitial.WantedFrontArmAngle=115
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallFront.CaptureBallInitial.WantedBackArmAngle=145
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallFront.CaptureBallFinal.WantedFrontArmAngle=120
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallFront.CaptureBallFinal.WantedBackArmAngle=145
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallFront.InitialIntakeDelayMS=0
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallFront.DistanceToDrive=192
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallFront.ReleaseBall.WantedFrontArmAngle=100
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallFront.ReleaseBall.WantedBackArmAngle=1000
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallFront.FrontArmIn.WantedFrontArmAngle=180
+com.wildstangs.subsystems.arm.ArmPreset.AutonomousProgramTwoBallFront.FrontArmIn.WantedBackArmAngle=1000
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallFront.IntakeDelayMS=50
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallFront.TensionDelayMS=700
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallFront.BallSettleDelayMS=100
+com.wildstangs.autonomous.programs.AutonomousProgramTwoBallFront.ForceStopAtStep=0
 
 //Sleeper
 com.wildstangs.autonomous.programs.AutonomousProgramSleeper.ForceStopAtStep=0
@@ -163,10 +181,10 @@ com.wildstangs.autonomous.programs.test.AutonomousProgramTestImages.TimeDelay=70
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.unknown.distance=175.0
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.unknown.heading=0.0
 com.wildstangs.autonomous.programs.test.AutonomousProgramDriveDistanceMotionProfile.ForceStopAtStep=0
-com.wildstangs.subsystems.arm.ArmPreset.yPreset.WantedBackArmAngle=180
-com.wildstangs.subsystems.arm.ArmPreset.yPreset.WantedFrontArmAngle=180
-com.wildstangs.subsystems.arm.ArmPreset.mPreset.WantedBackArmAngle=30
-com.wildstangs.subsystems.arm.ArmPreset.mPreset.WantedFrontArmAngle=30
+com.wildstangs.subsystems.arm.ArmPreset.yPreset.WantedBackArmAngle=30
+com.wildstangs.subsystems.arm.ArmPreset.yPreset.WantedFrontArmAngle=30
+com.wildstangs.subsystems.arm.ArmPreset.mPreset.WantedBackArmAngle=144
+com.wildstangs.subsystems.arm.ArmPreset.mPreset.WantedFrontArmAngle=144
 com.wildstangs.subsystems.arm.ArmPreset.cPreset.WantedBackArmAngle=270
 com.wildstangs.subsystems.arm.ArmPreset.cPreset.WantedFrontArmAngle=150
 com.wildstangs.subsystems.arm.ArmPreset.aPreset.WantedBackArmAngle=200
@@ -181,9 +199,9 @@ com.wildstangs.subsystems.arm.ArmPreset.DefaultPosition.WantedFrontArmAngle=180
 //             Presets            //
 //                                //
 //********************************//
-com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBackOnly.WantedBackArmAngle=142
+com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBackOnly.WantedBackArmAngle=135
 com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBackOnly.WantedFrontArmAngle=170
-com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBothArms.WantedBackArmAngle=142
+com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBothArms.WantedBackArmAngle=135
 com.wildstangs.subsystems.arm.ArmPreset.ShootPresetBothArms.WantedFrontArmAngle=170
 com.wildstangs.subsystems.arm.ArmPreset.CatchingPreset.WantedBackArmAngle=120
 com.wildstangs.subsystems.arm.ArmPreset.CatchingPreset.WantedFrontArmAngle=120

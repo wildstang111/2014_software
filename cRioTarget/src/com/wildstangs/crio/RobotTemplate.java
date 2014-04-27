@@ -13,6 +13,7 @@ import com.wildstangs.logger.Logger;
 import com.wildstangs.profiling.ProfilingTimer;
 import com.wildstangs.subsystems.BallHandler;
 import com.wildstangs.subsystems.HotGoalDetector;
+import com.wildstangs.subsystems.NonI2CLED;
 import com.wildstangs.subsystems.base.SubsystemContainer;
 import com.wildstangs.timer.WsTimer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -35,8 +36,8 @@ public class RobotTemplate extends IterativeRobot {
     public void robotInit() {
         startupTimer.startTimingSection();
         FrameworkAbstraction.robotInit("/ws_config.txt");
-        Logger.getLogger().always(this.getClass().getName(), "robotInit", "Startup Completed");
         startupTimer.endTimingSection();
+        Logger.getLogger().always(this.getClass().getName(), "robotInit", "Startup Completed");
 
     }
     
@@ -48,7 +49,7 @@ public class RobotTemplate extends IterativeRobot {
     //We may not want to check the calibration switches right away incase they have bad states from start up
     protected WsTimer waitForCalibrationTimer = new WsTimer();
     protected boolean waitingForArmCalibration = false;
-
+    
     public void disabledInit() {
         initTimer.startTimingSection();
         FrameworkAbstraction.disabledInit();
@@ -57,10 +58,15 @@ public class RobotTemplate extends IterativeRobot {
         waitForCalibrationTimer.reset();
         waitForCalibrationTimer.start();
         waitingForArmCalibration = true;
+        ((NonI2CLED) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.LED_INDEX)).setControlState(NonI2CLED.DISABLED);
     }
     
     public void disabledPeriodic() {
         FrameworkAbstraction.disabledPeriodic();
+        
+        SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.LED_INDEX).update();
+        
+        ((BallHandler) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.BALL_HANDLER_INDEX)).checkArmPidsDisabled();
         
         boolean backArmCalibrationSwitch = ((Boolean) InputManager.getInstance().getSensorInput(InputManager.BACK_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue();
         boolean frontArmCalibrationSwitch = ((Boolean) InputManager.getInstance().getSensorInput(InputManager.FRONT_ARM_CALIBRATION_SWITCH_INDEX).get()).booleanValue();
@@ -88,9 +94,11 @@ public class RobotTemplate extends IterativeRobot {
                 waitingForArmCalibration = false;
             }
         }
+        
     }
 
     public void autonomousInit() {
+        ((NonI2CLED) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.LED_INDEX)).setControlState(NonI2CLED.AUTONOMOUS);
         FrameworkAbstraction.autonomousInit();
 //        ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).initCamera();
     }
@@ -107,6 +115,7 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopInit() {
+        ((NonI2CLED) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.LED_INDEX)).setControlState(NonI2CLED.TELEOPERATED);
         FrameworkAbstraction.teleopInit();
         //Killing the camera so it doesn't cause our CPU usage to go to 100%
         if(KILL_CAMERA_CONFIG.getValue()) ((HotGoalDetector) SubsystemContainer.getInstance().getSubsystem(SubsystemContainer.HOT_GOAL_DETECTOR_INDEX)).killCamera();

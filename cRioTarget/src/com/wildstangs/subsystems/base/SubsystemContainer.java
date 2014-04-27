@@ -9,9 +9,8 @@ import com.wildstangs.subsystems.LandingGear;
 import com.wildstangs.subsystems.Wings;
 import com.wildstangs.subsystems.WsCompressor;
 import com.wildstangs.subsystems.DriveBase;
-import com.wildstangs.subsystems.Ears;
-import com.wildstangs.subsystems.LED;
 import com.wildstangs.subsystems.LightCannon;
+import com.wildstangs.subsystems.NonI2CLED;
 
 /**
  *
@@ -102,11 +101,11 @@ public class SubsystemContainer {
     protected SubsystemContainer() {
         subsystem.addToIndex(DRIVE_BASE_INDEX, new DriveBase(DRIVE_BASE));
         subsystem.addToIndex(WS_COMPRESSOR_INDEX, new WsCompressor(WS_COMPRESSOR, 1, 1, 1, 1));
-        subsystem.addToIndex(LED_INDEX, new LED(LED));
+        subsystem.addToIndex(LED_INDEX, new NonI2CLED(LED));
         subsystem.addToIndex(LIGHT_CANNON_INDEX, new LightCannon(LIGHT_CANNON));
         subsystem.addToIndex(BALL_HANDLER_INDEX, new BallHandler(BALL_HANDLER));
         subsystem.addToIndex(CATAPULT_INDEX, new Catapult(CATAPULT));
-        subsystem.addToIndex(LANDING_GEAR_INDEX, new LandingGear(LANDING_GEAR));
+//        subsystem.addToIndex(LANDING_GEAR_INDEX, new LandingGear(LANDING_GEAR));
         subsystem.addToIndex(HOT_GOAL_DETECTOR_INDEX, new HotGoalDetector(HOT_GOAL_DETECTOR));
         subsystem.addToIndex(WINGS_INDEX, new Wings(WINGS));
 //        subsystem.addToIndex(EAR_INDEX, new Ears("EARS"));

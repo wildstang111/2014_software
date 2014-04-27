@@ -17,6 +17,7 @@ import com.wildstangs.autonomous.steps.drivebase.AutonomousStepStopDriveUsingMot
 import com.wildstangs.autonomous.steps.drivebase.AutonomousStepWaitForDriveMotionProfile;
 import com.wildstangs.autonomous.steps.vision.AutonomousStepDelayForHotGoal;
 import com.wildstangs.autonomous.steps.vision.AutonomousStepSetCameraLedState;
+import com.wildstangs.autonomous.steps.wings.AutonomousStepSetWingsState;
 import com.wildstangs.config.DoubleConfigFileParameter;
 import com.wildstangs.config.IntegerConfigFileParameter;
 import com.wildstangs.subsystems.BallHandler;
@@ -55,6 +56,7 @@ public class AutonomousProgramDriveAndShootForHotGoal extends AutonomousProgram
         tensionAndDrive.addStep(drive);
         
         addStep(tensionAndDrive);
+//        addStep(new AutonomousStepSetWingsState(true));
         addStep(new AutonomousStepDelay(BALL_SETTLE_DELAY_TIME.getValue()));
         addStep(new AutonomousStepFireCatapult());
     }

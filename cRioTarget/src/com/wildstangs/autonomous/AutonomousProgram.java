@@ -1,5 +1,6 @@
 package com.wildstangs.autonomous;
 
+import com.wildstangs.autonomous.parameters.IAutonomousChangeOnLockIn;
 import com.wildstangs.autonomous.steps.AutonomousStep;
 import com.wildstangs.autonomous.steps.control.AutonomousStepStopAutonomous;
 import com.wildstangs.config.IntegerConfigFileParameter;
@@ -32,6 +33,10 @@ public abstract class AutonomousProgram {
 
     public void cleanup() {
         programSteps.clear();
+        if(this instanceof IAutonomousChangeOnLockIn)
+        {
+            ((IAutonomousChangeOnLockIn) this).onDisengage();
+        }
     }
 
     public void update() {

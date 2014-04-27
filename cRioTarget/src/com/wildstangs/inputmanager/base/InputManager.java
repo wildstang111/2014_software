@@ -185,11 +185,11 @@ public class InputManager {
 //        sensorInputs.addToIndex(RIGHT_ENCODER_A_INDEX, new WsDigitalInput(4));
 //        sensorInputs.addToIndex(RIGHT_ENCODER_B_INDEX, new WsDigitalInput(5));
         sensorInputs.addToIndex(TENSION_LIMIT_SWITCH_INDEX, new WsDigitalInput(6));
-        sensorInputs.addToIndex(BALL_DETECT_SWITCH_INDEX, new WsDigitalInput(7));
         sensorInputs.addToIndex(LATCH_POSITION_SWITCH_INDEX, new WsDigitalInput(8));
         sensorInputs.addToIndex(CATAPULT_DOWN_SWITCH_INDEX, new WsDigitalInput(9));
         sensorInputs.addToIndex(FRONT_ARM_CALIBRATION_SWITCH_INDEX, new WsDigitalInput(10));
         sensorInputs.addToIndex(BACK_ARM_CALIBRATION_SWITCH_INDEX, new WsDigitalInput(11));
+        //Digital 7, 12, 13, and 14 are used for the LEDs
 
         oiInputs.addToIndex(UNKNOWN_INDEX, new NoInput());
         oiInputs.addToIndex(DRIVER_JOYSTICK_INDEX, new DriverJoystick());

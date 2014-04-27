@@ -26,7 +26,7 @@ import com.wildstangs.subsystems.base.SubsystemContainer;
  *
  * @author Joey
  */
-public class AutonomousProgramTwoBall extends AutonomousProgram implements IAutonomousChangeOnLockIn
+public class AutonomousProgramTwoBallBack extends AutonomousProgram implements IAutonomousChangeOnLockIn
 {
     protected final DoubleConfigFileParameter DISTANCE_CONFIG = new DoubleConfigFileParameter(this.getClass().getName(), "DistanceToDrive", 175.0);
     protected final IntegerConfigFileParameter BALL_SETTLE_DELAY_CONFIG = new IntegerConfigFileParameter(this.getClass().getName(), "BallSettleDelayMS", 700);
@@ -35,17 +35,14 @@ public class AutonomousProgramTwoBall extends AutonomousProgram implements IAuto
     
     protected void defineSteps()
     {
-        addStep(new AutonomousStepSetArmPresets(new ArmPreset(ArmPreset.IGNORE_VALUE, 100, "AutonomousProgramTwoBall.CaptureBall")));
         addStep(new AutonomousStepArmCatapult());
         addStep(new AutonomousStepSetArmRoller(false, ArmRollerEnum.INTAKE));
-        addStep(new AutonomousStepDelay(SMALL_INTAKE_TIME_CONFIG.getValue()));
+        addStep(new AutonomousStepSetArmPresets(new ArmPreset(ArmPreset.IGNORE_VALUE, 120, "AutonomousProgramTwoBallBack.CaptureBall")));
         addStep(new AutonomousStepSetArmRoller(false, ArmRollerEnum.OFF));
         addStep(new AutonomousStepStartDriveUsingMotionProfile(DISTANCE_CONFIG.getValue(), 1.0));
         addStep(new AutonomousStepWaitForDriveMotionProfile());
         addStep(new AutonomousStepStopDriveUsingMotionProfile());
-        addStep(new AutonomousStepSetArmRoller(false, ArmRollerEnum.OUTPUT));
-        addStep(new AutonomousStepDelay(SMALL_INTAKE_TIME_CONFIG.getValue()));
-        addStep(new AutonomousStepSetArmRoller(false, ArmRollerEnum.OFF));
+        addStep(new AutonomousStepSetArmPresets(new ArmPreset(ArmPreset.IGNORE_VALUE, 100, "AutonomousProgramTwoBallBack.ReleaseBall")));
         addStep(new AutonomousStepDelay(BALL_SETTLE_DELAY_CONFIG.getValue()));
         addStep(new AutonomousStepFireCatapult());
         addStep(new AutonomousStepWaitForCatapultDown());

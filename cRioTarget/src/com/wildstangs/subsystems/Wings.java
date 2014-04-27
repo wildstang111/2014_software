@@ -73,4 +73,9 @@ public class Wings extends Subsystem implements IObserver
             }
         }
     }
+    
+    public void setWingState(boolean open)
+    {
+        this.currentState = open;
+    }
 }

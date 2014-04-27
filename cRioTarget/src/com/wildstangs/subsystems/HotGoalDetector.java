@@ -253,7 +253,7 @@ public class HotGoalDetector extends Subsystem implements IObserver
             }
 //            ColorImage image;                           // next 2 lines read image from flash on cRIO
 //            image = new RGBImage("/video.jpg"); 	// get the sample image from the cRIO flash
-            BinaryImage thresholdImage = image.thresholdHSV(110, 170, 160, 255, 90, 255);   // keep only green objects
+            BinaryImage thresholdImage = image.thresholdHSV(90, 170, 160, 255, 90, 255);   // keep only green objects
             
             if(imageWriteLevel >= 2 && imageWriteLevel <= 3)
             {
