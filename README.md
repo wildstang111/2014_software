@@ -1,6 +1,6 @@
 # Team 111's 2014 Robot Simulation and Base Code
 
-This repository contains the Team 111's 2014 robot source.
+This repository contains the Team 111's 2014 robot and simulation source.
 
 ## Intro
 
