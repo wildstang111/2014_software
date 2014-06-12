@@ -1,6 +1,6 @@
-# Team 111's Prototype Robot Simulation and Base Code
+# Team 111's 2014 Robot Simulation and Base Code
 
-This repository contains the Team 111's 2014 robot source. This code is private until the 2014 season is complete!
+This repository contains the Team 111's 2014 robot source.
 
 ## Intro
 
